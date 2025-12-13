@@ -32,6 +32,7 @@ class AuthController extends Controller
            'contact_number' => $data['contact_number'],
         ]);
 
+
         $user->assignRole('patient');
 
 

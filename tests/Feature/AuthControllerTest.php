@@ -69,4 +69,40 @@ class AuthControllerTest extends TestCase
              $response->assertStatus(201);
             $response->assertJson(['message' => 'Patient Registered Successfully'], 201);
     }
+
+    public function test_register_must_have_name(): void {
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+        Sanctum::actingAs($doctor);
+
+        $payload = [
+            'name' => '',
+            'email' => 'noname@gmail.com',
+            'password' => 'password3',
+            'password_confirmation' => 'password3',
+            'contact_number' => '0525353252',
+            'emergency_contact' => '0783535353',
+        ];
+
+        $response = $this->postJson('/api/registerPatient', $payload);
+        $response->assertStatus(403);
+    }
+
+    public function test_patient_cannot_register(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $payload = [
+          'name' => 'Ryan Doe',
+          'email' => 'ryandoe@gmail.com',
+          'password' => 'password4',
+          'password_confirmation' => 'password4',
+          'contact_number' => '6364363',
+          'emergency_contact' => '54325252',
+        ];
+
+        $response = $this->postJson('/api/registerPatient', $payload);
+        $response->assertStatus(403);
+    }
 }
