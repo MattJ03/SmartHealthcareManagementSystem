@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\PatientProfile;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class AuthController extends Controller
 {
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
     public function patientRegister(Request $request) {
         $this->authorize('create patient');
 
@@ -38,9 +42,8 @@ class AuthController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Patient Registered Successfully',
-            201
-        ]);
+            'message' => 'Patient Registered Successfully'
+        ], 201);
     }
 
 }
