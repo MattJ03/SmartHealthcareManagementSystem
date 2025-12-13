@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('medical_records', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id')->constrained('patient_profile')->onDelete('cascade');
+            $table->foreignId('patient_id')->constrained('patient_profiles')->onDelete('cascade');
             $table->string('file_path');
             $table->string('file_type')->nullable();
             $table->text('notes')->nullable();
-            $table->foreignId('doctor_id')->constrained('users')->nullOnDelete();
+            $table->foreignId('doctor_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
     }
