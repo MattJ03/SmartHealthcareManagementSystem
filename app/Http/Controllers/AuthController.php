@@ -10,7 +10,10 @@ use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\PatientProfile;
+use App\Models\DoctorProfile;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Log;
+
 class AuthController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -47,4 +50,35 @@ class AuthController extends Controller
         ], 201);
     }
 
+    public function doctorRegister(Request $request) {
+        $this->authorize('create doctor');
+
+        $data = $request->validate([
+            'name' => 'required|string|max:50',
+            'email' => 'required|email|max:50',
+            'password' => 'required|min:8|confirmed|max:50',
+            'contact_number' => 'required|string|max:15|min:8',
+            'speciality' => 'nullable|string|max:50',
+            'license_number' => 'required|string|min:8|max:15',
+            'clinic_hours' => 'required'
+        ]);
+
+       $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'contact_number' => $data['contact_number'],
+        ]);
+        Log::info('User registered successfully');
+        $user->assignRole('doctor');
+
+        DoctorProfile::create([
+            'user_id' => $user->id,
+            'speciality' => $data['speciality'],
+            'license_number' => $data['license_number'],
+            'clinic_hours' => $data['clinic_hours'],
+        ]);
+
+        return response()->json(['message' => 'Doctor Registered Successfully'], 201);
+    }
 }

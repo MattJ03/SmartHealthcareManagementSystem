@@ -6,4 +6,5 @@ use App\Http\Controllers\AuthController;
 
 Route::middleware('auth:sanctum')->group(function () {
    Route::post('registerPatient', [AuthController::class, 'patientRegister']);
+   Route::post('registerDoctor', [AuthController::class, 'doctorRegister']);
 });

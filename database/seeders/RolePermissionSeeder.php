@@ -26,6 +26,7 @@ class RolePermissionSeeder extends Seeder
         $permission7 = Permission::create(['name' => 'view patient info']);
         $permission8 = Permission::create(['name' => 'manage prescription']);
         $permission9 = Permission::create(['name' => 'view medical records']);
+        $permission10 = Permission::create(['name' => 'create doctor']);
 
         $admin->givePermissionTo([
             $permission1, $permission3, $permission4, $permission5, $permission6, $permission7
@@ -34,7 +35,7 @@ class RolePermissionSeeder extends Seeder
            $permission2, $permission4, $permission5, $permission7, $permission8, $permission9
         ]);
         $admin->givePermissionTo([
-            $permission1, $permission3, $permission4, $permission5, $permission6, $permission7
+            $permission1, $permission3, $permission4, $permission5, $permission6, $permission7, $permission10
         ]);
     }
 }
