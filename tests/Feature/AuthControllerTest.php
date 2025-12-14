@@ -129,4 +129,51 @@ class AuthControllerTest extends TestCase
         $response->assertStatus(201);
         $response->assertJson(['message' => 'Doctor Registered Successfully'], 201);
     }
+
+    public function test_doctor_cannot_register_doctor(): void {
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+        Sanctum::actingAs($doctor);
+
+        $payload = [
+            'name' => 'James Doe',
+            'email' => 'jamesdoe@gmail.com',
+            'password' => 'password5',
+            'password_confirmation' => 'password5',
+            'contact_number' => '65326422',
+            'speciality' => 'cardiology',
+            'license_number' => '4346272726',
+            'clinic_hours' =>  [
+                'Monday' => ['09:00-17:00'],
+                'Tuesday' => ['09:00-17:00'],
+            ],
+            ];
+
+        $response = $this->postJson('/api/registerDoctor', $payload);
+        $response->assertStatus(403);
+    }
+
+    public function test_patient_cannot_register_doctor(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $payload = [
+            'name' => 'James Doe',
+            'email' => 'jamesdoe@gmail.com',
+            'password' => 'password5',
+            'password_confirmation' => 'password5',
+            'contact_number' => '65326422',
+            'speciality' => 'cardiology',
+            'license_number' => '4346272726',
+            'clinic_hours' => [
+                'Monday' => ['09:00-17:00'],
+                'Tuesday' => ['09:00-17:00'],
+            ],
+        ];
+
+        $response = $this->postJson('/api/registerDoctor', $payload);
+        $response->assertStatus(403);
+
+    }
 }
