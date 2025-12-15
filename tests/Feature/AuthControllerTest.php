@@ -245,4 +245,56 @@ class AuthControllerTest extends TestCase
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('password');
     }
+
+    public function test_admin_can_be_registered(): void {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        Sanctum::actingAs($admin);
+
+        $payload = [
+          'name' => 'Gay',
+          'email' => 'martin@gmail.com',
+          'password' => 'password',
+          'password_confirmation' => 'password',
+          'contact_number' => '5435443543',
+        ];
+
+        $response = $this->postJson('/api/registerAdmin', $payload);
+        $response->assertStatus(201);
+        $response->assertJsonStructure(['message']);
+    }
+
+    public function test_doctor_cannot_register_admin(): void {
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+        Sanctum::actingAs($doctor);
+
+        $payload = [
+          'name' => 'Charles Cuck',
+          'email' => 'charlescuck@gmail.com',
+          'password' => 'password',
+          'password_confirmation' => 'password',
+          'contact_number' => '5435443543',
+        ];
+
+        $response = $this->postJson('/api/registerAdmin', $payload);
+        $response->assertStatus(403);
+    }
+
+    public function test_patient_cannot_register_admin(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $payload = [
+            'name' => 'Charles Cuck',
+          'email' => 'charlescuck@gmail.com',
+          'password' => 'password',
+          'password_confirmation' => 'password',
+          'contact_number' => '5435443543',
+        ];
+
+        $response = $this->postJson('/api/registerAdmin', $payload);
+        $response->assertStatus(403);
+    }
 }

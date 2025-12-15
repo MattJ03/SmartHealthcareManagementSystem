@@ -103,4 +103,8 @@ class AuthController extends Controller
         Log::info($createdUser->id . ' assigned to admin role');
         return response()->json(['message' => 'Admin Registered Successfully'], 201);
     }
+
+    public function patientLogin(Request $request) {
+
+    }
 }
