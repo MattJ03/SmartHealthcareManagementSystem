@@ -81,4 +81,26 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Doctor Registered Successfully'], 201);
     }
+
+    public function adminRegister(Request $request) {
+        $this->authorize('create admin');
+
+        $data = $request->validate([
+           'name' => 'required|string|max:50',
+           'email' => 'required|email|max:50',
+           'password' => 'required|min:8|confirmed|max:50',
+           'contact_number' => 'required|string|max:15|min:8',
+        ]);
+
+        $createdUser = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'contact_number' => $data['contact_number'],
+            ]);
+        Log::info($createdUser->id . ' account created, next will be assigned to admin role');
+        $createdUser->assignRole('admin');
+        Log::info($createdUser->id . ' assigned to admin role');
+        return response()->json(['message' => 'Admin Registered Successfully'], 201);
+    }
 }

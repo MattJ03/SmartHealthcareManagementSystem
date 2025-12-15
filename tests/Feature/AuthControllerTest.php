@@ -174,6 +174,75 @@ class AuthControllerTest extends TestCase
 
         $response = $this->postJson('/api/registerDoctor', $payload);
         $response->assertStatus(403);
+    }
 
+    public function test_name_is_required(): void {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        Sanctum::actingAs($admin);
+
+        $payload = [
+          'email' => 'noemailused@gmail.com',
+          'password'=> 'password',
+          'password_confirmation' => 'password',
+          'contact_number' => '532532532',
+            'speciality' => 'rheumatology',
+            'license_number' => '5253253253',
+            'clinic_hours' => [
+                'Monday' => ['09:00-17:00'],
+                'Tuesday' => ['09:00-17:00'],
+            ],
+        ];
+
+        $response = $this->postJson('/api/registerDoctor', $payload);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('name');
+    }
+
+    public function test_email_needs_at(): void {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        Sanctum::actingAs($admin);
+
+        $payload = [
+          'name' => 'James Mason',
+          'email' => 'jamesmasongmail.com',
+          'password' => 'password',
+          'password_confirmation' => 'password',
+          'contact_number' => '5435443543',
+          'speciality' => 'urology',
+          'license_number' => '53534543543',
+          'clinic_hours' => [
+              'Monday' => ['09:00-18:00'],
+              'Tuesday' => ['09:00-18:00'],
+          ],
+        ];
+        $response = $this->postJson('/api/registerDoctor', $payload);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('email');
+    }
+
+    public function test_password_confirmation_matches(): void {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        Sanctum::actingAs($admin);
+
+        $payload = [
+            'name' => 'James Mason',
+            'email' => 'jamesmasongmail.com',
+            'password' => 'password',
+            'password_confirmation' => 'password3',
+            'contact_number' => '5435443543',
+            'speciality' => 'urology',
+            'license_number' => '53534543543',
+            'clinic_hours' => [
+                'Monday' => ['09:00-18:00'],
+                'Tuesday' => ['09:00-18:00'],
+            ],
+        ];
+
+        $response = $this->postJson('/api/registerDoctor', $payload);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('password');
     }
 }
