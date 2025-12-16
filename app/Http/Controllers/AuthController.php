@@ -13,6 +13,7 @@ use App\Models\PatientProfile;
 use App\Models\DoctorProfile;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Log;
+use App\Services\AuthService;
 
 class AuthController extends Controller
 {
@@ -104,10 +105,23 @@ class AuthController extends Controller
         return response()->json(['message' => 'Admin Registered Successfully'], 201);
     }
 
-    public function patientLogin(Request $request) {
+    public function patientLogin(Request $request, AuthService $authService) {
         $validatedData = $request->validate([
            'email' => 'required|email|max:50',
             'password' => 'required|min:8|confirmed|max:50',
         ]);
+        try {
+            $user = $this->authService->patientLogin($validatedData);
+            $token = $user->createToken('api-token')->plainTextToken;
+            return response()->json([
+               'token' => $token,
+               'token_type' => 'Bearer',
+            ], 200);
+        } catch(\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], $e->getCode() ?: 400);
+        }
+
     }
 }
