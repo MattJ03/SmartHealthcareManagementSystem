@@ -105,6 +105,9 @@ class AuthController extends Controller
     }
 
     public function patientLogin(Request $request) {
-
+        $validatedData = $request->validate([
+           'email' => 'required|email|max:50',
+            'password' => 'required|min:8|confirmed|max:50',
+        ]);
     }
 }

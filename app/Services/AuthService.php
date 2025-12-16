@@ -23,5 +23,10 @@ class AuthService {
            'doctor_id' => $data['doctor_id'],
         ]);
         Log::info($profile->id . ' logged in');
+
+        return [
+            'user' => $user,
+            'profile' => $profile,
+        ];
     }
 }
