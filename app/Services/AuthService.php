@@ -19,5 +19,17 @@ class AuthService {
         return $patient;
     }
 
+    public function doctorLogin(array $data): User {
+        $doctor = User::where('email', $data['email'])->first();
+
+        if(!$doctor) {
+            throw new \Exception('User not found', 404);
+        }
+        if(!Haash::check($doctor->password, $data['password'])) {
+            throw new \Exception('wrong password',  403);
+        }
+        return $doctor;
+    }
+
     }
 

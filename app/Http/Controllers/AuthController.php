@@ -108,10 +108,10 @@ class AuthController extends Controller
     public function patientLogin(Request $request, AuthService $authService) {
         $validatedData = $request->validate([
            'email' => 'required|email|max:50',
-            'password' => 'required|min:8|confirmed|max:50',
+            'password' => 'required|min:8|max:50',
         ]);
         try {
-            $user = $this->authService->patientLogin($validatedData);
+            $user = $authService->patientLogin($validatedData);
             $token = $user->createToken('api-token')->plainTextToken;
             return response()->json([
                'token' => $token,
@@ -123,5 +123,24 @@ class AuthController extends Controller
             ], $e->getCode() ?: 400);
         }
 
+    }
+
+    public function doctorLogin(Request $request, AuthService $authService) {
+        $validatedData = $request->validate([
+           'email' => 'required|email|max:50',
+           'password' => 'required|min:8|max:50',
+        ]);
+        try {
+        $user = $authService->doctorLogin($validatedData);
+        $token = $user->createToken('api-token')->plainTextToken;
+        return response()->json([
+            'token' => $token,
+            'token_type' => 'Bearer',
+        ], 200);
+        } catch(\Exception $e) {
+        return response()->json([
+            'message' => $e->getMessage(),
+        ], $e->getCode() ?: 400);
+        }
     }
 }
