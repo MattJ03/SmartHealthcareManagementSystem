@@ -25,7 +25,7 @@ class AuthService {
         if(!$doctor) {
             throw new \Exception('User not found', 404);
         }
-        if(!Hash::check($doctor->password, $data['password'])) {
+        if(!Hash::check($data['password'], $doctor->password)) {
             throw new \Exception('wrong password',  403);
         }
         return $doctor;

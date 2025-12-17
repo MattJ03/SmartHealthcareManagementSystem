@@ -395,5 +395,18 @@ class AuthControllerTest extends TestCase
         ]);
         $response->assertStatus(200);
     }
+    public function test_doctor_login_requires_email(): void {
+        $doctor = User::factory()->create([
+            'email' => '',
+            'password' => 'password',
+        ]);
+        $doctor->assignRole('doctor');
+
+        $response = $this->postJson('/api/loginDoctor', [
+            'email' => '',
+            'password' => 'password',
+        ]);
+        $response->assertStatus(422);
+    }
 
 }
