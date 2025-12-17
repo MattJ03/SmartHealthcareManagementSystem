@@ -31,5 +31,16 @@ class AuthService {
         return $doctor;
     }
 
+    public function adminLogin(array $data): User {
+        $admin = User::where('email', $data['email'])->first();
+        if(!$admin) {
+            throw new \Exception('User not found', 404);
+        }
+        if(!Hash::check($data['password'], $admin->password)) {
+            throw new \Exception('wrong password', 403);
+        }
+        return $admin;
+    }
+
     }
 
