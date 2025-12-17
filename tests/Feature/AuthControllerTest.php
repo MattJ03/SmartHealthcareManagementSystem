@@ -297,4 +297,61 @@ class AuthControllerTest extends TestCase
         $response = $this->postJson('/api/registerAdmin', $payload);
         $response->assertStatus(403);
     }
+
+    public function test_patient_can_login(): void {
+        $patient = User::factory()->create([
+           'email' => 'jamessmith@gmail.com',
+           'password' => 'password',
+        ]);
+        $patient->assignRole('patient');
+
+        $response = $this->postJson('/api/loginPatient', [
+           'email' => 'jamessmith@gmail.com',
+           'password' => 'password',
+        ]);
+        $response->assertStatus(200);
+    }
+
+    public function test_patient_login_requires_email(): void {
+        $patient = User::factory()->create([
+           'email' => '',
+           'password' => 'password',
+        ]);
+        $patient->assignRole('patient');
+
+        $response = $this->postJson('/api/loginPatient', [
+           'email' => '',
+           'password' => 'password',
+        ]);
+        $response->assertStatus(422);
+    }
+
+    public function test_patient_login_requires_password(): void {
+        $patient = User::factory()->create([
+           'email' => 'erikal@gmail.com',
+            'password' => '',
+        ]);
+        $patient->assignRole('patient');
+
+        $response = $this->postJson('/api/loginPatient', [
+            'email' => 'erikal@gmail.com',
+            'password' => '',
+        ]);
+        $response->assertStatus(422);
+    }
+
+    public function test_patient_login_requires_correct_password(): void {
+        $patient = User::factory()->create([
+           'email' => 'james@gmail.com',
+           'password' => 'password',
+        ]);
+        $patient->assignRole('patient');
+
+        $response = $this->postJson('/api/loginPatient', [
+           'email' => 'james@gmail.com',
+           'password' => 'password1',
+        ]);
+        $response->assertStatus(422);
+    }
+
 }
