@@ -409,4 +409,32 @@ class AuthControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
+    public function test_doctor_login_requires_password(): void {
+        $doctor = User::factory()->create([
+           'email' => 'real@gmail.com',
+           'password' => '',
+        ]);
+        $doctor->assignRole('doctor');
+
+        $response = $this->postJson('/api/loginDoctor', [
+            'email' => 'real@gmail.com',
+            'password' => '',
+        ]);
+        $response->assertStatus(422);
+    }
+
+    public function test_doctor_login_requires_min_password(): void {
+        $doctor = User::factory()->create([
+           'email' => 'minchar@gmail.com',
+           'password' => 'short',
+        ]);
+        $doctor->assignRole('doctor');
+
+        $response = $this->postJson('/api/loginDoctor', [
+           'email' => 'minchar@gmail.com',
+           'password' => 'short',
+        ]);
+        $response->assertStatus(422);
+    }
+
 }
