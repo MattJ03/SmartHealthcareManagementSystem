@@ -351,7 +351,49 @@ class AuthControllerTest extends TestCase
            'email' => 'james@gmail.com',
            'password' => 'password1',
         ]);
+        $response->assertStatus(403);
+    }
+
+    public function test_patient_login_requires_at_symbol(): void {
+        $patient = User::factory()->create([
+          'email' => 'ronaldgmail.com',
+          'password' => 'password',
+        ]);
+        $patient->assignRole('patient');
+
+        $response = $this->postJson('/api/loginPatient', [
+            'email' => 'ronaldgmail,com',
+            'password' => 'password',
+        ]);
         $response->assertStatus(422);
+    }
+
+    public function test_patient_login_has_to_be_same_email(): void {
+        $patient = User::factory()->create([
+            'email' => 'sameemail@icloud.com',
+            'password' => 'password',
+        ]);
+        $patient->assignRole('patient');
+
+        $response = $this->postJson('/api/loginPatient', [
+           'email' => 'notsameemail@icloud.com',
+           'password' => 'password',
+        ]);
+        $response->assertStatus(404);
+    }
+
+    public function test_doctor_can_login(): void {
+        $doctor = User::factory()->create([
+            'email' => 'doctor@email.com',
+            'password' => 'password',
+        ]);
+        $doctor->assignRole('doctor');
+
+        $response = $this->postJson('/api/loginDoctor', [
+            'email' => 'doctor@email.com',
+            'password' => 'password',
+        ]);
+        $response->assertStatus(200);
     }
 
 }
