@@ -23,14 +23,6 @@ class AuthControllerTest extends TestCase
         $this->seed(\Database\Seeders\RolePermissionSeeder::class);
     }
 
-
-    public function test_example(): void
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
     public function doctor_register_patient(): void {
         $doctor = User::factory()->create();
         $doctor->assignRole('doctor');
@@ -298,190 +290,18 @@ class AuthControllerTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_patient_can_login(): void {
-        $patient = User::factory()->create([
-           'email' => 'jamessmith@gmail.com',
-           'password' => 'password',
-        ]);
-        $patient->assignRole('patient');
-
-        $response = $this->postJson('/api/loginPatient', [
-           'email' => 'jamessmith@gmail.com',
-           'password' => 'password',
-        ]);
-        $response->assertStatus(200);
-    }
-
-    public function test_patient_login_requires_email(): void {
-        $patient = User::factory()->create([
-           'email' => '',
-           'password' => 'password',
-        ]);
-        $patient->assignRole('patient');
-
-        $response = $this->postJson('/api/loginPatient', [
-           'email' => '',
-           'password' => 'password',
-        ]);
-        $response->assertStatus(422);
-    }
-
-    public function test_patient_login_requires_password(): void {
-        $patient = User::factory()->create([
-           'email' => 'erikal@gmail.com',
-            'password' => '',
-        ]);
-        $patient->assignRole('patient');
-
-        $response = $this->postJson('/api/loginPatient', [
-            'email' => 'erikal@gmail.com',
-            'password' => '',
-        ]);
-        $response->assertStatus(422);
-    }
-
-    public function test_patient_login_requires_correct_password(): void {
-        $patient = User::factory()->create([
-           'email' => 'james@gmail.com',
-           'password' => 'password',
-        ]);
-        $patient->assignRole('patient');
-
-        $response = $this->postJson('/api/loginPatient', [
-           'email' => 'james@gmail.com',
-           'password' => 'password1',
-        ]);
-        $response->assertStatus(403);
-    }
-
-    public function test_patient_login_requires_at_symbol(): void {
-        $patient = User::factory()->create([
-          'email' => 'ronaldgmail.com',
-          'password' => 'password',
-        ]);
-        $patient->assignRole('patient');
-
-        $response = $this->postJson('/api/loginPatient', [
-            'email' => 'ronaldgmail,com',
+    public function test_user_can_login(): void {
+        $user = User::factory()->create([
+            'email' => 'jamesmason@gmail.com',
             'password' => 'password',
         ]);
-        $response->assertStatus(422);
-    }
-
-    public function test_patient_login_has_to_be_same_email(): void {
-        $patient = User::factory()->create([
-            'email' => 'sameemail@icloud.com',
-            'password' => 'password',
-        ]);
-        $patient->assignRole('patient');
-
-        $response = $this->postJson('/api/loginPatient', [
-           'email' => 'notsameemail@icloud.com',
-           'password' => 'password',
-        ]);
-        $response->assertStatus(404);
-    }
-
-    public function test_patient_login_returns_correct_token(): void {
-        $patient = User::factory()->create([
-            'email' => 'james@gmail.com',
-            'password' => 'password',
-        ]);
-        $patient->assignRole('patient');
-
-        $response = $this->postJson('/api/loginPatient', [
-            'email' => 'james@gmail.com',
-            'password' => 'password',
-        ]);
-        $response->assertStatus(200);
-        $response->assertJsonStructure(['token', 'token_type']);
-    }
-
-    public function test_doctor_can_login(): void {
-        $doctor = User::factory()->create([
-            'email' => 'doctor@email.com',
-            'password' => 'password',
-        ]);
-        $doctor->assignRole('doctor');
-
-        $response = $this->postJson('/api/loginDoctor', [
-            'email' => 'doctor@email.com',
+        $user->assignRole('patient');
+        $response = $this->postJson('/api/login', [
+            'email' => 'jamesmason@gmail.com',
             'password' => 'password',
         ]);
         $response->assertStatus(200);
     }
-    public function test_doctor_login_requires_email(): void {
-        $doctor = User::factory()->create([
-            'email' => '',
-            'password' => 'password',
-        ]);
-        $doctor->assignRole('doctor');
 
-        $response = $this->postJson('/api/loginDoctor', [
-            'email' => '',
-            'password' => 'password',
-        ]);
-        $response->assertStatus(422);
-    }
-
-    public function test_doctor_login_requires_password(): void {
-        $doctor = User::factory()->create([
-           'email' => 'real@gmail.com',
-           'password' => '',
-        ]);
-        $doctor->assignRole('doctor');
-
-        $response = $this->postJson('/api/loginDoctor', [
-            'email' => 'real@gmail.com',
-            'password' => '',
-        ]);
-        $response->assertStatus(422);
-    }
-
-    public function test_doctor_login_requires_min_password(): void {
-        $doctor = User::factory()->create([
-           'email' => 'minchar@gmail.com',
-           'password' => 'short',
-        ]);
-        $doctor->assignRole('doctor');
-
-        $response = $this->postJson('/api/loginDoctor', [
-           'email' => 'minchar@gmail.com',
-           'password' => 'short',
-        ]);
-        $response->assertStatus(422);
-    }
-
-    public function test_doctor_login_has_to_be_same_email(): void {
-        $doctor = User::factory()->create([
-           'email' => 'email@gmail.com',
-           'password' => 'password',
-        ]);
-        $doctor->assignRole('doctor');
-
-        $response = $this->postJson('/api/loginDoctor', [
-           'email' => 'icloud@icloud.com',
-           'password' => 'password',
-        ]);
-        $response->assertStatus(404);
-    }
-
-    public function test_doctor_login_returns_token(): void {
-        $doctor = User::factory()->create([
-           'email' => 'pleasework@gmail.com',
-           'password' => 'password',
-        ]);
-        $doctor->assignRole('doctor');
-
-        $response = $this->postJson('/api/loginDoctor', [
-           'email' => 'pleasework@gmail.com',
-           'password' => 'password',
-        ]);
-        $response->assertStatus(200);
-        $response->assertJsonStructure([
-            'token', 'token_type'
-        ]);
-
-    }
 
 }

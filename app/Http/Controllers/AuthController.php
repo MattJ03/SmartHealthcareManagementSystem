@@ -14,8 +14,6 @@ use App\Models\DoctorProfile;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Log;
 use App\Services\AuthService;
-use Illuminate\Support\Facades\Hash;
-
 class AuthController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
