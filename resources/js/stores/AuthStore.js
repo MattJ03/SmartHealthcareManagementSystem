@@ -4,8 +4,8 @@ import { computed } from 'vue';
 import api from "../axios.js";
 
 
-const useAuthStore = defineStore('auth', () => {
-   const token = ref('');
+export const useAuthStore = defineStore('auth', () => {
+   const token = ref(localStorage.getItem('token'));
    const user = ref(null);
    const loading = ref(false);
    const error = ref('');
@@ -13,9 +13,15 @@ const useAuthStore = defineStore('auth', () => {
    async function login(email, password) {
        loading.value = true;
        try {
-
-
+           const res = await api.post('login', {email, password});
+           token.value = res.data.token;
+           localStorage.setItem('token', token.value);
+       } catch (error) {
+           console.log(error.response?.data || error.message);
+       } finally {
+           loading.value = false;
        }
    }
+
 
 });
