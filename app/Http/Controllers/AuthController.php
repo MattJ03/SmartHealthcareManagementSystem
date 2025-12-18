@@ -14,6 +14,7 @@ use App\Models\DoctorProfile;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Log;
 use App\Services\AuthService;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -105,62 +106,23 @@ class AuthController extends Controller
         return response()->json(['message' => 'Admin Registered Successfully'], 201);
     }
 
-    public function patientLogin(Request $request, AuthService $authService) {
+    public function login(Request $request) {
         $validatedData = $request->validate([
-           'email' => 'required|email|max:50',
+            'email' => 'required|email|max:50',
             'password' => 'required|min:8|max:50',
         ]);
-        try {
-            $user = $authService->patientLogin($validatedData);
-            $token = $user->createToken('api-token')->plainTextToken;
-            return response()->json([
-               'token' => $token,
-               'token_type' => 'Bearer',
-            ], 200);
-        } catch(\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-            ], $e->getCode() ?: 400);
+        $user = User::where('email', $validatedData['email'])->first();
+        if(!$user) {
+            return response()->json(['message' => 'User not found'], 404);
         }
-
-    }
-
-    public function doctorLogin(Request $request, AuthService $authService) {
-        $validatedData = $request->validate([
-           'email' => 'required|email|max:50',
-           'password' => 'required|min:8|max:50',
-        ]);
-        try {
-        $user = $authService->doctorLogin($validatedData);
+        if(!Hash::check($validatedData['password'], $user->password)) {
+            return response()->json(['message' => 'Incorrect password'], 401);
+        }
         $token = $user->createToken('api-token')->plainTextToken;
         return response()->json([
-            'token' => $token,
-            'token_type' => 'Bearer',
-        ], 200);
-        } catch(\Exception $e) {
-        return response()->json([
-            'message' => $e->getMessage(),
-        ], $e->getCode() ?: 400);
-        }
-    }
-
-    public function adminLogin(Request $request, AuthService $authService) {
-        $validatedData = $request->validate([
-           'email' => 'required|email|max:50',
-           'password' => 'required|min:8|max:50',
+           'token' => $token,
+           'token_type' => 'Bearer',
+           'role' => $user->getRoleNames()->first(),
         ]);
-
-        try {
-            $user = $authService->adminLogin($validatedData);
-            $token = $user->createToken('api-token')->plainTextToken;
-            return response()->json([
-                'token' => $token,
-                'token_type' => 'Bearer',
-            ], 200);
-        } catch(\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-            ], $e->getCode() ?: 400);
-        }
     }
 }

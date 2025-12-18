@@ -23,5 +23,12 @@ export const useAuthStore = defineStore('auth', () => {
        }
    }
 
+   async function patientRegister(form) {
+       loading.value = true;
+       try {
+           const res = await api.post('patientRegister')
+       }
+   }
+
 
 });
