@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, reactive } from 'vue';
 import { computed } from 'vue';
+import api from "../axios.js";
 
 
 const useAuthStore = defineStore('auth', () => {
@@ -12,6 +13,7 @@ const useAuthStore = defineStore('auth', () => {
    async function login(email, password) {
        loading.value = true;
        try {
+
 
        }
    }
