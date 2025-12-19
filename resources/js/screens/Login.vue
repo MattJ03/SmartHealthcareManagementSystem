@@ -5,13 +5,30 @@
         <div class="right-half"></div>
 
         <div class="card">
-            <LoginForm />
+            <LoginForm @submit="handleLogin" />
         </div>
     </div>
 </template>
 
 <script setup>
 import LoginForm from "../components/LoginForm.vue";
+import { ref, reactive, computed } from 'vue';
+import { useAuthStore } from "../stores/AuthStore.js";
+import router from "../router/index.js";
+
+const email = ref('');
+const password = ref('');
+
+const authStore = useAuthStore();
+
+async function handleLogin({email, password}) {
+    try {
+        await authStore.login(email, password);
+    } catch(error) {
+       console.log(error);
+    }
+}
+
 </script>
 
 <style scoped>

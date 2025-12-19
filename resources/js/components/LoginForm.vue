@@ -56,6 +56,7 @@ async function submit(email, password) {
     margin-bottom: 30px;
     border-radius: 12px;
     font-size: 20px;
+
 }
 .labels {
     gap: 10px;
@@ -81,5 +82,6 @@ async function submit(email, password) {
     background: #C0392B;
     font-size: 20px;
     border-radius: 14px;
+    color: #FFFFFF;
 }
 </style>

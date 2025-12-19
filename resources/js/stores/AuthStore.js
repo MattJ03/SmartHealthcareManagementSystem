@@ -52,17 +52,17 @@ export const useAuthStore = defineStore('auth', () => {
        }
     }
 
-    return [
-      token,
-      user,
-      role,
-      loading,
-      error,
-      login,
-      register,
-      patientRegister,
-      doctorRegister,
-      adminRegister,
-    ];
+    return {
+        token,
+        user,
+        role,
+        loading,
+        error,
+        login,
+        register,
+        patientRegister,
+        doctorRegister,
+        adminRegister,
+    }
 
 });
