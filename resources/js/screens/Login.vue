@@ -2,7 +2,7 @@
     <div class="page">
         <div class="card">
             <LoginForm></LoginForm>
-            <img :src="regPic" alt="login image" />
+
         </div>
     </div>
 </template>
@@ -22,12 +22,12 @@ import regPic from "../assets/regPic.png";
 }
 .card {
     display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     max-width: 900px;
     gap: 3rem;
     padding: 2rem;
-
-
 
 }
 </style>

@@ -2,9 +2,9 @@
 <div class="page">
     <div class="container">
         <form @submit.prevent class="form">
-       <label>Email</label>
+       <label class="labels">Email</label>
         <input class="credentials" type="email" />
-            <label>Password</label>
+            <label class="labels">Password</label>
             <input class="credentials" type="password"/>
         </form>
     </div>
@@ -22,7 +22,8 @@
 }
 
 .container {
-    height: 440px;
+    height: 340px;
+    width: 350px;
     max-width: 500px;
     background: #F2F0EF;
     padding: 2rem;
@@ -31,14 +32,20 @@
 .form {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 8px;
     align-items: center;
 }
 .credentials {
     background: #E9DCC9;
-    height: 35px;
-    margin-bottom: 4px;
+    height: 45px;
+    margin-bottom: 30px;
     border-radius: 12px;
-    font-size: 17px;
+    font-size: 20px;
+}
+.labels {
+    gap: 10px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
 }
 </style>
