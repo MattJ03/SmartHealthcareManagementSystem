@@ -1,17 +1,32 @@
 <template>
     <div class="container">
-        <form @submit.prevent class="form">
+
+        <form @submit.prevent="submit" class="form">
+            <div class="logo-wrapper" >
             <img class="logo" :src="pill" alt="logo" />
-       <label class="labels">Email</label>
-        <input class="credentials" type="email" />
-            <label class="labels">Password</label>
-            <input class="credentials" type="password"/>
+            </div>
+                <label class="labels">Email</label>
+            <input v-model="email" type="email" class="credentials" />
+                <label class="labels">Password</label>
+            <input v-model="password" class="credentials" type="password"/>
+            <button type="submit" class="btn-reg">Log In</button>
         </form>
     </div>
 
 </template>
 <script setup>
 import pill from '../assets/pill.PNG';
+import { ref } from 'vue';
+
+const emit = defineEmits(['submit']);
+
+const email = ref('');
+const password = ref('');
+
+async function submit(email, password) {
+    emit('submit', {email: email.value, password: password.value});
+}
+
 </script>
 <style scoped>
 
@@ -22,12 +37,17 @@ import pill from '../assets/pill.PNG';
     background: #F2F0EF;
     padding: 2rem;
     border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .form {
     display: flex;
+    width: 100%;
     flex-direction: column;
+    align-items: flex-start;
     gap: 8px;
-    align-items: center;
+
 }
 .credentials {
     background: #E9DCC9;
@@ -39,12 +59,27 @@ import pill from '../assets/pill.PNG';
 }
 .labels {
     gap: 10px;
-    display: flex;
+    display: block;
     justify-content: left;
-    align-items: center;
+    font-size: 18px;
+
+}
+.logo-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 .logo {
-    height: 70px;
-
+   height: 70px;
+    width: auto;
+    margin-bottom: 1rem;
+}
+.btn-reg{
+    width: 60%;
+    align-self: center;
+    height: 45px;
+    background: #C0392B;
+    font-size: 20px;
+    border-radius: 14px;
 }
 </style>
