@@ -35,6 +35,7 @@ const authStore = useAuthStore();
     background-color: #C0392B;
     border-radius: 14px;
     font-size: 16px;
+    border: none;
 }
 .logo {
     height: 70px;

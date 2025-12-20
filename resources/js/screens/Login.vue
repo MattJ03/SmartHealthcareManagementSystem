@@ -68,13 +68,12 @@ async function handleLogin({email, password}) {
     border-radius: 14px;
     background: #F2F0EF;
 
-    /* Flex layout for inner form */
     display: flex;
     flex-direction: column;
     gap: 1rem;
 
-    /* Prevent stretching */
-    height: auto; /* do not fill parent */
+
+    height: auto;
     max-height: fit-content;
 }
 
