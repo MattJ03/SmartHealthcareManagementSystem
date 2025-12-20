@@ -10,6 +10,7 @@ export const useAuthStore = defineStore('auth', () => {
    const role = ref(localStorage.getItem('role'));
    const loading = ref(false);
    const error = ref('');
+   const isAdmin = computed(() => role.value === 'admin');
 
    async function login(email, password) {
        loading.value = true;
@@ -63,11 +64,13 @@ export const useAuthStore = defineStore('auth', () => {
         role,
         loading,
         error,
+        isAdmin,
         login,
         register,
         patientRegister,
         doctorRegister,
         adminRegister,
+
     };
 
 });
