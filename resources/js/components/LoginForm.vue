@@ -23,7 +23,7 @@ const emit = defineEmits(['submit']);
 const email = ref('');
 const password = ref('');
 
-async function submit(email, password) {
+async function submit() {
     emit('submit', {email: email.value, password: password.value});
 }
 
@@ -83,5 +83,8 @@ async function submit(email, password) {
     font-size: 20px;
     border-radius: 14px;
     color: #FFFFFF;
+}
+.btn-reg:hover {
+    background: #8B0000;
 }
 </style>

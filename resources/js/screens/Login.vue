@@ -24,6 +24,7 @@ const authStore = useAuthStore();
 async function handleLogin({email, password}) {
     try {
         await authStore.login(email, password);
+        await router.push('/home');
     } catch(error) {
        console.log(error);
     }

@@ -63,6 +63,6 @@ export const useAuthStore = defineStore('auth', () => {
         patientRegister,
         doctorRegister,
         adminRegister,
-    }
+    };
 
 });
