@@ -21,6 +21,11 @@ export const useAuthStore = defineStore('auth', () => {
            localStorage.setItem('role', role.value);
        } catch (error) {
            console.log(error.response?.data || error.message);
+           token.value = null;
+           role.value = null;
+           localStorage.removeItem('token');
+           localStorage.removeItem('role');
+           throw error;
        } finally {
            loading.value = false;
        }

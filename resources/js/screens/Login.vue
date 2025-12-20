@@ -26,7 +26,7 @@ async function handleLogin({email, password}) {
         await authStore.login(email, password);
         await router.push('/home');
     } catch(error) {
-       console.log(error);
+        console.log("Login failed:", error.response?.data?.message || error.message);
     }
 }
 
