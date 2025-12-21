@@ -1,12 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Register from '../screens/Register.vue';
+import RegisterPatient from '../screens/RegisterPatient.vue';
 import Login from "../screens/Login.vue";
 import Home from "../screens/Home.vue";
+import RegisterAdmin from "../screens/RegisterAdmin.vue";
 
 const routes = [
     { path: '/login', component: Login },
     { path: '/home', component: Home },
-    { path: '/register', component: Register, meta: {role: 'admin'}},
+    { path: '/register-patient', component: RegisterPatient, meta: {role: 'admin'}},
+    { path: '/register-admin', component:RegisterAdmin, meta: {role: 'admin'}},
 
 ];
 
