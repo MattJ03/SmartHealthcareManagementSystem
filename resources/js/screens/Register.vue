@@ -1,5 +1,5 @@
 <template>
-
+<NavBar></NavBar>
     <div class="page">
         <div class="left-half"></div>
         <div class="right-half"></div>
@@ -10,7 +10,7 @@
 </template>
 <script setup>
 import RegisterFormPatient from "../components/RegisterFormPatient.vue";
-
+import NavBar from "../components/NavBar.vue";
 </script>
 <style scoped>
 .page {

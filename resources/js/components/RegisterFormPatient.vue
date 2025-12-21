@@ -21,7 +21,7 @@
                 </div>
                 <div class="field">
                     <label class="labels">Password Confirmation</label>
-                    <input type="password" v-model=form.name class="credentials" />
+                    <input type="password" v-model="form.password_confirmation" class="credentials" />
                 </div>
             </div>
             <div class="row">
@@ -34,6 +34,7 @@
                     <input type="number" v-model="form.emergency_contact" class="credentials" />
                 </div>
             </div>
+            <button class="btn-reg" type="submit">Register</button>
         </form>
     </div>
 
@@ -51,7 +52,11 @@ const form = reactive({
     emergency_contact: '',
 
 })
-const emits = defineEmits();
+const emit = defineEmits();
+
+async function submit() {
+    emit('submit', {...form});
+}
 
 </script>
 <style scoped>
@@ -64,7 +69,7 @@ const emits = defineEmits();
     background-color: #F2F0EF;
     width: 350px;
     max-width: 800px;
-    padding: 2rem;
+
     border-radius: 14px;
 }
 
@@ -104,9 +109,22 @@ const emits = defineEmits();
 .credentials {
     background: #E9DCC9;
     height: 45px;
-    width: 90%;
+    width: 100%;
     margin-bottom: 30px;
     border-radius: 12px;
     font-size: 20px;
+
+}
+.btn-reg{
+    width: 40%;
+    align-self: center;
+    height: 50px;
+    background: #C0392B;
+    font-size: 20px;
+    border-radius: 14px;
+    color: #FFFFFF;
+}
+.btn-reg:hover {
+    background: #8B0000;
 }
 </style>
