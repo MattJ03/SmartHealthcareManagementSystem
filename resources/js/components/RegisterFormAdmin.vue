@@ -38,13 +38,19 @@
 import { ref, reactive, computed} from "vue";
 import pill from '../assets/pill.PNG'
 
+const emit = defineEmits();
+
 const form = reactive({
     name: '',
     email: '',
     password: '',
     password_confirmation: '',
     contact_number: '',
-})
+});
+
+async function submit() {
+    emit('submit', {...form});
+}
 
 </script>
 <style scoped>
