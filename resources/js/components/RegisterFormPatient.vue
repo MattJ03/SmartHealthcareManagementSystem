@@ -27,11 +27,11 @@
             <div class="row">
                 <div class="field">
                     <label class="labels">Contact Number</label>
-                    <input type="number" v-model="form.contact_number" class="credentials" />
+                    <input type="text" v-model="form.contact_number" class="credentials" />
                 </div>
                 <div class="field">
                     <label class="labels">Emergency Contact</label>
-                    <input type="number" v-model="form.emergency_contact" class="credentials" />
+                    <input type="text" v-model="form.emergency_contact" class="credentials" />
                 </div>
             </div>
             <button class="btn-reg" type="submit">Register</button>

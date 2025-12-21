@@ -4,13 +4,23 @@
         <div class="left-half"></div>
         <div class="right-half"></div>
         <div class="card">
-       <RegisterFormPatient></RegisterFormPatient>
+       <RegisterFormPatient @submit="registerUser"></RegisterFormPatient>
         </div>
         </div>
 </template>
 <script setup>
 import RegisterFormPatient from "../components/RegisterFormPatient.vue";
 import NavBar from "../components/NavBar.vue";
+import { ref, reactive, computed } from "vue";
+import { useAuthStore } from "../stores/AuthStore.js";
+import router from "../router/index.js";
+
+const authStore = useAuthStore();
+
+async function registerUser(form) {
+    await authStore.patientRegister(form);
+    await router.push('/home');
+}
 </script>
 <style scoped>
 .page {
