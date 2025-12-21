@@ -30,6 +30,7 @@
                     <input type="text" v-model="form.contact_number" class="credentials" />
                 </div>
             </div>
+            <button class="btn-reg" @submit="submit">Register</button>
         </form>
     </div>
 </template>
@@ -106,5 +107,20 @@ const form = reactive({
     margin-bottom: 30px;
     border-radius: 12px;
     font-size: 20px;
+}
+.btn-reg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    height: 50px;
+    width: 40%;
+    border-radius: 14px;
+    background-color: #C0392B;
+    font-size: 20px;
+    color: #FFFFFF;
+}
+.btn-reg:hover {
+    background-color: #8B0000;
 }
 </style>
