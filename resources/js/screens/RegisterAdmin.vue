@@ -13,7 +13,7 @@ import {useAuthStore} from "../stores/AuthStore.js";
 import router from "../router/index.js";
 
 const authStore = useAuthStore();
-async function registerAdmin() {
+async function registerAdmin(form) {
     await authStore.adminRegister(form);
     await router.push('/home');
 }
