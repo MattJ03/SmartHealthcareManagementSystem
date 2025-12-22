@@ -33,7 +33,7 @@ async function registerUser(form) {
     left: 0;
     width: 50%;
     height: 100%;
-    background: red;
+    background: #C0392B;
 }
 
 
@@ -43,7 +43,7 @@ async function registerUser(form) {
     right: 0;
     width: 50%;
     height: 100%;
-    background: white;
+    background: #FFFFFF;
 }
 .card {
     position: absolute;

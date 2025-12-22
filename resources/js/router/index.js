@@ -4,6 +4,7 @@ import Login from "../screens/Login.vue";
 import Home from "../screens/Home.vue";
 import RegisterAdmin from "../screens/RegisterAdmin.vue";
 import RegisterSelect from "../screens/RegisterSelect.vue";
+import RegisterDoctor from "../screens/RegisterDoctor.vue";
 
 const routes = [
     { path: '/login', component: Login },
@@ -11,6 +12,7 @@ const routes = [
     { path: '/register-patient', component: RegisterPatient, meta: {role: 'admin'}},
     { path: '/register-admin', component:RegisterAdmin, meta: {role: 'admin'}},
     { path: '/register-select', component: RegisterSelect, meta: {role: 'admin'}},
+    { path: '/register-doctor', component: RegisterDoctor, meta: {role: 'admin'}},
 
 ];
 

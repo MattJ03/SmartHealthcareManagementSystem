@@ -30,7 +30,7 @@ async function registerAdmin(form) {
     left: 0;
     width: 50%;
     height: 100%;
-    background: red;
+    background: #C0392B;
 }
 
 
