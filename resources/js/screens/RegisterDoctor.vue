@@ -2,6 +2,9 @@
     <div class="page">
         <div class="left-half"></div>
         <div class="right-half"></div>
+        <div class="card">
+            <RegisterFormDoctor></RegisterFormDoctor>
+        </div>
 
     </div>
 </template>
@@ -29,5 +32,18 @@ import RegisterFormDoctor from "../components/RegisterFormDoctor.vue";
     height: 100%;
     width: 50%;
     background-color: #FFFFFF;
+}
+.card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 500px;
+    width: auto;
+    padding: 2rem;
+    border-radius: 14px;
+    background-color: #F2F0EF;
+    height: auto;
+    max-height: fit-content;
 }
 </style>

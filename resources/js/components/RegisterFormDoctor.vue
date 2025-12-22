@@ -14,17 +14,17 @@ import pill from '../assets/pill.PNG';
 </script>
 <style scoped>
 .container {
-    width: 400px;
-    min-height: 400px;
-    height: auto;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 2rem;
-    max-width: 800px;
     border: none;
     border-radius: 14px;
-    background-color: #E9DCC9;
+    height: auto;
+    min-height: 400px;
+    width: 350px;
+    max-width: 800px;
+    background-color: #F2F0EF;
 }
 .form {
     display: flex;
