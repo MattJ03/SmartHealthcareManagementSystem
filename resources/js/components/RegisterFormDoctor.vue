@@ -40,6 +40,8 @@
                 <input type="text" v-model="form.license_number" class="credentials" />
             </div>
         </div>
+        <button type="submit" class="btn-reg">Register</button>
+
     </form>
 
 </div>
@@ -128,5 +130,17 @@ const clinicHours = reactive({
     border-radius: 14px;
     font-size: 18px;
     max-width: 100%;
+}
+.btn-reg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    height: 50px;
+    width: 40%;
+    border-radius: 14px;
+    background-color: #C0392B;
+    font-size: 20px;
+    color: #FFFFFF;
 }
 </style>
