@@ -14,7 +14,7 @@
 <script setup>
 import { ref, reactive, computed } from "vue";
 import patientIcon from '../assets/patienticon.webp';
-import doctorIcon from '../assets/newDoctor.png';
+import doctorIcon from '../assets/newNewDoctor.png';
 import adminIcon from '../assets/adminicon.webp';
 
 
