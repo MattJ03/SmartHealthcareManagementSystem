@@ -37,11 +37,11 @@ const days = [
 ];
 
 const clinicHours = reactive({
-   monday: { start: '', end: '' },
-   tuesday: { start: '', end: '' },
-   wednesday: { start: '', end: '' },
-   thursday: { start: '', end: '' },
-   friday: { start: '', end: '' },
+   monday: { enabled: false, start: '', end: '' },
+   tuesday: { enabled: false, start: '', end: '' },
+   wednesday: { enabled: false, start: '', end: '' },
+   thursday: { enabled: false, start: '', end: '' },
+   friday: { enabled: false, start: '', end: '' },
 });
 </script>
 <style scoped>
