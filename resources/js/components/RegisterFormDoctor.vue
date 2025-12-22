@@ -40,6 +40,13 @@
                 <input type="text" v-model="form.license_number" class="credentials" />
             </div>
         </div>
+        <div class="clinic-hours">
+            <div v-for="day in days" :key="day" class="clinic-row" >
+                <label class="day-label"><input type="checkbox" v-model="clinicHours[day].enabled" /> {{ day }} </label>
+                <input type="time" class="credentials" v-model="clinicHours[day].start" :disabled="clinicHours[day].enabled" />
+                <input type="time" class="credentials" v-model="clinicHours[day].end" :disabled="!clinicHours[day].enabled" />
+            </div>
+        </div>
         <button type="submit" class="btn-reg">Register</button>
 
     </form>
@@ -75,6 +82,8 @@ const clinicHours = reactive({
    thursday: { enabled: false, start: '', end: '' },
    friday: { enabled: false, start: '', end: '' },
 });
+
+async function
 </script>
 <style scoped>
 .container {
@@ -93,6 +102,7 @@ const clinicHours = reactive({
 .form {
     display: flex;
     flex-direction: column;
+    height: auto;
     width: 100%;
     align-items: flex-start;
     gap: 8px;
@@ -143,4 +153,19 @@ const clinicHours = reactive({
     font-size: 20px;
     color: #FFFFFF;
 }
+.clinic-hours {
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.clinic-row {
+    display: grid;
+    grid-template-columns: 120px 1fr 1fr;
+    gap: 0.5rem;
+    align-items: center;
+}
+.day-label {
+    text-transform: capitalize;
+    font-size: 16px;
+}
+
 </style>
