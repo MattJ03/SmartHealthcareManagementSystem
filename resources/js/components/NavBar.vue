@@ -14,7 +14,7 @@ import {useAuthStore} from "../stores/AuthStore.js";
 import router from "../router/index.js";
 
 async function moveToRegister() {
-    await router.push('/register');
+    await router.push('/register-select');
 }
 const authStore = useAuthStore();
 </script>
