@@ -2,7 +2,7 @@
     <div class="block">
     <div class="patient-img-container">
         <strong><label class="title-labels">Patient</label></strong>
-        <img :src="patientIcon" alt="patientImage" class="patient-img" />
+        <img :src="patientIcon" alt="patientImage" class="patient-img" @click="movePatientCreate" />
     </div>
     <div class="doctor-img-container">
         <strong><label class="title-labels">Doctor</label></strong>
@@ -20,6 +20,10 @@ import patientIcon from '../assets/patienticon.webp';
 import doctorIcon from '../assets/newNewDoctor.png';
 import adminIcon from '../assets/adminicon.webp';
 import router from "../router/index.js";
+
+async function movePatientCreate() {
+    await router.push('/register-patient');
+}
 
 </script>
 <style scoped>
@@ -66,6 +70,15 @@ import router from "../router/index.js";
     font-size: 40px;
     text-align: center;
     color: #FFFFFF;
+}
+.patient-img:hover {
+    filter: grayscale(100%);
+}
+.doctor-img:hover {
+    filter: grayscale(100%);
+}
+.admin-img:hover {
+    filter: grayscale(100%);
 }
 
 </style>
