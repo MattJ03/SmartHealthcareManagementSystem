@@ -43,7 +43,7 @@
         <div class="clinic-hours">
             <div v-for="day in days" :key="day" class="clinic-row" >
                 <label class="day-label"><input type="checkbox" v-model="clinicHours[day].enabled" /> {{ day }} </label>
-                <input type="time" class="credentials" v-model="clinicHours[day].start" :disabled="clinicHours[day].enabled" />
+                <input type="time" class="credentials" v-model="clinicHours[day].start" :disabled="!clinicHours[day].enabled" />
                 <input type="time" class="credentials" v-model="clinicHours[day].end" :disabled="!clinicHours[day].enabled" />
             </div>
         </div>
@@ -56,6 +56,8 @@
 <script setup>
 import { ref, reactive, computed } from "vue";
 import pill from '../assets/pill.PNG';
+
+const emit = defineEmits();
 
 const form = reactive({
     name: '',
@@ -83,7 +85,9 @@ const clinicHours = reactive({
    friday: { enabled: false, start: '', end: '' },
 });
 
-async function
+async function submit() {
+    emit('submit', {...form, clinicHours: clinicHours});
+}
 </script>
 <style scoped>
 .container {
