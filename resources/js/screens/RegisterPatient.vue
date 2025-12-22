@@ -1,5 +1,4 @@
 <template>
-<NavBar></NavBar>
     <div class="page">
         <div class="left-half"></div>
         <div class="right-half"></div>

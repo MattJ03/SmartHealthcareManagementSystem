@@ -6,11 +6,11 @@
     </div>
     <div class="doctor-img-container">
         <strong><label class="title-labels">Doctor</label></strong>
-        <img :src="doctorIcon" alt="doctorImage" class="doctor-img" />
+        <img :src="doctorIcon" alt="doctorImage" class="doctor-img" @click="moveDoctorCreate" />
     </div>
         <div class="admin-img-container">
             <strong><label class="title-labels">Admin</label></strong>
-            <img :src="adminIcon" alt="adminImage" class="admin-img" />
+            <img :src="adminIcon" alt="adminImage" class="admin-img" @click="moveAdminCreate" />
         </div>
     </div>
 </template>
@@ -23,6 +23,12 @@ import router from "../router/index.js";
 
 async function movePatientCreate() {
     await router.push('/register-patient');
+}
+async function moveDoctorCreate() {
+    await router.push('/register-doctor');
+}
+async function moveAdminCreate() {
+    await router.push('/register-admin');
 }
 
 </script>
