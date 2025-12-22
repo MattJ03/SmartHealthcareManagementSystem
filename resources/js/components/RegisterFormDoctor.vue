@@ -7,7 +7,37 @@
         <div class="row">
             <div class="field">
                 <label class="label">Name</label>
-                <input v-model=""
+                <input type="text" v-model="form.name" class="credentials" />
+            </div>
+            <div class="field">
+                <label class="label">Email</label>
+                <input type="email" v-model="form.email" class="credentials" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="field">
+                <label class="label">Password</label>
+                <input type="password" v-model="form.password" class="credentials" />
+            </div>
+            <div class="field">
+                <label class="label">Password Confirmation</label>
+                <input type="password" v-model="form.confirm_password" class="credentials" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="field">
+                <label class="label">Contact Number</label>
+                <input type="text" v-model="form.contact_number" class="credentials" />
+            </div>
+            <div class="field">
+                <label class="label">Speciality</label>
+                <input type="text" v-model="form.speciality" class="credentials" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="field">
+                <label class="label">License Number</label>
+                <input type="text" v-model="form.license_number" class="credentials" />
             </div>
         </div>
     </form>
@@ -60,7 +90,7 @@ const clinicHours = reactive({
 }
 .form {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     width: 100%;
     align-items: flex-start;
     gap: 8px;
@@ -94,8 +124,9 @@ const clinicHours = reactive({
     background-color: #E9DCC9;
     height: 40px;
     width: 100%;
-    margin-bottom: 14px;
+    margin-bottom: 30px;
     border-radius: 14px;
     font-size: 18px;
+    max-width: 100%;
 }
 </style>
