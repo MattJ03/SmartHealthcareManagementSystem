@@ -3,13 +3,22 @@
         <div class="left-half"></div>
         <div class="right-half"></div>
         <div class="card">
-            <RegisterFormDoctor></RegisterFormDoctor>
+            <RegisterFormDoctor @submit="registerDoctor"></RegisterFormDoctor>
         </div>
 
     </div>
 </template>
 <script setup>
 import RegisterFormDoctor from "../components/RegisterFormDoctor.vue";
+import { useAuthStore } from "../stores/AuthStore.js";
+import router from "../router/index.js";
+
+const store = useAuthStore();
+
+async function registerDoctor(payload) {
+    await store.doctorRegister(payload);
+    await router.push('/home');
+}
 </script>
 <style scoped>
 .page {
