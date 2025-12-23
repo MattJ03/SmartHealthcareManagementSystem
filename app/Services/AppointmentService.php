@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Appointment;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Nette\Schema\ValidationException;
 
 class AppointmentService {
 
@@ -19,7 +20,9 @@ class AppointmentService {
                 ->lockForUpdate()
                 ->exists();
             if($conflicts) {
-                throw new \Exception("Booking time already exists in database");
+                throw ValidationException::withMessages([
+                   'starts_at' => 'The start date and end date has already been taken.',
+                ]);
             }
 
             return Appointment::create([

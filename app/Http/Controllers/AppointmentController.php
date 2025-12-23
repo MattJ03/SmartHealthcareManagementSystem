@@ -6,10 +6,10 @@ use App\Models\DoctorProfile;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Appointment;
-use
+use App\Services\AppointmentService;
 class AppointmentController extends Controller
 {
-    public function createAppoinment(Request $request,)
+    public function createAppoinment(Request $request, AppointmentService $appointmentService)
     {
         $this->authorize('create appointment');
 
@@ -22,7 +22,11 @@ class AppointmentController extends Controller
         ]);
 
         $patientId = auth()->id();
-
+        $appointment = $appointmentService->storeAppointment($patientId, $validatedData);
+        return response()->json([
+            'appointment' => $appointment,
+            'patientId' => $patientId,
+        ]);
 
     }
 }
