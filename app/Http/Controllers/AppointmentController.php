@@ -7,11 +7,12 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Appointment;
 use App\Services\AppointmentService;
+use Database\Seeders\RolePermissionSeeder;
 
 namespace App\Http\Controllers;
 class AppointmentController extends Controller
 {
-    public function createAppoinment(Request $request, AppointmentService $appointmentService)
+    public function storeAppointment(Request $request, AppointmentService $appointmentService)
     {
         $this->authorize('create appointment');
 

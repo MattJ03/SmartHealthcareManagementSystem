@@ -7,6 +7,9 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Appointment;
 use App\Http\Controllers\AppointmentController;
+use App\Services\AppointmentService;
+use Database\Factories\AppointmentFactory;
+
 
 class AppointmentControllerTest extends TestCase
 {
@@ -17,6 +20,10 @@ class AppointmentControllerTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    pubic function test_create_appointment(): void {
+
+}
 
 
 

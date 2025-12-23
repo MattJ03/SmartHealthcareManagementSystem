@@ -10,7 +10,7 @@ use Carbon\Carbon;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
  */
-class AppointmentFactorFactory extends Factory
+class AppointmentFactory extends Factory
 {
 
     public function definition(): array
