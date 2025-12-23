@@ -90,11 +90,11 @@ class AuthControllerTest extends TestCase
           'email' => 'ryandoe@gmail.com',
           'password' => 'password4',
           'password_confirmation' => 'password4',
-          'contact_number' => '6364363',
+          'contact_number' => '636443363',
           'emergency_contact' => '54325252',
         ];
 
-        $response = $this->postJson('/api/registerPatient', $payload);
+        $response = $this->postJson('/api/registerDoctor', $payload);
         $response->assertStatus(403);
     }
 
@@ -108,7 +108,7 @@ class AuthControllerTest extends TestCase
             'email' => 'jamesdoe@gmail.com',
             'password' => 'password5',
             'password_confirmation' => 'password5',
-            'contact_number' => '65326422',
+            'contact_number' => '65326422334',
             'speciality' => 'cardiology',
             'license_number' => '4346272726',
             'clinic_hours' =>  [
