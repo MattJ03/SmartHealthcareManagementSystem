@@ -41,7 +41,7 @@ class RolePermissionSeeder extends Seeder
             $permission14, $permission15
         ]);
         $doctor->givePermissionTo([
-           $permission2, $permission4, $permission5, $permission7, $permission8, $permission9, $permission12, $permission13,
+           $permission2, $permission4, $permission5, $permission7, $permission8, $permission9, $permission13,
             $permission14, $permission15, $permission16
         ]);
         $admin->givePermissionTo([
