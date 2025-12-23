@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Appointment;
 use App\Services\AppointmentService;
+
+namespace App\Http\Controllers;
 class AppointmentController extends Controller
 {
     public function createAppoinment(Request $request, AppointmentService $appointmentService)
