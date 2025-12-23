@@ -6,6 +6,8 @@ use App\Models\Appointment;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Nette\Schema\ValidationException;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class AppointmentService {
 
@@ -28,8 +30,8 @@ class AppointmentService {
             return Appointment::create([
                 'patient_id' => $patientId,
                 'doctor_id' => $data['doctor_id'],
-                'starts_at' => $data['starts_at'],
-                'ends_at' => $data['ends_at'],
+                'starts_at' => Carbon::parse($data['starts_at']),
+                'ends_at' => Carbon::parse($data['ends_at']),
                 'status' => $data['status'],
                 'notes' => $data['notes'] ?? null,
             ]);

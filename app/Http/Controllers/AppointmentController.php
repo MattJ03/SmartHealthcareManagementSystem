@@ -8,13 +8,12 @@ use App\Models\User;
 use App\Models\Appointment;
 use App\Services\AppointmentService;
 use Database\Seeders\RolePermissionSeeder;
-
-namespace App\Http\Controllers;
+use App\Policies\AppointmentPolicy;
 class AppointmentController extends Controller
 {
     public function storeAppointment(Request $request, AppointmentService $appointmentService)
     {
-        $this->authorize('create appointment');
+        $this->authorize('create', Appointment::class);
 
         $validatedData = $request->validate([
             'doctor_id' => 'required|exists:users,id',
@@ -28,8 +27,8 @@ class AppointmentController extends Controller
         $appointment = $appointmentService->storeAppointment($patientId, $validatedData);
         return response()->json([
             'appointment' => $appointment,
-            'patientId' => $patientId,
-        ]);
+            'patient_id' => $patientId,
+        ], 201);
 
     }
 }
