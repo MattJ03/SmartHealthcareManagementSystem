@@ -36,15 +36,17 @@ class RolePermissionSeeder extends Seeder
         $permission17 = Permission::create(['name' => 'assign doctors']);
 
 
-        $admin->givePermissionTo([
-            $permission1, $permission3, $permission4, $permission5, $permission6, $permission7, $permission12, $permission13
+        $patient->givePermissionTo([
+            $permission1, $permission3, $permission4, $permission5, $permission6, $permission7, $permission12, $permission13,
+            $permission14, $permission15
         ]);
         $doctor->givePermissionTo([
-           $permission2, $permission4, $permission5, $permission7, $permission8, $permission9, $permission12
+           $permission2, $permission4, $permission5, $permission7, $permission8, $permission9, $permission12, $permission13,
+            $permission14, $permission15, $permission16
         ]);
         $admin->givePermissionTo([
             $permission1, $permission3, $permission4, $permission5, $permission6, $permission7, $permission10, $permission11,
-            $permission12
+            $permission12, $permission13, $permission14, $permission15, $permission16, $permission17
 
         ]);
     }
