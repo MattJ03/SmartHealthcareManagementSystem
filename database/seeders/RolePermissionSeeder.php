@@ -28,15 +28,23 @@ class RolePermissionSeeder extends Seeder
         $permission9 = Permission::create(['name' => 'view medical records']);
         $permission10 = Permission::create(['name' => 'create doctor']);
         $permission11 = Permission::create(['name' => 'create admin']);
+        $permission12 = Permission::create(['name' => 'create appointment']);
+        $permission13 = Permission::create(['name' => 'update appointment']);
+        $permission14 = Permission::create(['name' => 'delete appointment']);
+        $permission15 = Permission::create(['name' => 'view appointment']);
+        $permission16 = Permission::create(['name' => 'modify clinic hours']);
+        $permission17 = Permission::create(['name' => 'assign doctors']);
+
 
         $admin->givePermissionTo([
-            $permission1, $permission3, $permission4, $permission5, $permission6, $permission7
+            $permission1, $permission3, $permission4, $permission5, $permission6, $permission7, $permission12, $permission13
         ]);
         $doctor->givePermissionTo([
-           $permission2, $permission4, $permission5, $permission7, $permission8, $permission9
+           $permission2, $permission4, $permission5, $permission7, $permission8, $permission9, $permission12
         ]);
         $admin->givePermissionTo([
             $permission1, $permission3, $permission4, $permission5, $permission6, $permission7, $permission10, $permission11,
+            $permission12
 
         ]);
     }
