@@ -21,7 +21,7 @@
             </div>
             <div class="field">
                 <label class="label">Password Confirmation</label>
-                <input type="password" v-model="form.confirm_password" class="credentials" />
+                <input type="password" v-model="form.password_confirmation" class="credentials" />
             </div>
         </div>
         <div class="row">
@@ -48,7 +48,6 @@
             </div>
         </div>
         <button type="submit" class="btn-reg">Register</button>
-
     </form>
 
 </div>
@@ -63,7 +62,7 @@ const form = reactive({
     name: '',
     email: '',
     password: '',
-    confirm_password: '',
+    password_confirmation: '',
     contact_number: '',
     speciality: '',
     license_number: '',
@@ -86,7 +85,7 @@ const clinicHours = reactive({
 });
 
 async function submit() {
-    emit('submit', {...form, clinicHours: clinicHours});
+    emit('submit', {...form, clinic_hours: clinicHours});
 }
 </script>
 <style scoped>
