@@ -151,12 +151,41 @@ class AppointmentControllerTest extends TestCase
         $patient = User::factory()->create();
         $patient->assignRole('patient');
         Sanctum::actingAs($patient);
+
         $appointment = Appointment::factory()->make()->toArray();
         $response = $this->postJson('/api/storeAppointment', $appointment);
+
         $response->assertStatus(201);
         $response->assertJsonStructure(['appointment', 'patient_id']);
     }
 
+    public function test_database_has_appointment_stored(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $appointment = Appointment::factory()->make()->toArray();
+        $response = $this->postJson('/api/storeAppointment', $appointment);
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('appointments', [
+            'patient_id' => $patient->id,
+            'doctor_id' => $appointment['doctor_id'],
+            'starts_at' => Carbon::parse($appointment['starts_at'])->format('Y-m-d H:i:s'),
+        ]);
+
+    }
+
+    public function test_database_has_one_appointment(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $appointment = Appointment::factory()->make()->toArray();
+
+        $response = $this->postJson('/api/storeAppointment', $appointment);
+        $response->assertStatus(201);
+        $this->assertDatabaseCount('appointments', 1);
+    }
 
 
 }
