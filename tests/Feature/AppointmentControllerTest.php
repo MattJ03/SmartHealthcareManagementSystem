@@ -50,6 +50,24 @@ class AppointmentControllerTest extends TestCase
         $response->assertJsonStructure(['appointment', 'patient_id']);
     }
 
+    public function test_doctor_cannot_create_appointment(): void {
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+        Sanctum::actingAs($doctor);
 
+        $appointment = Appointment::factory()->make()->toArray();
+        $response = $this->postJson('/api/storeAppointment', $appointment);
+        $response->assertStatus(403);
+    }
+
+    public function test_admin_can_create_appointment(): void {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        Sanctum::actingAs($admin);
+
+        $appointment = Appointment::factory()->make()->toArray();
+        $response = $this->postJson('/api/storeAppointment', $appointment);
+        $response->assertStatus(201);
+    }
 
 }

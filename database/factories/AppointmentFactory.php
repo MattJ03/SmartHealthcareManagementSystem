@@ -17,11 +17,15 @@ class AppointmentFactory extends Factory
     {
 
         $starts = Carbon::today()->setTime(9, 0);
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
         return [
             'patient_id' => User::factory(),
-            'doctor_id' => User::factory(),
-            'starts_at' => fake()->time(),
-            'ends_at' => (clone $starts)->addMinutes(30),
+            'doctor_id' => $doctor->id,
+            'starts_at' => $starts->format("Y-m-d H:i:s"),
+            'ends_at' => $starts->copy()->addMinutes(30)->format('Y-m-d H:i:s'),
             'status' => 'confirmed',
             'notes' => fake()->paragraph(),
         ];
