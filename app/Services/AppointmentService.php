@@ -27,6 +27,10 @@ class AppointmentService {
                 ]);
             }
 
+            $doctorId = User::findOrFail($data['doctor_id']);
+            abort_unless($doctorId->hasRole('doctor'), 403);
+
+
             return Appointment::create([
                 'patient_id' => $patientId,
                 'doctor_id' => $data['doctor_id'],

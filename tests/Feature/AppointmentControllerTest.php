@@ -36,9 +36,12 @@ class AppointmentControllerTest extends TestCase
         $patient->assignRole('patient');
         Sanctum::actingAs($patient);
 
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+
         $payload = [
             'patient_id' => $patient->id,
-            'doctor_id' => User::factory()->create()->id,
+            'doctor_id' => $doctor->id,
              'starts_at' => Carbon::tomorrow(),
             'ends_at' => Carbon::tomorrow()->addMinutes(30),
             'status' => 'confirmed',
@@ -185,6 +188,34 @@ class AppointmentControllerTest extends TestCase
         $response = $this->postJson('/api/storeAppointment', $appointment);
         $response->assertStatus(201);
         $this->assertDatabaseCount('appointments', 1);
+    }
+
+    public function test_database_has_multiple_appointments(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        for($i = 0; $i < 3; $i++) {
+            Appointment::factory()->create();
+        }
+        $this->assertDatabaseCount('appointments', 3);
+    }
+
+    public function test_doctor_id_cannot_be_set_as_the_patients_id(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $appointment = [
+            'patient_id' => $patient->id,
+            'doctor_id' => $patient->id,
+            'starts_at' => Carbon::tomorrow()->addMinutes(30)->format('Y-m-d H:i:s'),
+            'ends_at' => Carbon::tomorrow()->addMinutes(60)->format('Y-m-d H:i:s'),
+             'status' => 'confirmed',
+            'notes' => fake()->paragraph(),
+            ];
+        $response = $this->postJson('/api/storeAppointment', $appointment);
+        $response->assertStatus(403);
     }
 
 

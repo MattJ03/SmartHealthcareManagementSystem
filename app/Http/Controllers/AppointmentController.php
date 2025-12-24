@@ -17,11 +17,13 @@ class AppointmentController extends Controller
 
         $validatedData = $request->validate([
             'doctor_id' => 'required|exists:users,id',
-            'starts_at' => 'required|',
+            'starts_at' => 'required',
             'ends_at' => 'required|after:starts_at',
             'status' => 'required|in:pending,confirmed,cancelled,completed',
             'notes' => 'nullable',
         ]);
+
+
 
         $patientId = auth()->id();
         $appointment = $appointmentService->storeAppointment($patientId, $validatedData);
