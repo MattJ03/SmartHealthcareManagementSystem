@@ -70,4 +70,42 @@ class AppointmentControllerTest extends TestCase
         $response->assertStatus(201);
     }
 
+    public function test_appointment_requires_starts_at(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+
+        $payload = [
+        'patient_id' => $patient->id,
+        'doctor_id' => $doctor->id,
+            'ends_at' => Carbon::tomorrow()->addMinutes(30)->format('Y-m-d H:i:s'),
+            'status' => 'confirmed',
+            'notes' => fake()->paragraph(),
+        ];
+
+        $response = $this->postJson('/api/storeAppointment', $payload);
+        $response->assertStatus(422);
+    }
+
+    public function test_appointment_requires_real_doctor_id(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+        $fakeDoctor = User::factory()->create();
+
+        $payload = [
+          'patient_id' => $patient->id,
+          'doctor_id' => $fakeDoctor->id,
+          'starts_at' => Carbon::tomorrow()->addMinutes(30)->format('Y-m-d H:i:s'),
+          'ends_at' => Carbon::tomorrow()->addMinutes(30)->format('Y-m-d H:i:s'),
+          'status' => 'confirmed',
+          'notes' => fake()->paragraph(),
+        ];
+
+        $response = $this->postJson('/api/storeAppointment', $payload);
+        $response->assertStatus(422);
+    }
+
 }

@@ -21,6 +21,7 @@ class AppointmentFactory extends Factory
         $doctor->assignRole('doctor');
         $patient = User::factory()->create();
         $patient->assignRole('patient');
+
         return [
             'patient_id' => User::factory(),
             'doctor_id' => $doctor->id,
