@@ -108,4 +108,55 @@ class AppointmentControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
+    public function test_notes_can_be_null(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+
+        $payload = [
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+            'starts_at' => Carbon::tomorrow()->format('Y-m-d H:i:s'),
+            'ends_at' => Carbon::tomorrow()->addMinutes(30)->format('Y-m-d H:i:s'),
+            'status' => 'confirmed',
+        ];
+
+        $response = $this->postJson('/api/storeAppointment', $payload);
+        $response->assertStatus(201);
+    }
+
+    public function test_status_requires_enum_in_controller(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+
+        $payload = [
+          'patient_id' => $patient->id,
+          'doctor_id' => $doctor->id,
+          'starts_at' => Carbon::tomorrow()->format('Y-m-d H:i:s'),
+          'ends_at' => Carbon::tomorrow()->addMinutes(30)->format('Y-m-d H:i:s'),
+          'status' => 'trashSite',
+          'notes' => fake()->paragraph(),
+        ];
+
+        $response = $this->postJson('/api/storeAppointment', $payload);
+        $response->assertStatus(422);
+    }
+
+    public function test_successful_appointment_returns_correct_json(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+        $appointment = Appointment::factory()->make()->toArray();
+        $response = $this->postJson('/api/storeAppointment', $appointment);
+        $response->assertStatus(201);
+        $response->assertJsonStructure(['appointment', 'patient_id']);
+    }
+
+
+
 }
