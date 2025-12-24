@@ -66,9 +66,13 @@ class AppointmentControllerTest extends TestCase
     public function test_admin_can_create_appointment(): void {
         $admin = User::factory()->create();
         $admin->assignRole('admin');
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+
         Sanctum::actingAs($admin);
 
         $appointment = Appointment::factory()->make()->toArray();
+        $appointment['patient_id'] = $patient['id'];
         $response = $this->postJson('/api/storeAppointment', $appointment);
         $response->assertStatus(201);
     }
@@ -218,5 +222,33 @@ class AppointmentControllerTest extends TestCase
         $response->assertStatus(403);
     }
 
+    public function test_admin_id_cannot_be_set_as_the_patients_id(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $appointment = Appointment::factory()->make()->toArray();
+        $appointment['doctor_id'] = $admin['id'];
+        $response = $this->postJson('/api/storeAppointment', $appointment);
+        $response->assertStatus(403);
+        $this->assertDatabaseMissing('appointments', $appointment);
+    }
+
+    public function test_doctor_id_cannot_be_set_as_patients_id(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+        $appointment = Appointment::factory()->make()->toArray();
+
+
+
+        $response = $this->postJson('/api/storeAppointment', $appointment);
+        $response->assertStatus(403);
+        $this->assertDatabaseMissing('appointments', $appointment);
+    }
 
 }

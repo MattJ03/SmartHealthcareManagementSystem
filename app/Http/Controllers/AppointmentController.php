@@ -25,7 +25,23 @@ class AppointmentController extends Controller
 
 
 
-        $patientId = auth()->id();
+        $user = auth()->user();
+        if($user->hasRole('patient')) {
+            $patientId = $user->id;
+        }
+
+        if($user->hasRole('admin')) {
+            $request->validate([
+                'patient_id' => 'required|exists:users,id',
+                ]);
+
+            $patient = User::findOrFail($request->patient_id);
+            abort_unless($patient->hasRole('patient'), 403);
+            $patientId = $patient->id;
+
+        }
+
+
         $appointment = $appointmentService->storeAppointment($patientId, $validatedData);
         return response()->json([
             'appointment' => $appointment,
