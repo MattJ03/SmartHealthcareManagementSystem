@@ -68,7 +68,5 @@ class AppointmentController extends Controller
         }
         $appointment = $appointmentService->updateAppointment($appointment->id, $validatedData);
 
-
-
     }
 }

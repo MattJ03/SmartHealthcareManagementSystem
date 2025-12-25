@@ -282,4 +282,14 @@ class AppointmentControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
+    public function test_appointment_can_be_updated(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $appointment = Appointment::factory()->make()->toArray();
+
+        $response = $this->putJ
+    }
+
 }
