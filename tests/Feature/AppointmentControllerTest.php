@@ -236,19 +236,25 @@ class AppointmentControllerTest extends TestCase
         $this->assertDatabaseMissing('appointments', $appointment);
     }
 
-    public function test_doctor_id_cannot_be_set_as_patients_id(): void {
+    public function test_patient_cannot_create_appointment_for_other_patient(): void {
         $patient = User::factory()->create();
         $patient->assignRole('patient');
         Sanctum::actingAs($patient);
         $doctor = User::factory()->create();
         $doctor->assignRole('doctor');
+        $patientB = User::factory()->create();
+       $patientB->assignRole('patient');
+
         $appointment = Appointment::factory()->make()->toArray();
+        $appointment['patient_id'] = $patientB->id;
+        $appointment['doctor_id'] = $doctor->id;
 
+    $response = $this->postJson('/api/storeAppointment', $appointment);
+        $response->assertStatus(201);
 
-
-        $response = $this->postJson('/api/storeAppointment', $appointment);
-        $response->assertStatus(403);
-        $this->assertDatabaseMissing('appointments', $appointment);
+        $this->assertDatabaseHas('appointments', [
+            'patient_id' => $patient->id,
+        ]);
     }
 
 }
