@@ -70,14 +70,14 @@ class AppointmentController extends Controller
         $appointment = $appointmentService->updateAppointment($appointment->id, $validatedData);
     }
 
-    public function getAllMyAppoinments(Request $request) {
+    public function getAllMyAppointments() {
         $user = auth()->user();
 
         abort_unless($user->hasRole('patient'), 403);
 
         $appointments = Appointment::where('patient_id', $user->id)
                                      ->where('status', 'confirmed')
-                                     ->where('starts_at', '=>', now())
+                                     ->where('starts_at', '>=', now())
                                      ->get();
 
         if($appointments->isEmpty()) {
@@ -88,8 +88,24 @@ class AppointmentController extends Controller
 
         }
         return response()->json([
-            'appointments' => $appointments->get(),
+            'appointments' => $appointments,
             'message' => 'All appointments',
         ], 200);
     }
+    public function test_get_all_appointments_works(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        Appointment::factory()->count(5)->create([
+            'patient_id' => $patient->id,
+            'status' => 'confirmed',
+            'starts_at' => now()->addHour(),
+        ]);
+
+        $response = $this->getJson('/api/getAllMyAppointments');
+        $response->assertStatus(200);
+        $response->assertJsonCount(5, 'appointments');
+    }
+
 }

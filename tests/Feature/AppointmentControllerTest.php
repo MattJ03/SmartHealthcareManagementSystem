@@ -424,4 +424,88 @@ class AppointmentControllerTest extends TestCase
         ]);
     }
 
+    public function test_get_all_appointments_works(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+         Appointment::factory()->count(5)->create();
+
+        $this->assertCount(5, Appointment::all());
+        $response = $this->getJson('/api/getAllMyAppointments');
+        $response->assertStatus(200);
+        $this->assertDatabaseCount('appointments', 5);
+         }
+
+         public function test_index_retrieves_large_num_of_appointments(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+          Appointment::factory()->count(1000)->create([
+              'patient_id' => $patient->id,
+              'status' => 'confirmed',
+              'starts_at' => now()->addHour(),
+          ]);
+          $this->assertCount(1000, Appointment::all());
+          $response = $this->getJson('/api/getAllMyAppointments');
+          $response->assertStatus(200);
+
+          $response->assertJsonCount(1000, 'appointments');
+         }
+
+         public function test_index_doesnt_show_cancelled_appointments(): void {
+             $patient = User::factory()->create();
+             $patient->assignRole('patient');
+             Sanctum::actingAs($patient);
+
+             Appointment::factory()->count(100)->create([
+                 'status' => 'confirmed',
+             ]);
+             $this->assertDatabaseCount('appointments', 100);
+             $response = $this->getJson('/api/getAllMyAppointments');
+             $response->assertStatus(200);
+             $response->assertJsonMissing([
+                 'status' => 'cancelled',
+             ]);
+         }
+
+         public function test_index_all_after_time_now(): void {
+          $patient = User::factory()->create();
+          $patient->assignRole('patient');
+          Sanctum::actingAs($patient);
+
+          Appointment::factory()->count(10)->create([
+              'starts_at' => Carbon::yesterday()->addMinutes(60)->format('Y-m-d H:i:s'),
+          ]);
+          $this->assertCount(10, Appointment::all());
+          $response = $this->getJson('/api/getAllMyAppointments');
+          $response->assertStatus(200);
+          $response->assertJsonStructure([
+              'message',
+          ]);
+         }
+
+         public function test_index_return_confirmed_dont_pull_non_confirmed_appointments(): void {
+          $patient = User::factory()->create();
+          $patient->assignRole('patient');
+          Sanctum::actingAs($patient);
+
+          Appointment::factory()->count(5)->create([
+              'patient_id' => $patient->id,
+              'starts_at' => now()->addHour(),
+              'status' => 'confirmed',
+          ]);
+          $this->assertCount(5, Appointment::all());
+          Appointment::factory()->count(5)->create([
+              'patient_id' => $patient->id,
+               'starts_at' => now()->addMinutes(60)->format('Y-m-d H:i:s'),
+               'status' => 'cancelled',
+          ]);
+          $this->assertCount(10, Appointment::all());
+          $response = $this->getJson('/api/getAllMyAppointments');
+          $response->assertStatus(200);
+          $response->assertJsonCount(5, 'appointments');
+
+         }
 }
