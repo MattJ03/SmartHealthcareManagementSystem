@@ -258,5 +258,28 @@ class AppointmentControllerTest extends TestCase
     }
 
 //CHECK THAT TIME END DATE CANNOT BE BEFORE START DATE USING CARBON
+    public function test_start_time_cannot_be_after_end_time(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $appointment = Appointment::factory()->make()->toArray();
+        $appointment['starts_at'] = Carbon::Tomorrow()->addMinutes(60)->format('Y-m-d H:i:s');
+        $response = $this->postJson('/api/storeAppointment', $appointment);
+        $response->assertStatus(422);
+    }
+
+    public function test_end_time_cannot_be_before_start_time(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $appointment = Appointment::factory()->make()->toArray();
+        $appointment['starts_at'] = Carbon::tomorrow()->addMinutes(60)->format('Y-m-d H:i:s');
+        $appointment['ends_at'] = Carbon::tomorrow()->subMinutes(60)->format('Y-m-d H:i:s');
+
+        $response = $this->postJson('/api/storeAppointment', $appointment);
+        $response->assertStatus(422);
+    }
 
 }
