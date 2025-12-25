@@ -296,7 +296,7 @@ class AppointmentControllerTest extends TestCase
             'doctor_id' => $doctor->id,
         ]);
 
-        $response = $this->putJson('/api/updateAppointment/' . $appointment->id , [
+        $response = $this->putJson('/api/updateAppointment/' . $appointment->id, [
            'doctor_id' => $doctor->id,
             'starts_at' => Carbon::tomorrow()->addMinutes(60)->format('Y-m-d H:i:s'),
             'ends_at' => Carbon::tomorrow()->addMinutes(85)->format('Y-m-d H:i:s'),
@@ -304,6 +304,100 @@ class AppointmentControllerTest extends TestCase
             'notes' => fake()->paragraph(),
         ]);
         $response->assertStatus(200);
+    }
+
+    public function test_appointment_update_status(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+
+
+        $appointment = Appointment::factory()->create([
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+        $response = $this->putJson('/api/updateAppointment/' . $appointment->id, [
+            'doctor_id' => $doctor->id,
+             'starts_at' => Carbon::tomorrow()->addMinutes(120)->format('Y-m-d H:i:s'),
+             'ends_at' => Carbon::tomorrow()->addMinutes(135)->format('Y-m-d H:i:s'),
+              'status' => 'cancelled',
+              'notes' => fake()->paragraph(),
+            ]);
+        $response->assertStatus(200);
+    }
+
+    public function test_appointment_starts_can_be_updated(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+
+
+        $appointment = Appointment::factory()->create([
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $response = $this->putJson('/api/updateAppointment/' . $appointment->id, [
+            'doctor_id' => $doctor->id,
+            'starts_at' => Carbon::tomorrow()->addMinutes(200)->format('Y-m-d H:i:s'),
+            'ends_at' => Carbon::tomorrow()->addMinutes(215)->format('Y-m-d H:i:s'),
+            'status' => 'confirmed',
+            'notes' => fake()->paragraph(),
+            ]);
+        $response->assertStatus(200);
+    }
+
+    public function test_update_blocked_when_end_date_changed_to_pre_start_date(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+
+        $appointment = Appointment::factory()->create([
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+            'starts_at' => Carbon::tomorrow()->addMinutes(60)->format('Y-m-d H:i:s'),
+            'ends_at' => Carbon::tomorrow()->addMinutes(85)->format('Y-m-d H:i:s'),
+            'status' => 'pending',
+            'notes' => fake()->paragraph(),
+            ]);
+
+        $response = $this->putJson('/api/updateAppointment/' . $appointment->id, [
+           'doctor_id' => $doctor->id,
+           'starts_at' => Carbon::tomorrow()->addMinutes(60)->format('Y-m-d H:i:s'),
+           'ends_at' => Carbon::tomorrow()->addMinutes(45)->format('Y-m-d H:i:s'),
+           'status' => 'pending',
+           'notes' => fake()->paragraph(),
+        ]);
+        $response->assertStatus(422);
+    }
+
+    public function test_update_blocked_when_start_date_changed_to_post_end_date(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+
+        $appointment = Appointment::factory()->create([
+           'patient_id' => $patient->id,
+           'doctor_id' => $doctor->id,
+        ]);
+
+        $response = $this->putJson('/api/updateAppointment/' . $appointment->id, [
+            'doctor_id' => $doctor->id,
+            'starts_at' => Carbon::tomorrow()->addMinutes(100)->format('Y-m-d H:i:s'),
+            'ends_at' => Carbon::tomorrow()->addMinutes(85)->format('Y-m-d H:i:s'),
+        ]);
+        $response->assertStatus(422);
     }
 
 }
