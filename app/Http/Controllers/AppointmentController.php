@@ -92,20 +92,19 @@ class AppointmentController extends Controller
             'message' => 'All appointments',
         ], 200);
     }
-    public function test_get_all_appointments_works(): void {
-        $patient = User::factory()->create();
-        $patient->assignRole('patient');
-        Sanctum::actingAs($patient);
 
-        Appointment::factory()->count(5)->create([
-            'patient_id' => $patient->id,
-            'status' => 'confirmed',
-            'starts_at' => now()->addHour(),
-        ]);
+    public function deleteAppointment(Request $request, $id) {
+        $user = auth()->user();
 
-        $response = $this->getJson('/api/getAllMyAppointments');
-        $response->assertStatus(200);
-        $response->assertJsonCount(5, 'appointments');
+        $appointment = Appointment::findOrFail($request->id);
+        $this->authorize('delete', $appointment);
+
+
+
+
+
+        $appointment->delete();
+        return response()->json(['message' => 'appointment deleted'], 200);
     }
 
 }

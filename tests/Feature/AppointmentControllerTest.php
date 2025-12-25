@@ -508,4 +508,51 @@ class AppointmentControllerTest extends TestCase
           $response->assertJsonCount(5, 'appointments');
 
          }
+
+         public function test_no_appointments_correct_json(): void {
+             $patient = User::factory()->create();
+             $patient->assignRole('patient');
+             Sanctum::actingAs($patient);
+
+             $response = $this->getJson('/api/getAllMyAppointments');
+             $response->assertStatus(200);
+             $response->assertJsonStructure([
+                 'message',
+             ]);
+         }
+
+         public function test_correct_json_response(): void {
+           $patient = User::factory()->create();
+           $patient->assignRole('patient');
+           Sanctum::actingAs($patient);
+
+           Appointment::factory()->count(10)->create([
+               'patient_id' => $patient->id,
+               'starts_at' => now()->addHour(),
+               'status' => 'confirmed',
+           ]);
+           $response = $this->getJson('/api/getAllMyAppointments');
+           $response->assertStatus(200);
+           $response->assertJsonStructure([
+               'message', 'appointments',
+           ]);
+    }
+
+    public function test_delete_appointment(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $appointment = Appointment::factory()->create([
+           'patient_id' => $patient->id,
+           'starts_at' => now()->addHour(),
+           'status' => 'confirmed',
+        ]);
+        $this->assertDatabaseCount('appointments', 1);
+
+        $response = $this->deleteJson('/api/deleteAppointment/' . $appointment->id);
+        $this->assertDatabaseCount('appointments', 0);
+    }
+
+
 }
