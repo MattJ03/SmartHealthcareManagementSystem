@@ -400,4 +400,28 @@ class AppointmentControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
+    public function test_notes_is_updated(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+
+        $appointment = Appointment::factory()->create([
+           'patient_id' => $patient->id,
+           'doctor_id' => $doctor->id,
+        ]);
+        $response = $this->putJson('/api/updateAppointment/' . $appointment->id, [
+            'doctor_id' => $doctor->id,
+            'starts_at' => Carbon::tomorrow()->addMinutes(100)->format('Y-m-d H:i:s'),
+            'ends_at' => Carbon::tomorrow()->addMinutes(115)->format('Y-m-d H:i:s'),
+            'status' => 'cancelled',
+            'notes' => 'Chud site Twin',
+        ]);
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('appointments', [
+           'notes' => 'Chud site Twin',
+        ]);
+    }
+
 }

@@ -68,6 +68,28 @@ class AppointmentController extends Controller
             abort_unless($user->id === $appointment->patient_id, 403);
         }
         $appointment = $appointmentService->updateAppointment($appointment->id, $validatedData);
+    }
 
+    public function getAllMyAppoinments(Request $request) {
+        $user = auth()->user();
+
+        abort_unless($user->hasRole('patient'), 403);
+
+        $appointments = Appointment::where('patient_id', $user->id)
+                                     ->where('status', 'confirmed')
+                                     ->where('starts_at', '=>', now())
+                                     ->get();
+
+        if($appointments->isEmpty()) {
+            return response()->json([
+                'message' => 'there are no appointments',
+                'appointments' => [],
+            ], 200);
+
+        }
+        return response()->json([
+            'appointments' => $appointments->get(),
+            'message' => 'All appointments',
+        ], 200);
     }
 }
