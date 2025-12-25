@@ -49,4 +49,26 @@ class AppointmentController extends Controller
         ], 201);
 
     }
+
+    public function updateAppointment(Request $request, AppointmentService $appointmentService) {
+        $this->authorize('update', Appointment::class);
+
+        $validatedData = $request->validate([
+           'doctor_id' => 'required|exists:users,id',
+           'starts_at' => 'required',
+            'ends_at' => 'required|after:starts_at',
+            'status' => 'required|in:pending,confirmed,cancelled,completed',
+            'notes' => 'nullable',
+        ]);
+        $appointment = Appointment::findOrFail($request->id);
+
+        $user = auth()->user();
+        if($user->hasRole('patient')) {
+            abort_unless($user->id === $appointment->patient_id, 403);
+        }
+        $appointment = $appointmentService->updateAppointment($appointment->id, $validatedData);
+
+
+
+    }
 }

@@ -43,4 +43,42 @@ class AppointmentService {
 
     }
 
+    public function updateAppointment(int $appointmentId, array $data): Appointment {
+        $appointment = Appointment::findOrFail($appointmentId);
+        if(!$appointment) {
+           throw new \Exception('Appointment not found');
+        }
+
+        DB::transaction(function () use ($appointment, $data) {
+           $conflicts = Appointment::where('doctor_id', $data['doctor_id'])
+                                           ->where('status', '!=', 'cancelled')
+                                          ->where(function ($query) use ($data) {
+                                              $query->where('starts_at', '=<', $data['starts_at'])
+                                                  ->where('ends_at', '<=', $data['ends_at']);
+                                          })
+               ->lockForUpdate()
+               ->exists();
+           if($conflicts)  {
+               throw ValidationException::withMessages([
+                   'starts_at' => 'The start date and end date has already been taken.',
+               ]);
+           }
+
+           $doctor = User::findOrFail($data['doctor_id']);
+           abort_unless($doctor->hasRole('doctor'), 403);
+
+            $appointment->update([
+              'doctor_id' => $doctor->id,
+              'starts_at' => Carbon::parse($data['starts_at']),
+              'ends_at' => Carbon::parse($data['ends_at']),
+              'status' => $data['status'],
+              'notes' => $data['notes'] ?? null,
+
+
+           ]);
+
+            return $appointment;
+        });
+    }
+
 }
