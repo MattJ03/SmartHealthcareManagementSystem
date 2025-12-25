@@ -51,7 +51,8 @@ class AppointmentController extends Controller
     }
 
     public function updateAppointment(Request $request, AppointmentService $appointmentService) {
-        $this->authorize('update', Appointment::class);
+        $appointment = Appointment::findOrFail($request->id);
+        $this->authorize('update', $appointment);
 
         $validatedData = $request->validate([
            'doctor_id' => 'required|exists:users,id',
@@ -60,7 +61,7 @@ class AppointmentController extends Controller
             'status' => 'required|in:pending,confirmed,cancelled,completed',
             'notes' => 'nullable',
         ]);
-        $appointment = Appointment::findOrFail($request->id);
+
 
         $user = auth()->user();
         if($user->hasRole('patient')) {

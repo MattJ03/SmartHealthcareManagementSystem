@@ -14,7 +14,8 @@ use Database\Factories\AppointmentFactory;
 use Carbon\Carbon;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
-
+use Nette\Utils\Json;
+use Nette\Schema\ValidationException;
 
 class AppointmentControllerTest extends TestCase
 {
@@ -287,9 +288,22 @@ class AppointmentControllerTest extends TestCase
         $patient->assignRole('patient');
         Sanctum::actingAs($patient);
 
-        $appointment = Appointment::factory()->make()->toArray();
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
 
-        $response = $this->putJ
+        $appointment = Appointment::factory()->create([
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $response = $this->putJson('/api/updateAppointment/' . $appointment->id , [
+           'doctor_id' => $doctor->id,
+            'starts_at' => Carbon::tomorrow()->addMinutes(60)->format('Y-m-d H:i:s'),
+            'ends_at' => Carbon::tomorrow()->addMinutes(85)->format('Y-m-d H:i:s'),
+            'status' => 'pending',
+            'notes' => fake()->paragraph(),
+        ]);
+        $response->assertStatus(200);
     }
 
 }

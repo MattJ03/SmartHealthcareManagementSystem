@@ -16,8 +16,8 @@ class AppointmentService {
             $conflicts = Appointment::where('doctor_id', $data['doctor_id'])
                 ->where('status', '!=', 'cancelled')
                 ->where(function ($query) use ($data) {
-                    $query->where('starts_at', '<=', $data['ends_at'])
-                    ->where('ends_at', '>=', $data['starts_at']);
+                    $query->where('starts_at', '<', $data['ends_at'])
+                    ->where('ends_at', '>', $data['starts_at']);
                 })
                 ->lockForUpdate()
                 ->exists();
@@ -49,12 +49,12 @@ class AppointmentService {
            throw new \Exception('Appointment not found');
         }
 
-        DB::transaction(function () use ($appointment, $data) {
+       return DB::transaction(function () use ($appointment, $data) {
            $conflicts = Appointment::where('doctor_id', $data['doctor_id'])
                                            ->where('status', '!=', 'cancelled')
                                           ->where(function ($query) use ($data) {
-                                              $query->where('starts_at', '=<', $data['starts_at'])
-                                                  ->where('ends_at', '<=', $data['ends_at']);
+                                              $query->where('starts_at', '<', $data['starts_at'])
+                                                  ->where('ends_at', '>', $data['ends_at']);
                                           })
                ->lockForUpdate()
                ->exists();
@@ -76,9 +76,9 @@ class AppointmentService {
 
 
            ]);
-
-            return $appointment;
+           return $appointment;
         });
+
     }
 
 }
