@@ -99,6 +99,7 @@ class AppointmentController extends Controller
         $this->authorize('delete', $appointment);
 
         $appointment->delete();
+        return response()->json(['message' => 'Appointment deleted'], 200);
     }
 
 }

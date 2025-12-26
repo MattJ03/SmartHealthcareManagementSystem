@@ -424,6 +424,35 @@ class AppointmentControllerTest extends TestCase
         ]);
     }
 
+    public function test_patient_cannot_update_appointment_that_is_not_theirs(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+
+        $patient2 = User::factory()->create();
+        $patient2->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $appointment = Appointment::factory()->create([
+            'patient_id' => $patient2->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $response = $this->putJson('/api/updateAppointment/' . $appointment->id, [
+            'doctor_id' => $doctor->id,
+            'starts_at' => Carbon::tomorrow()->addMinutes(100)->format('Y-m-d H:i:s'),
+            'ends_at' => Carbon::tomorrow()->addMinutes(115)->format('Y-m-d H:i:s'),
+            'status' => 'cancelled',
+            'notes' => 'Chud site Twin',
+        ]);
+        $response->assertStatus(403);
+        $this->assertDatabaseMissing('appointments', [
+            'notes' => 'Chud site Twin',
+        ]);
+    }
+
     public function test_get_all_appointments_works(): void {
         $patient = User::factory()->create();
         $patient->assignRole('patient');
