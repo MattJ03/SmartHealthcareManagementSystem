@@ -26,6 +26,9 @@ class AppointmentController extends Controller
 
 
         $user = auth()->user();
+
+
+
         if($user->hasRole('patient')) {
             $patientId = $user->id;
         }

@@ -283,6 +283,33 @@ class AppointmentControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
+    public function test_cannot_book_overlapping_appointment(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        Sanctum::actingAs($patient);
+
+        Appointment::factory()->create([
+           'doctor_id' => $doctor->id,
+           'starts_at' => Carbon::tomorrow()->addMinutes(60)->format('Y-m-d H:i:s'),
+           'ends_at' => Carbon::tomorrow()->addMinutes(75)->format('Y-m-d H:i:s'),
+            'status' => 'confirmed',
+            'notes' => fake()->paragraph(),
+        ]);
+
+        $appointment2 = [
+            'doctor_id' => '=> $doctor->id',
+            'starts_at' => Carbon::tomorrow()->addMinutes(55)->format('Y-m-d H:i:s'),
+            'ends_at' => Carbon::tomorrow()->addMinutes(75)->format('Y-m-d H:i:s'),
+            'status' => 'confirmed',
+            'notes' => fake()->paragraph(),
+        ];
+
+        $response = $this->postJson('/api/storeAppointment', $appointment2);
+        $response->assertStatus(422);
+        $this->assertDatabaseMissing('appointments', $appointment2);
+    }
+
+
     public function test_appointment_can_be_updated(): void {
         $patient = User::factory()->create();
         $patient->assignRole('patient');
@@ -678,6 +705,23 @@ class AppointmentControllerTest extends TestCase
         $response = $this->deleteJson('/api/deleteAppointment/' . $appointment->id);
         $response->assertStatus(403);
         $this->assertDatabaseCount('appointments', 1);
+    }
+
+    public function test_correct_json_response_delete(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $appointment = Appointment::factory()->create([
+            'patient_id' => $patient->id,
+        ]);
+        $this->assertDatabaseCount('appointments', 1);
+        $response = $this->deleteJson('/api/deleteAppointment/' . $appointment->id);
+        $response->assertStatus(200);
+        $this->assertDatabaseCount('appointments', 0);
+        $response->assertJsonFragment([
+            'message' => 'Appointment deleted',
+        ]);
     }
 
 }
