@@ -635,6 +635,20 @@ class AppointmentControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_patient_cannot_
+    public function test_patient_cannot_delete_appointment_thats_not_theirs(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+
+        $patient2 = User::factory()->create();
+        $patient2->assignRole('patient');
+        Sanctum::actingAs($patient);
+        $appointment = Appointment::factory()->create([
+            'patient_id' => $patient2->id,
+        ]);
+        $this->assertDatabaseCount('appointments', 1);
+        $response = $this->deleteJson('/api/deleteAppointment/' . $appointment->id);
+        $response->assertStatus(403);
+        $this->assertDatabaseCount('appointments', 1);
+    }
 
 }
