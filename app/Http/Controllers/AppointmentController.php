@@ -95,16 +95,10 @@ class AppointmentController extends Controller
 
     public function deleteAppointment(Request $request, $id) {
         $user = auth()->user();
-
-        $appointment = Appointment::findOrFail($request->id);
+        $appointment = Appointment::findOrFail($id);
         $this->authorize('delete', $appointment);
 
-
-
-
-
         $appointment->delete();
-        return response()->json(['message' => 'appointment deleted'], 200);
     }
 
 }

@@ -554,5 +554,87 @@ class AppointmentControllerTest extends TestCase
         $this->assertDatabaseCount('appointments', 0);
     }
 
+    public function test_attribute_not_found_after_delete(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $appointment = Appointment::factory()->create([
+           'patient_id' => $patient->id,
+           'starts_at' => now()->addHour(),
+           'status' => 'confirmed',
+        ]);
+        $this->assertDatabaseCount('appointments', 1);
+
+        $response = $this->deleteJson('/api/deleteAppointment/' . $appointment->id);
+
+        $this->assertDatabaseCount('appointments', 0);
+        $this->assertDatabaseMissing('appointments', [
+            'patient_id' => $patient->id,
+        ]);
+    }
+
+    public function test_delete_doesnt_delete_entire_appointments_table(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $appointment = Appointment::factory()->count(3)->create([
+            'patient_id' => $patient->id,
+        ]);
+        $this->assertDatabaseCount('appointments', 3);
+
+        $appointment1 = Appointment::factory()->create([
+            'patient_id' => $patient->id,
+        ]);
+        $response = $this->deleteJson('/api/deleteAppointment/' . $appointment1->id);
+        $this->assertDatabaseCount('appointments', 3);
+    }
+
+    public function test_admin_can_delete_appointment_booked_by_patient(): void { //dont sanctum admin yet wanna see code
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        Sanctum::actingAs($admin);
+
+        $appointment = Appointment::factory()->create([
+           'patient_id' => $patient->id,
+        ]);
+
+        $response = $this->deleteJson('/api/deleteAppointment/' . $appointment->id);
+        $response->assertStatus(200);
+        $this->assertDatabaseCount('appointments', 0);
+    }
+
+    public function test_doctor_can_delete_appointment_booked_by_patient(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+        Sanctum::actingAs($doctor);
+
+        $appointment = Appointment::factory()->create([
+            'patient_id' => $patient->id,
+        ]);
+        $this->assertDatabaseCount('appointments', 1);
+
+        $response = $this->deleteJson('/api/deleteAppointment/' . $appointment->id);
+        $response->assertStatus(200);
+        $this->assertDatabaseCount('appointments', 0);
+    }
+
+    public function test_cannot_delete_appointment_thats_not_booked(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $response = $this->deleteJson('/api/deleteAppointment/' . 5);
+        $response->assertStatus(404);
+    }
+
+    public function test_patient_cannot_
 
 }
