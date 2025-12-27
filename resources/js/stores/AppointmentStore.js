@@ -4,6 +4,7 @@ import api from '../axios.js';
 
 export const useAppointmentStore = defineStore('appointment', () => {
     const role = ref(localStorage.getItem('role'));
+    const doctor = ref(null);
     const loading = ref(false);
     const error = ref(null);
     const appointment = ref(null);
@@ -63,6 +64,20 @@ export const useAppointmentStore = defineStore('appointment', () => {
             patientAppointments.value = patientAppointments.value.filter(a => a.id !== id);
         } catch (error) {
             error.value = error.response?.data?.message ?? 'Failed to delete';
+        } finally {
+            loading.value = false;
+        }
+    }
+
+    const getAppointment = async (id) => {
+        loading.value = true;
+        error.value = '';
+        try {
+            const res = await api.get(`/getMyAppointment/${id}`);
+            appointment.value = res.data.appointment;
+            doctor.value = res.data.doctor_name;
+        } catch (error) {
+            error.value = error.response?.data?.message ?? 'Failed to get Appointment';
         } finally {
             loading.value = false;
         }

@@ -106,4 +106,16 @@ class AppointmentController extends Controller
         return response()->json(['message' => 'Appointment deleted'], 200);
     }
 
+    public function getAppointment($id) {
+        $user = auth()->user();
+        $appointment = Appointment::findOrFail($id);
+        $this->authorize('view', $appointment);
+
+        return response()->json([
+            'appointment' => $appointment,
+            'doctor_name' => $appointment->doctor->name,
+            'message' => 'appointment details',
+        ], 200);
+    }
+
 }

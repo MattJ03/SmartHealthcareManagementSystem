@@ -4,12 +4,17 @@
         <h1 class="welcome-name">Welcome back, {{ name }}</h1>
         <p class="welcome-name">How are feeling today?</p>
     </div>
+
+    <div class="red-container" >
     <div class="next-appointment-container">
         <div class="next-appoint-clock">
         <img :src="clock" class="img" alt="clock" />
        <h2>Next Appointment</h2>
         </div>
         <button class="view-details-btn">View Details</button>
+    </div>
+        <h2 class="annual-checkup"><strong>Annual Checkup</strong></h2>
+        <p> With Dr. </p>
     </div>
 
 
@@ -29,6 +34,16 @@ const { name } = storeToRefs(store);
 
 </script>
 <style style>
+
+.red-container {
+    background-color: #C0392B;
+    width: 85%;
+    margin: auto;
+    color: #FFFFFF;
+    padding: 20px;
+    border-radius: 14px;
+
+}
 .welcome-container {
    padding-left: 120px;
     padding-right: 20px;
@@ -47,18 +62,7 @@ const { name } = storeToRefs(store);
 .next-appointment-container {
     display: flex;
     align-items: center;
-    margin: auto;
-
     justify-content: space-between;
-
-    background-color: #C0392B;
-    color: #FFFFFF;
-    width: 85%;
-    padding: 20px;
-    border-radius: 14px;
-    margin-top: 30px;
-
-
 }
 
 .view-details-btn {
@@ -69,6 +73,7 @@ const { name } = storeToRefs(store);
     background-color: #FFFFFF;
     border-radius: 14px;
     font-size: 16px;
+    color: #C0392B;
 }
 .view-details-btn:hover {
     background-color: #f0f0f0;
@@ -84,6 +89,10 @@ const { name } = storeToRefs(store);
     justify-content: center;
     align-items: center;
     gap: 15px;
+}
+
+.annual-checkup {
+    font-size: 30px;
 }
 
 </style>

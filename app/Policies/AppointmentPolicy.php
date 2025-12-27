@@ -47,6 +47,9 @@ class AppointmentPolicy
     {
         return $user->id === $appointment->patient_id || $user->hasRole(['doctor', 'admin']);
     }
+    public function view(User $user, Appointment $appointment): bool {
+        return $user->hasRole(['admin']) || $user->id === $appointment->patient_id || $appointment->doctor_id === $user->id;
+    }
 
     /**
      * Determine whether the user can restore the model.
