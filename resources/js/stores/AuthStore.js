@@ -54,7 +54,6 @@ export const useAuthStore = defineStore('auth', () => {
            throw error;
        } finally {
            loading.value = false;
-
        }
     }
 

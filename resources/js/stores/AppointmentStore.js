@@ -17,7 +17,7 @@ export const useAppointmentStore = defineStore('appointment', () => {
           const res = await api.get('/getAllMyAppointments');
           patientAppointments.value = res.data.appointments;
       } catch (error) {
-          error.value = error.response?.message ?? 'Failing to load appointments';
+          error.value = error.response?.data?.message ?? 'Failing to load appointments';
         } finally {
           loading.value = false;
       }
@@ -30,7 +30,7 @@ export const useAppointmentStore = defineStore('appointment', () => {
             const res = await api.post(`/storeAppointment`, payload);
             patientAppointments.value.push(res.data.appointment);
         } catch (error) {
-            error.value = error.response?.message;
+            error.value = error.response?.data?.message;
         } finally {
             loading.value = false;
         }
@@ -41,10 +41,28 @@ export const useAppointmentStore = defineStore('appointment', () => {
         error.value = '';
         try {
             const res = await api.put(`/updateAppointment/${id}`, payload);
-            appointment.value = res.data.appointment;
-            return res.data;
+            const updated = res.data.appointment;
+
+            const index = patientAppointments.value.findIndex(a => a.id === id);
+            if(index !== 1) {
+                patientAppointments.value[index] = updated;
+            }
+            return updated;
         } catch (error) {
-            error.value = error.response?.message ?? 'Failed to Update';
+            error.value = error.response?.data?.message ?? 'Failed to Update';
+        } finally {
+            loading.value = false;
+        }
+    }
+
+    const deleteAppointment = async (id) => {
+        loading.value = true;
+        error.value = '';
+        try {
+            const res = await api.delete(`/deleteAppointment/${id}`);
+            patientAppointments.value = patientAppointments.value.filter(a => a.id !== id);
+        } catch (error) {
+            error.value = error.response?.data?.message ?? 'Failed to delete';
         } finally {
             loading.value = false;
         }
