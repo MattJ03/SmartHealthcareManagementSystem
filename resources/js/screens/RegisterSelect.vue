@@ -75,7 +75,7 @@ async function moveAdminCreate() {
 .title-labels {
     font-size: 40px;
     text-align: center;
-    color: #FFFFFF;
+    color: #000000;
 }
 .patient-img:hover {
     filter: grayscale(100%);

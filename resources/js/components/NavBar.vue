@@ -27,12 +27,12 @@ const authStore = useAuthStore();
     align-items: center;
     gap: 1rem;
     height: 90px;
-    background-color: #FFFFFF;
+    background-color: #C0392B;
 }
 .btn-create-account {
   height: 50px;
-    color: #FFFFFF;
-    background-color: #C0392B;
+    color: #000000;
+    background-color: #FAF9F6;
     border-radius: 14px;
     font-size: 16px;
     border: none;
