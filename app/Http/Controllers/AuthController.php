@@ -101,7 +101,8 @@ class AuthController extends Controller
         Log::info($createdUser->id . ' account created, next will be assigned to admin role');
         $createdUser->assignRole('admin');
         Log::info($createdUser->id . ' assigned to admin role');
-        return response()->json(['message' => 'Admin Registered Successfully'], 201);
+        return response()->json(['message' => 'Admin Registered Successfully',
+                                  'user' => $createdUser], 201);
     }
 
     public function login(Request $request) {
@@ -121,6 +122,7 @@ class AuthController extends Controller
            'token' => $token,
            'token_type' => 'Bearer',
            'role' => $user->getRoleNames()->first(),
+            'name' => $user->name,
         ]);
     }
 }
