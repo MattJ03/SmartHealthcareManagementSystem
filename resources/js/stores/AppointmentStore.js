@@ -75,6 +75,10 @@ export const useAppointmentStore = defineStore('appointment', () => {
          appointment,
          patientAppointments,
          hasAppointments,
+         fetchAllMyAppointments,
+         createAppointment,
+         updateAppointment,
+         deleteAppointment,
      };
 
 });
