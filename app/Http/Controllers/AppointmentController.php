@@ -23,11 +23,7 @@ class AppointmentController extends Controller
             'notes' => 'nullable',
         ]);
 
-
-
         $user = auth()->user();
-
-
 
         if($user->hasRole('patient')) {
             $patientId = $user->id;
