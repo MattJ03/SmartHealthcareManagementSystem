@@ -68,4 +68,13 @@ export const useAppointmentStore = defineStore('appointment', () => {
         }
     }
 
+     return {
+        role,
+        loading,
+        error,
+         appointment,
+         patientAppointments,
+         hasAppointments,
+     };
+
 });
