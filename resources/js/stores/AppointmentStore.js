@@ -23,4 +23,17 @@ export const useAppointmentStore = defineStore('appointment', () => {
       }
     };
 
+    const createAppointment = async (payload) => {
+        loading.value = true;
+        error.value = '';
+        try {
+            const res = await api.post(`/storeAppointment`, payload);
+            patientAppointments.value.push(res.data.appointment);
+        } catch (error) {
+            error.value = error.response?.message;
+        } finally {
+            loading.value = false;
+        }
+    }
+
 });
