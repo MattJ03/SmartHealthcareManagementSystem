@@ -36,4 +36,18 @@ export const useAppointmentStore = defineStore('appointment', () => {
         }
     }
 
+    const updateAppointment = async (payload, id) => {
+        loading.value = true;
+        error.value = '';
+        try {
+            const res = await api.put(`/updateAppointment/${id}`, payload);
+            appointment.value = res.data.appointment;
+            return res.data;
+        } catch (error) {
+            error.value = error.response?.message ?? 'Failed to Update';
+        } finally {
+            loading.value = false;
+        }
+    }
+
 });

@@ -480,6 +480,33 @@ class AppointmentControllerTest extends TestCase
         ]);
     }
 
+    public function test_correct_json_returned_from_success_update(): void {
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+
+        $appointment = Appointment::factory()->create([
+            'patient_id' => $patient->id,
+
+        ]);
+
+        $response = $this->putJson('/api/updateAppointment/' . $appointment->id, [
+            'doctor_id' => $doctor->id,
+            'starts_at' => Carbon::tomorrow()->addMinutes(100)->format('Y-m-d H:i:s'),
+            'ends_at' => Carbon::tomorrow()->addMinutes(115)->format('Y-m-d H:i:s'),
+            'status' => 'pending',
+            'notes' => 'Chungus Site',
+        ]);
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+           'appointment',
+           'message'
+        ]);
+    }
+
     public function test_get_all_appointments_works(): void {
         $patient = User::factory()->create();
         $patient->assignRole('patient');

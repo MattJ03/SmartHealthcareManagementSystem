@@ -67,6 +67,11 @@ class AppointmentController extends Controller
             abort_unless($user->id === $appointment->patient_id, 403);
         }
         $appointment = $appointmentService->updateAppointment($appointment->id, $validatedData);
+
+        return response()->json([
+           'appointment' => $appointment,
+           'message' => 'Appointment updated successfully',
+        ]);
     }
 
     public function getAllMyAppointments() {
