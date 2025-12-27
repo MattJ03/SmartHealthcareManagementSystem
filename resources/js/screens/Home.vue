@@ -1,7 +1,8 @@
 <template>
     <NavBar></NavBar>
     <div class="welcome-container">
-        <h1 class="welcome-name"> Welcome back {{ name }}</h1>
+        <h1 class="welcome-name">Welcome back {{ name }}</h1>
+        <p class="welcome-name">How are feeling today?</p>
     </div>
 
 
@@ -27,5 +28,11 @@ const { name } = storeToRefs(store);
 }
 .welcome-name {
     color: #000000;
+    margin-bottom: 0;
+}
+
+.welcome-container p {
+    font-size: 20px;
+     margin-top: 10px;
 }
 </style>
