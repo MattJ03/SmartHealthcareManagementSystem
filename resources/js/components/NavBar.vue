@@ -1,7 +1,7 @@
 <template>
    <nav class="nav-bar">
        <div class="logo">
-           <img :src="pill" class="logo" alt="logo" />
+           <img :src="whitePill" class="logo" alt="logo" />
        </div>
        <div class="nav-links">
            <button v-if="authStore.isAdmin" class="btn-create-account" type="button" @click="moveToRegister"> Create New User</button>
@@ -9,7 +9,7 @@
    </nav>
 </template>
 <script setup>
-import pill from '../assets/pill.PNG';
+import whitePill from "../assets/whitePill.png"
 import {useAuthStore} from "../stores/AuthStore.js";
 import router from "../router/index.js";
 
