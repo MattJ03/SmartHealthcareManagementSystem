@@ -46,7 +46,7 @@ export const useAppointmentStore = defineStore('appointment', () => {
             const updated = res.data.appointment;
 
             const index = patientAppointments.value.findIndex(a => a.id === id);
-            if(index !== 1) {
+            if(index !== -1) {
                 patientAppointments.value[index] = updated;
             }
             return updated;
@@ -84,21 +84,28 @@ export const useAppointmentStore = defineStore('appointment', () => {
         }
     }
 
-        const fetchUpcomingAppointment = async () => {
-            loading.value = true;
-            error.value = '';
-            try {
-                const res = await api.get('/upcomingAppointments');
-                nextAppointment.value = res.data.upcoming.length > 0 ? res.data.upcoming[0]: null;
-            } catch (error) {
-                error.value = error.response?.data?.message ?? 'Failed to fetch Appointment';
-            } finally {
-                loading.value = false;
+    const fetchUpcomingAppointment = async () => {
+        loading.value = true;
+        error.value = '';
+        try {
+            const res = await api.get('/upcomingAppointments');
+
+            nextAppointment.value = res.data.upcoming?.[0] ?? null;
+
+            if (nextAppointment.value && nextAppointment.value.doctor) {
+                doctor.value = nextAppointment.value.doctor.name;
+            } else {
+                doctor.value = null;
             }
+        } catch (error) {
+            error.value = error.response?.data?.message ?? 'Failed to fetch Appointment';
+        } finally {
+            loading.value = false;
+        }
+    };
 
-    }
 
-     return {
+    return {
         role,
         loading,
         error,

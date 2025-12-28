@@ -14,23 +14,31 @@
         <button class="view-details-btn">View Details</button>
     </div>
         <h2 class="annual-checkup"><strong>Annual Checkup</strong></h2>
-        <p> With Dr. </p>
+        <p v-if="nextAppointment"> With Dr. {{ doctorName }} </p>
     </div>
 
 
 </template>
 <script setup>
 import NavBar from "../components/NavBar.vue";
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
 import router from "../router/index.js";
 import { useAuthStore } from "../stores/AuthStore.js";
+import { useAppointmentStore } from "../stores/AppointmentStore.js";
 import { storeToRefs } from "pinia";
 import clock from '../assets/clock.png';
 
 const store = useAuthStore();
+const appointmentStore = useAppointmentStore();
 
 const { name } = storeToRefs(store);
+const { nextAppointment } = storeToRefs(appointmentStore)
 
+onMounted(() => {
+    appointmentStore.fetchUpcomingAppointment();
+})
+
+const doctorName = computed(() => nextAppointment.value?.doctor?.name ?? '');
 
 </script>
 <style style>

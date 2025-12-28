@@ -13,16 +13,13 @@ class AppointmentPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->hasRole(['patient', 'doctor', 'admin']);
     }
+
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Appointment $appointment): bool
-    {
-        return false;
-    }
 
     /**
      * Determine whether the user can create models.
