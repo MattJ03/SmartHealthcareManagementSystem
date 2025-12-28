@@ -15,10 +15,17 @@
     </div>
         <h2 class="scheduled-appointment"><strong>Scheduled Appointment</strong></h2>
         <p v-if="nextAppointment" class="doctor-text"> With Dr. {{ doctorName }} </p>
+        <div class="three-squares">
         <div v-if="appointmentDate" class="checkup-square">
             <p class="checkup-dates">Date</p>
             <p class="checkup-dates"> {{ appointmentDate }}</p>
         </div>
+            <div class="time-square">
+                <p class="checkup-dates">Time</p>
+                <p class="checkup-dates"> {{ appointmentTime }} {{ appointmentPeriod }}</p>
+            </div>
+        </div>
+
     </div>
 
 
@@ -31,6 +38,7 @@ import { useAuthStore } from "../stores/AuthStore.js";
 import { useAppointmentStore } from "../stores/AppointmentStore.js";
 import { storeToRefs } from "pinia";
 import clock from '../assets/clock.png';
+import {useFormattedAppointment} from "../composobles/useFormattedAppointment.js";
 
 const store = useAuthStore();
 const appointmentStore = useAppointmentStore();
@@ -44,7 +52,7 @@ onMounted(() => {
 
 const doctorName = computed(() => nextAppointment.value?.doctor?.name ?? '');
 
-const appointmentDate = computed(() => {return nextAppointment.value?.starts_at ?? null});
+const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppointment(nextAppointment);
 
 </script>
 <style style>
@@ -109,6 +117,11 @@ const appointmentDate = computed(() => {return nextAppointment.value?.starts_at 
     font-size: 30px;
     margin-bottom: 12px;
 }
+.three-squares {
+    display: flex;
+    gap: 24px;
+
+}
 
 .checkup-square {
     height: 44px;
@@ -129,11 +142,20 @@ const appointmentDate = computed(() => {return nextAppointment.value?.starts_at 
 }
 
 .checkup-dates {
-    justify-content: space-between;
+
     align-items: center;
     font-size: 16px;
     margin: 0;
     margin-bottom: 8px;
+}
+.time-square {
+    background-color: #8B0000;
+    border-radius: 14px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 0;
 }
 
 

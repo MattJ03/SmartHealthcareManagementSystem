@@ -20,5 +20,11 @@ export function useFormattedAppointment(appointmentRef) {
        });
     });
 
-    return { appointmentDate, appointmentTime };
+    const appointmentPeriod = computed(() => {
+        if(!appointmentRef.value?.starts_at) return '';
+        const date = new Date(appointmentRef.value.starts_at);
+        return date.toLocaleString('en-GB', { hour: '2-digit', hour12: true}).toUpperCase().split(' ')[1];
+    });
+
+    return { appointmentDate, appointmentTime, appointmentPeriod };
 }
