@@ -9,6 +9,7 @@ export const useAppointmentStore = defineStore('appointment', () => {
     const error = ref(null);
     const appointment = ref(null);
     const patientAppointments = ref([]);
+    const nextAppointment = ref(null);
     const hasAppointments = computed(() => patientAppointments.value.length > 0);
 
     const fetchAllMyAppointments = async () => {
@@ -83,17 +84,33 @@ export const useAppointmentStore = defineStore('appointment', () => {
         }
     }
 
+        const fetchUpcomingAppointment = async () => {
+            loading.value = true;
+            error.value = '';
+            try {
+                const res = await api.get('/upcomingAppointments');
+                nextAppointment.value = res.data.upcoming.length > 0 ? res.data.upcoming[0]: null;
+            } catch (error) {
+                error.value = error.response?.data?.message ?? 'Failed to fetch Appointment';
+            } finally {
+                loading.value = false;
+            }
+
+    }
+
      return {
         role,
         loading,
         error,
          appointment,
          patientAppointments,
+         nextAppointment,
          hasAppointments,
          fetchAllMyAppointments,
          createAppointment,
          updateAppointment,
          deleteAppointment,
+         fetchUpcomingAppointment,
      };
 
 });
