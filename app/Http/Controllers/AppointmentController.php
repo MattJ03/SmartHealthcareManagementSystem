@@ -118,4 +118,23 @@ class AppointmentController extends Controller
         ], 200);
     }
 
+    public function upcomingAppointments(Request $request) {
+        $user = auth()->user();
+        $this->authorize('upcoming', Appointment::class);
+
+        $upcoming = Appointment::orderBy('starts_at', 'asc')
+                                        ->where('status', 'confirmed')
+                                        ->where('patient_id', $user->id)
+                                         ->get();
+
+        if($upcoming->isEmpty()) {
+            return response()->json([
+                'message' => 'there are no upcoming appointments',
+            ]);
+        }
+        return response()->json([
+            'upcoming' => $upcoming,
+        ], 200);
+    }
+
 }
