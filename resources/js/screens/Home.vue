@@ -25,8 +25,28 @@
                 <p class="checkup-dates"> {{ appointmentTime }} {{ appointmentPeriod }}</p>
             </div>
         </div>
-
     </div>
+    <div class="quick-actions-container">
+        <h1 class="quick-actions-header">Quick Actions</h1>
+        <div class="quick-actions-row">
+            <div class="quick-actions-white-square">
+                <p class="quick-actions-text">Book Appointment</p>
+            </div>
+            <div class="quick-actions-white-square">
+                <p class="quick-actions-text">Medical Records</p>
+            </div>
+        </div>
+        <div class="quick-actions-row">
+            <div class="quick-actions-white-square">
+                <p class="quick-actions-text">Messages</p>
+            </div>
+            <div class="quick-actions-white-square">
+                <p class="quick-actions-text">Alerts</p>
+            </div>
+        </div>
+    </div>
+
+
 
 
 </template>
@@ -156,6 +176,40 @@ const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppo
     padding-left: 10px;
     padding-right: 10px;
     margin: 0;
+}
+.quick-actions-container {
+    width: 85%;
+    display: flex;
+    flex-direction: column;
+    margin: 24px auto 0 auto;
+    gap: 16px;
+}
+
+.quick-actions-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+.quick-actions-white-square {
+    background-color: #FFFFFF;
+    border: #000000;
+    justify-content: center;
+    align-items: center;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 40px;
+    border-radius: 14px;
+
+}
+.quick-actions-header {
+
+}
+
+.quick-actions-text{
+    display: flex;
+    justify-content: center;
+
+    font-size: 18px;
 }
 
 

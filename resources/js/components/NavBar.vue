@@ -38,6 +38,7 @@ const authStore = useAuthStore();
     border-radius: 14px;
     font-size: 16px;
     border: none;
+    cursor: pointer;
 }
 .logo {
     height: 70px;
