@@ -13,8 +13,12 @@
         </div>
         <button class="view-details-btn">View Details</button>
     </div>
-        <h2 class="annual-checkup"><strong>Annual Checkup</strong></h2>
-        <p v-if="nextAppointment"> With Dr. {{ doctorName }} </p>
+        <h2 class="scheduled-appointment"><strong>Scheduled Appointment</strong></h2>
+        <p v-if="nextAppointment" class="doctor-text"> With Dr. {{ doctorName }} </p>
+        <div v-if="appointmentDate" class="checkup-square">
+            <p class="checkup-dates">Date</p>
+            <p class="checkup-dates"> {{ appointmentDate }}</p>
+        </div>
     </div>
 
 
@@ -39,6 +43,8 @@ onMounted(() => {
 })
 
 const doctorName = computed(() => nextAppointment.value?.doctor?.name ?? '');
+
+const appointmentDate = computed(() => {return nextAppointment.value?.starts_at ?? null});
 
 </script>
 <style style>
@@ -99,8 +105,36 @@ const doctorName = computed(() => nextAppointment.value?.doctor?.name ?? '');
     gap: 15px;
 }
 
-.annual-checkup {
+.scheduled-appointment {
     font-size: 30px;
+    margin-bottom: 12px;
 }
+
+.checkup-square {
+    height: 44px;
+    background-color: #8B0000;
+    width: fit-content;
+    border: none;
+    border-radius: 14px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+
+}
+.doctor-text {
+    font-size: 18px;
+    margin: 2px;
+    margin-bottom: 12px;
+}
+
+.checkup-dates {
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    margin: 0;
+    margin-bottom: 8px;
+}
+
 
 </style>
