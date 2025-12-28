@@ -104,8 +104,7 @@ export const useAppointmentStore = defineStore('appointment', () => {
         }
     };
 
-
-    return {
+     return {
         role,
         loading,
         error,
