@@ -11,4 +11,14 @@ export function useFormattedAppointment(appointmentRef) {
            year: "numeric",
        });
     });
+
+    const appointmentTime = computed(() => {
+       if(!appointmentRef.value?.starts_at) return '';
+       return new Date(appointmentRef.value.starts_at).toLocaleString('en-GB', {
+           hour: "numeric",
+           minute: "numeric",
+       });
+    });
+
+    return { appointmentDate, appointmentTime };
 }
