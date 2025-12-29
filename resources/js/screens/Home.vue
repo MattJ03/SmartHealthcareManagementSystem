@@ -44,6 +44,7 @@
                 <p class="quick-actions-text">Alerts</p>
             </div>
         </div>
+        <UpcomingAppointmentsGrid v-for="appointment in patientAppointments" :key="appointment.id" :appointment="appointment" />
     </div>
 
 
@@ -52,6 +53,7 @@
 </template>
 <script setup>
 import NavBar from "../components/NavBar.vue";
+import UpcomingAppointmentsGrid from "../components/UpcomingAppointmentsGrid.vue";
 import { ref, reactive, computed, onMounted } from 'vue';
 import router from "../router/index.js";
 import { useAuthStore } from "../stores/AuthStore.js";
@@ -64,10 +66,11 @@ const store = useAuthStore();
 const appointmentStore = useAppointmentStore();
 
 const { name } = storeToRefs(store);
-const { nextAppointment } = storeToRefs(appointmentStore)
+const { nextAppointment, patientAppointments } = storeToRefs(appointmentStore)
 
 onMounted(() => {
     appointmentStore.fetchUpcomingAppointment();
+    appointmentStore.fetchAllMyAppointments();
 })
 
 const doctorName = computed(() => nextAppointment.value?.doctor?.name ?? '');
