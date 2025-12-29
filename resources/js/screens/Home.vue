@@ -30,6 +30,7 @@
         <h1 class="quick-actions-header">Quick Actions</h1>
         <div class="quick-actions-row">
             <div class="quick-actions-white-square">
+                <img :src="book" alt="book" class="quick-actions-img" />
                 <p class="quick-actions-text">Book Appointment</p>
             </div>
             <div class="quick-actions-white-square">
@@ -60,6 +61,10 @@ import { useAuthStore } from "../stores/AuthStore.js";
 import { useAppointmentStore } from "../stores/AppointmentStore.js";
 import { storeToRefs } from "pinia";
 import clock from '../assets/clock.png';
+import alert from '../assets/alert.png';
+import messages from '../assets/messages.png'
+import book from '../assets/book.png';
+import history from '../assets/history.png'
 import {useFormattedAppointment} from "../composobles/useFormattedAppointment.js";
 
 const store = useAuthStore();
@@ -150,6 +155,7 @@ const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppo
     height: 44px;
     background-color: #8B0000;
     width: fit-content;
+    height: 50px;
     border: none;
     border-radius: 14px;
     padding-top: 8px;
@@ -170,6 +176,7 @@ const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppo
     font-size: 16px;
     margin: 0;
     margin-bottom: 8px;
+
 }
 .time-square {
     background-color: #8B0000;
@@ -194,26 +201,35 @@ const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppo
     gap: 20px;
 }
 .quick-actions-white-square {
+    position: relative;
     background-color: #FFFFFF;
     border: 1px solid #E9DCC9;
-    justify-content: center;
-    align-items: center;
+    border-radius: 14px;
     padding-top: 50px;
     padding-bottom: 50px;
-    padding-right: 40px;
-    border-radius: 14px;
-
-}
-.quick-actions-header {
-
-}
-
-.quick-actions-text{
+    padding-left: 40px;
+    padding-right: 40;
     display: flex;
     justify-content: center;
+    align-items: center;
+}
 
+.quick-actions-white-square img {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 35px;
+    width: 35px;
+}
+
+
+.quick-actions-text{
+    margin: 0;
     font-size: 18px;
 }
+
+
 
 
 </style>
