@@ -33,7 +33,7 @@ const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppo
     display: flex;
     flex-direction: column;
     justify-content: left;
-    border: 1px solid #000000;
+    border: 1px solid #E9DCC9;
     background-color: #FFFFFF;
 
     padding-left: 10px;

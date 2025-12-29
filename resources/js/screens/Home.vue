@@ -34,18 +34,23 @@
                 <p class="quick-actions-text">Book Appointment</p>
             </div>
             <div class="quick-actions-white-square">
+                <img :src="history" alt="history" class="quick-actions-img" />
                 <p class="quick-actions-text">Medical Records</p>
             </div>
         </div>
         <div class="quick-actions-row">
             <div class="quick-actions-white-square">
+                <img :src="messages" alt="messages" class="quick-actions-img" />
                 <p class="quick-actions-text">Messages</p>
             </div>
             <div class="quick-actions-white-square">
+                <img :src="alert" alt="alert" class="quick-actions-img" />
                 <p class="quick-actions-text">Alerts</p>
             </div>
         </div>
-        <UpcomingAppointmentsGrid v-for="appointment in patientAppointments" :key="appointment.id" :appointment="appointment" />
+        <h2>Upcoming Appointments</h2>
+        <UpcomingAppointmentsGrid v-if="role === 'patient'"  v-for="appointment in patientAppointments" :key="appointment.id" :appointment="appointment" />
+        <DoctorUpcomingAppointmentsGrid v-else-if="role === 'doctor'" v-for="appointment in doctorAppointments" :key="appointment.id" :appointment="appointment" />
     </div>
 
 
@@ -66,19 +71,24 @@ import messages from '../assets/messages.png'
 import book from '../assets/book.png';
 import history from '../assets/history.png'
 import {useFormattedAppointment} from "../composobles/useFormattedAppointment.js";
+import DoctorUpcomingAppointmentsGrid from "../components/DoctorUpcomingAppointmentsGrid.vue";
+
 
 const store = useAuthStore();
 const appointmentStore = useAppointmentStore();
 
-const { name } = storeToRefs(store);
-const { nextAppointment, patientAppointments } = storeToRefs(appointmentStore)
+const { name, role } = storeToRefs(store);
+const { nextAppointment, patientAppointments, doctorAppointments } = storeToRefs(appointmentStore)
 
 onMounted(() => {
     appointmentStore.fetchUpcomingAppointment();
     appointmentStore.fetchAllMyAppointments();
+    appointmentStore.getUpcomingDoctorAppointments();
 })
 
 const doctorName = computed(() => nextAppointment.value?.doctor?.name ?? '');
+
+
 
 const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppointment(nextAppointment);
 
