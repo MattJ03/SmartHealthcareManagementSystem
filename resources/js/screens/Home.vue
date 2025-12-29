@@ -29,7 +29,7 @@
     <div class="quick-actions-container">
         <h1 class="quick-actions-header">Quick Actions</h1>
         <div class="quick-actions-row">
-            <div class="quick-actions-white-square">
+            <div class="quick-actions-white-square" @click="moveToBook">
                 <img :src="book" alt="book" class="quick-actions-img" />
                 <p class="quick-actions-text">Book Appointment</p>
             </div>
@@ -91,6 +91,10 @@ const doctorName = computed(() => nextAppointment.value?.doctor?.name ?? '');
 
 
 const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppointment(nextAppointment);
+
+async function moveToBook() {
+    await router.push('/book-appointment');
+}
 
 </script>
 <style style>
@@ -222,6 +226,7 @@ const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppo
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 .quick-actions-white-square img {
