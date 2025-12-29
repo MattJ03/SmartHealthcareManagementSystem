@@ -192,7 +192,7 @@ const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppo
 }
 .quick-actions-white-square {
     background-color: #FFFFFF;
-    border: #000000;
+    border: 1px solid #E9DCC9;
     justify-content: center;
     align-items: center;
     padding-top: 50px;

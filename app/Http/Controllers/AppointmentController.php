@@ -139,4 +139,24 @@ class AppointmentController extends Controller
         ], 200);
     }
 
+    public function getAllDoctorAppointments() {
+        $user = auth()->user();
+        abort_unless($user->hasRole('doctor'), 403);
+        $appointments = Appointment::with('patient')
+                                         ->where('doctor_id', auth()->id())
+                                         ->where('status', 'confirmed')
+                                         ->where('starts_at', '>=', now())
+                                          ->get();
+        if($appointments->isEmpty()) {
+            return response()->json([
+                'appointments' => [],
+                'message' => 'there are no upcoming appointments',
+            ]);
+        }
+        return response()->json([
+            'appointments' => $appointments,
+            'message' => 'All appointments',
+        ]);
+    }
+
 }
