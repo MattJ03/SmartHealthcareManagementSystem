@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DoctorAvailabilityController;
 use App\Models\PatientProfile;
+use App\Http\Controllers\UserDirectoryController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
@@ -25,4 +26,5 @@ Route::middleware('auth:sanctum')->group(function () {
       $doctorId = $user->profile?->doctor_id;
       return response()->json(['doctorId' => $doctorId]);
    });
+  Route::get('getDoctors', [UserDirectoryController::class, 'getDoctors']);
 });

@@ -1,6 +1,8 @@
 <template>
-    <div class="calendar-container">
+    <NavBar></NavBar>
 
+    <div class="calendar-container">
+       <h1 class="book-appointment">Book Appointment</h1>
         <div class="month-nav">
             <button @click="prevMonth">&lt;</button>
             <span class="month-name">{{ monthName }} {{ currentYear }}</span>
@@ -51,6 +53,8 @@
 import {ref, computed, onMounted} from 'vue';
 import {useAvailabilityStore} from "../stores/AvailabilityStore.js";
 import api from "../axios.js";
+import NavBar from "./NavBar.vue";
+
 
 const today = new Date();
 const currentMonth = ref(today.getMonth());
@@ -234,6 +238,7 @@ async function confirmBooking() {
     padding: 20px;
     width: 400px;
     max-width: 90%;
+    border: 2px solid #FFFFFF;
 }
 
 .slot-list {
@@ -263,6 +268,23 @@ async function confirmBooking() {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+
+}
+
+.modal-actions button {
+    padding: 10px 15px;
+    border: 1px solid #FFFFFF;
+    border-radius: 14px;
+    color: #FFFFFF;
+    background-color: #C0392B;
+    cursor: pointer;
+    font-size: 16px;
+}
+.modal-actions button:hover {
+    background-color: #8B0000;
+}
+.book-appointment {
+    color: #FFFFFF;
 }
 </style>
 
