@@ -8,16 +8,16 @@ export const useAvailabilityStore = defineStore('availability', () => {
     async function getAvailableSlots(doctorId, date) {
         loading.value = true;
         try {
-            const res = await api.get(`/doctors/${doctorId}/availability`, {
-                params: { date }
-            });
-            slots.value = res.data;
-        } catch (error) {
-            error.value = error.response?.message ?? 'failed to get slots';
+            const res = await api.get(`/doctors/${doctorId}/availability`, { params: { date } });
+            slots.value = res.data.slots; // assume backend returns array of available times
+        } catch (err) {
+            console.error(err);
+            slots.value = [];
         } finally {
             loading.value = false;
         }
     }
+
 
     return {
         slots,

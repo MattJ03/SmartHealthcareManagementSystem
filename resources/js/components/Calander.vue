@@ -68,8 +68,6 @@ const doctorId = ref(null);
 
 function selectDate(day) {
     selectedDate.value = new Date(currentYear.value, currentMonth.value, day);
-
-
     showBookingForm.value = true;
     if (doctorId.value) {
         const dateParam = selectedDate.value.toISOString().split('T')[0]; // YYYY-MM-DD
@@ -111,7 +109,7 @@ function nextMonth() {
 
 onMounted(async () => {
     const res = await api.get('/patient/doctor');
-    doctorId.value = res.data.doctorId ?? 5;
+    doctorId.value = res.data.doctorId;
     console.log(doctorId.value);
 });
 

@@ -5,16 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\DoctorProfile;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\Appointment;
+use App\Models\User;
+
 
 class DoctorAvailabilityController extends Controller
 {
-    public function __invoke(Request $request, $doctor) {
-        $doctorId = $doctor;
+    public function __invoke(Request $request, User $doctor) {
+        $profile = $doctor->doctorProfile;
+        if(!$profile) {
+            return response()-> json([]);
+        }
+        $doctorId = $doctor->id;
 
         $date = Carbon::parse($request->query('date'));
         $dateKey = strToLower($date->format('D'));
-
-        $profile = DoctorProfile::where('user_id', $doctorId)->firstOrFail();
 
         $hours = $profile->clinic_hours[$dateKey] ?? null;
 

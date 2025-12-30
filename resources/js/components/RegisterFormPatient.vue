@@ -34,14 +34,27 @@
                     <input type="text" v-model="form.emergency_contact" class="credentials" />
                 </div>
             </div>
+            <div class="row">
+                <div class="field">
+                    <label class="labels">Doctor</label>
+                    <select v-model="form.doctor_id" class="credentials" >
+                        <option value="">-- Select Doctor --</option>
+                        <option v-for="doctor in doctorList" :key="doctor.id" :value="doctor.id" >
+                            {{ doctor.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>
             <button class="btn-reg" type="submit">Register</button>
         </form>
     </div>
 
 </template>
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import {ref, reactive, computed, onMounted} from 'vue';
 import pill from '../assets/pill.PNG';
+import {useUserDirectoryStore} from "../stores/UserDirectoryStore.js";
+
 
 const form = reactive({
     name: '',
@@ -50,13 +63,29 @@ const form = reactive({
     password_confirmation: '',
     contact_number: '',
     emergency_contact: '',
+    doctor_id: '',
 
-})
+});
+const doctors = ref([]);
+
+const userStore = useUserDirectoryStore();
+
+
+
 const emit = defineEmits();
 
 async function submit() {
     emit('submit', {...form});
 }
+
+onMounted( () => {
+     userStore.fetchDoctors();
+});
+const doctorList = computed(() => userStore.doctors);
+
+
+
+
 
 </script>
 <style scoped>

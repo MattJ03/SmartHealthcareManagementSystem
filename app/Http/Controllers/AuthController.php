@@ -14,6 +14,7 @@ use App\Models\DoctorProfile;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Log;
 use App\Services\AuthService;
+use Illuminate\Support\Facades\DB;
 class AuthController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -21,34 +22,32 @@ class AuthController extends Controller
         $this->authorize('create patient');
 
         $data = $request->validate([
-           'name' => 'required|string|max:100',
+            'name' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed|max:50',
             'contact_number' => 'required|string|max:15|min:8',
             'emergency_contact' => 'required|string|max:15|min:8',
-            'doctor_id' => 'nullable|exists:users,id',
-        ]);
-        $user = User::create([
-           'name' => $data['name'],
-           'email' => $data['email'],
-           'password' => Hash::make($data['password']),
-           'contact_number' => $data['contact_number'],
+            'doctor_id' => 'required|exists:users,id',  // Make it required!
         ]);
 
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'contact_number' => $data['contact_number'],
+        ]);
 
         $user->assignRole('patient');
 
-
         PatientProfile::create([
-           'user_id' => $user->id,
-           'emergency_contact' => $data['emergency_contact'],
-            'doctor_id' => $data['doctor_id'] ?? null,
+            'user_id' => $user->id,
+            'emergency_contact' => $data['emergency_contact'],
+            'doctor_id' => $data['doctor_id'],
         ]);
 
-        return response()->json([
-            'message' => 'Patient Registered Successfully'
-        ], 201);
+        return response()->json(['message' => 'Patient registered successfully'], 201);
     }
+
 
     public function doctorRegister(Request $request) {
         $this->authorize('create doctor');
@@ -60,16 +59,16 @@ class AuthController extends Controller
             'contact_number' => 'required|string|max:15|min:8',
             'speciality' => 'nullable|string|max:50',
             'license_number' => 'required|string|min:8|max:15',
-            'clinic_hours' => 'required'
+            'clinic_hours' => 'required|array'
         ]);
 
-       $user = User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'contact_number' => $data['contact_number'],
         ]);
-        Log::info('User registered successfully');
+
         $user->assignRole('doctor');
 
         DoctorProfile::create([
@@ -79,8 +78,9 @@ class AuthController extends Controller
             'clinic_hours' => $data['clinic_hours'],
         ]);
 
-        return response()->json(['message' => 'Doctor Registered Successfully'], 201);
+        return response()->json(['message' => 'Doctor registered successfully', 'doctor_id' => $user->id], 201);
     }
+
 
     public function adminRegister(Request $request) {
         $this->authorize('create admin');
