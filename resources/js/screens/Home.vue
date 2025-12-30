@@ -222,7 +222,7 @@ async function moveToBook() {
     padding-top: 50px;
     padding-bottom: 50px;
     padding-left: 40px;
-    padding-right: 40;
+    padding-right: 40px;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -1,7 +1,8 @@
 <template>
-<h1>HEY</h1>
+<Calander></Calander>
 </template>
 <script setup>
+import Calander from "../components/Calander.vue";
 </script>
 <style scoped>
 </style>
