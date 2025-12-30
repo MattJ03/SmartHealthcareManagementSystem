@@ -23,29 +23,55 @@
                 {{ day }}
             </div>
         </div>
+
+        <div v-if="showBookingForm" class="modal-overlay">
+            <div class="modal-content">
+                <h2>Book Appointment - {{ selectedDateString }}</h2>
+
+                <div v-if="availabilityStore.loading">Loading slots...</div>
+                <div v-else>
+                    <div v-if="availabilityStore.slots.length === 0">No available slots</div>
+                    <ul class="slot-list">
+                        <li v-for="slot in availabilityStore.slots" :key="slot">
+                            <button @click="selectSlot(slot)">{{ slot }}</button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="modal-actions">
+                    <button @click="confirmBooking">Confirm</button>
+                    <button @click="closeModal">Cancel</button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import {ref, computed, onMounted} from 'vue';
+import {useAvailabilityStore} from "../stores/AvailabilityStore.js";
+import api from "../axios.js";
 
-// Current month/year
 const today = new Date();
 const currentMonth = ref(today.getMonth());
 const currentYear = ref(today.getFullYear());
 
+const availabilityStore = useAvailabilityStore();
 const showBookingForm = ref(false);
 const selectedDate = ref(null);
 const bookingTime = ref(null);
+const doctorId = ref(null);
 
- function selectDate(day) {
-     selectedDate.value = new Date(
-         currentYear.value,
-         currentMonth.value,
-         day,
-     );
-     showBookingForm.value = true;
- }
+function selectDate(day) {
+    selectedDate.value = new Date(currentYear.value, currentMonth.value, day);
+
+
+    showBookingForm.value = true;
+    if (doctorId.value) {
+        const dateParam = selectedDate.value.toISOString().split('T')[0]; // YYYY-MM-DD
+        availabilityStore.getAvailableSlots(doctorId.value, dateParam);
+    }
+}
 
 
 const weekdays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -78,6 +104,53 @@ function nextMonth() {
         currentYear.value++;
     }
 }
+
+onMounted(async () => {
+    const res = await api.get('/patient/doctor');
+    doctorId.value = res.data.doctorId ?? 5;
+    console.log(doctorId.value);
+});
+
+function selectSlot(slot) {
+    bookingTime.value = slot;
+}
+
+function closeModal() {
+    showBookingForm.value = false;
+    bookingTime.value = null;
+}
+
+const selectedDateString = computed(() => {
+    if(!selectedDate.value)  return '';
+    return selectedDate.value.toLocaleDateString();
+    });
+
+async function confirmBooking() {
+    if (!bookingTime.value) return alert("Select a slot");
+
+    const startsAt = new Date(selectedDate.value);
+    const [hours, minutes] = bookingTime.value.split(':').map(Number);
+    startsAt.setHours(hours);
+    startsAt.setMinutes(minutes);
+
+    const endsAt = new Date(startsAt.getTime() + 30 * 60 * 1000); // 30 min appointment
+
+    try {
+        await api.post('/appointments', {
+            doctor_id: doctorId.value,
+            starts_at: startsAt.toISOString(),
+            ends_at: endsAt.toISOString(),
+            status: 'pending',
+        });
+        alert('Appointment booked!');
+        showBookingForm.value = false;
+        bookingTime.value = null;
+    } catch (err) {
+        console.error(err);
+        alert('Failed to book appointment');
+    }
+}
+
 </script>
 
 <style scoped>
@@ -140,6 +213,56 @@ function nextMonth() {
 
 .day-cell:hover {
     background-color: #d0eaff;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    width: 400px;
+    max-width: 90%;
+}
+
+.slot-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.slot-list li button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #C0392B;
+    cursor: pointer;
+    background: #fff;
+    transition: background 0.2s;
+}
+
+.slot-list li.selected button {
+    background: #C0392B;
+    color: #fff;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
 }
 </style>
 
