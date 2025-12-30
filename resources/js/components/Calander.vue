@@ -1,18 +1,18 @@
 <template>
     <div class="calendar-container">
-        <!-- Month navigation -->
+
         <div class="month-nav">
             <button @click="prevMonth">&lt;</button>
             <span class="month-name">{{ monthName }} {{ currentYear }}</span>
             <button @click="nextMonth">&gt;</button>
         </div>
 
-        <!-- Weekday headers -->
+
         <div class="weekdays">
             <div v-for="day in weekdays" :key="day">{{ day }}</div>
         </div>
 
-        <!-- Calendar grid -->
+
         <div class="calendar-grid">
             <div
                 v-for="(day, index) in daysInMonth"
@@ -34,10 +34,23 @@ const today = new Date();
 const currentMonth = ref(today.getMonth());
 const currentYear = ref(today.getFullYear());
 
-// Weekday names
+const showBookingForm = ref(false);
+const selectedDate = ref(null);
+const bookingTime = ref(null);
+
+ function selectDate(day) {
+     selectedDate.value = new Date(
+         currentYear.value,
+         currentMonth.value,
+         day,
+     );
+     showBookingForm.value = true;
+ }
+
+
 const weekdays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
-// Number of days in the month
+
 const daysInMonth = computed(() => {
     const date = new Date(currentYear.value, currentMonth.value + 1, 0);
     const days = [];
@@ -47,10 +60,10 @@ const daysInMonth = computed(() => {
     return days;
 });
 
-// Month name
+
 const monthName = computed(() => new Date(currentYear.value, currentMonth.value).toLocaleString('default', { month: 'long' }));
 
-// Month navigation
+
 function prevMonth() {
     currentMonth.value--;
     if(currentMonth.value < 0){
@@ -65,17 +78,12 @@ function nextMonth() {
         currentYear.value++;
     }
 }
-
-// Click handler
-function selectDate(day){
-    alert(`Selected ${day}-${currentMonth.value+1}-${currentYear.value}`);
-}
 </script>
 
 <style scoped>
 .calendar-container {
     width: 1500px;
-    background-color: #ffffff;
+    background-color: #C0392B;
     border-radius: 12px;
     padding: 20px;
     margin: 40px auto;
@@ -100,6 +108,7 @@ function selectDate(day){
 .month-name {
     font-weight: bold;
     font-size: 22px;
+    color: #FFFFFF;
 }
 
 .weekdays {
@@ -108,6 +117,7 @@ function selectDate(day){
     text-align: center;
     font-weight: bold;
     margin-bottom: 10px;
+    color: #FFFFFF;
 }
 
 .calendar-grid {
@@ -117,7 +127,7 @@ function selectDate(day){
 }
 
 .day-cell {
-    aspect-ratio: 1 / 1; /* makes each cell a perfect square */
+    aspect-ratio: 1 / 1;
     background-color: #f0f0f0;
     display: flex;
     justify-content: flex-start;
