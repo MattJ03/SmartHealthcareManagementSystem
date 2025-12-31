@@ -17,13 +17,15 @@
 
         <div class="calendar-grid">
             <div
-                v-for="(day, index) in daysInMonth"
+                v-for="(date, index) in daysInMonth"
                 :key="index"
                 class="day-cell"
-                @click="selectDate(day)"
+                :class="{ empty: !date }"
+                @click="date && selectDate(date)"
             >
-                {{ day }}
+                {{ date ? date.getDate() : '' }}
             </div>
+
         </div>
 
         <div v-if="showBookingForm" class="modal-overlay">
@@ -66,8 +68,8 @@ const selectedDate = ref(null);
 const bookingTime = ref(null);
 const doctorId = ref(null);
 
-function selectDate(day) {
-    selectedDate.value = new Date(currentYear.value, currentMonth.value, day);
+function selectDate(date) {
+    selectedDate.value = date;
     showBookingForm.value = true;
     if (doctorId.value) {
         const dateParam = selectedDate.value.toISOString().split('T')[0]; // YYYY-MM-DD
@@ -80,11 +82,21 @@ const weekdays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
 
 const daysInMonth = computed(() => {
-    const date = new Date(currentYear.value, currentMonth.value + 1, 0);
     const days = [];
-    for(let i = 1; i <= date.getDate(); i++){
-        days.push(i);
+
+    const firstDayOfMonth = new Date(currentYear.value, currentMonth.value, 1);
+    const lastDayOfMonth = new Date(currentYear.value, currentMonth.value + 1, 0);
+
+    // leading empty cells
+    for (let i = 0; i < firstDayOfMonth.getDay(); i++) {
+        days.push(null);
     }
+
+    // actual days
+    for (let d = 1; d <= lastDayOfMonth.getDate(); d++) {
+        days.push(new Date(currentYear.value, currentMonth.value, d));
+    }
+
     return days;
 });
 
