@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Appointment;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 
 class DoctorAvailabilityController extends Controller
@@ -19,9 +20,15 @@ class DoctorAvailabilityController extends Controller
         $doctorId = $doctor->id;
 
         $date = Carbon::parse($request->query('date'));
-        $dateKey = strToLower($date->format('D'));
+        $dateKey = strToLower($date->format('l'));
 
         $hours = $profile->clinic_hours[$dateKey] ?? null;
+
+        \Log::debug([
+            'dateKey' => $dateKey,
+            'clinic_hours' => $profile->clinic_hours,
+            'hours' => $hours,
+        ]);
 
         if(!$hours) {
             return response()->json([]);

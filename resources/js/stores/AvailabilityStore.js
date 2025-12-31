@@ -9,7 +9,7 @@ export const useAvailabilityStore = defineStore('availability', () => {
         loading.value = true;
         try {
             const res = await api.get(`/doctors/${doctorId}/availability`, { params: { date } });
-            slots.value = res.data.slots; // assume backend returns array of available times
+            slots.value = res.data;
         } catch (err) {
             console.error(err);
             slots.value = [];
