@@ -89,7 +89,7 @@ export const useAppointmentStore = defineStore('appointment', () => {
         loading.value = true;
         error.value = '';
         try {
-            const res = await api.get('/upcomingAppointments');
+            const res = await api.get('/getAllMyAppointments');
 
             nextAppointment.value = res.data.upcoming?.[0] ?? null;
 

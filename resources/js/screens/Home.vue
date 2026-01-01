@@ -49,7 +49,12 @@
             </div>
         </div>
         <h2>Upcoming Appointments</h2>
-        <UpcomingAppointmentsGrid v-if="role === 'patient'"  v-for="appointment in patientAppointments" :key="appointment.id" :appointment="appointment" />
+        <UpcomingAppointmentsGrid
+            v-if="role === 'patient'"
+            v-for="appointment in patientAppointments"
+            :key="appointment.id"
+            :appointment="appointment"
+        />
         <DoctorUpcomingAppointmentsGrid v-else-if="role === 'doctor'" v-for="appointment in doctorAppointments" :key="appointment.id" :appointment="appointment" />
     </div>
 
@@ -81,9 +86,14 @@ const { name, role } = storeToRefs(store);
 const { nextAppointment, patientAppointments, doctorAppointments } = storeToRefs(appointmentStore)
 
 onMounted(() => {
+
     appointmentStore.fetchUpcomingAppointment();
-    appointmentStore.fetchAllMyAppointments();
-    appointmentStore.getUpcomingDoctorAppointments();
+    if(role.value === 'patient') {
+        appointmentStore.fetchAllMyAppointments();
+    }
+    if(role.value === 'doctor') {
+        appointmentStore.getUpcomingDoctorAppointments();
+    }
 })
 
 const doctorName = computed(() => nextAppointment.value?.doctor?.name ?? '');

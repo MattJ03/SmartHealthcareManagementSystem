@@ -36,10 +36,17 @@
                 <div v-else>
                     <div v-if="availabilityStore.slots.length === 0">No available slots</div>
                     <ul class="slot-list">
-                        <li v-for="slot in availabilityStore.slots" :key="slot">
-                            <button @click="selectSlot(slot)">{{ slot }}</button>
+                        <li v-for="slot in allPossibleSlots" :key="slot">
+                            <button
+                                @click="selectSlot(slot)"
+                                :disabled="!availabilityStore.slots.includes(slot)"
+                                :class="{ 'unavailable-slot': !availabilityStore.slots.includes(slot), 'selected': bookingTime.value === slot }"
+                            >
+                                {{ slot }}
+                            </button>
                         </li>
                     </ul>
+
                 </div>
 
                 <div class="modal-actions">
@@ -56,6 +63,7 @@ import {ref, computed, onMounted} from 'vue';
 import {useAvailabilityStore} from "../stores/AvailabilityStore.js";
 import api from "../axios.js";
 import NavBar from "./NavBar.vue";
+import {useAppointmentStore} from "../stores/AppointmentStore.js";
 
 
 const today = new Date();
@@ -65,8 +73,28 @@ const currentYear = ref(today.getFullYear());
 const availabilityStore = useAvailabilityStore();
 const showBookingForm = ref(false);
 const selectedDate = ref(null);
-const bookingTime = ref(null);
+const bookingTime = ref('');
 const doctorId = ref(null);
+
+const appointmentStore = useAppointmentStore();
+
+const allPossibleSlots = computed(() => {
+    if(!selectedDate.value) return [];
+
+    const slots = [];
+    let start = new Date(selectedDate.value);
+    start.setHours(9, 0, 0, 0);
+    const end = new Date(selectedDate.value);
+    end.setHours(17, 0, 0, 0);
+
+    while(start < end) {
+        const hours = start.getHours().toString().padStart(2, '0');
+        const minutes = start.getMinutes().toString().padStart(2, '0');
+        slots.push(`${hours}:${minutes}`);
+        start = new Date(start.getTime() + 30 * 60 * 1000);
+    }
+    return slots
+})
 
 function selectDate(date) {
     selectedDate.value = date;
@@ -87,12 +115,11 @@ const daysInMonth = computed(() => {
     const firstDayOfMonth = new Date(currentYear.value, currentMonth.value, 1);
     const lastDayOfMonth = new Date(currentYear.value, currentMonth.value + 1, 0);
 
-    // leading empty cells
+
     for (let i = 0; i < firstDayOfMonth.getDay(); i++) {
         days.push(null);
     }
 
-    // actual days
     for (let d = 1; d <= lastDayOfMonth.getDate(); d++) {
         days.push(new Date(currentYear.value, currentMonth.value, d));
     }
@@ -131,13 +158,15 @@ function selectSlot(slot) {
 
 function closeModal() {
     showBookingForm.value = false;
-    bookingTime.value = null;
+    bookingTime.value = '';
 }
 
 const selectedDateString = computed(() => {
     if(!selectedDate.value)  return '';
     return selectedDate.value.toLocaleDateString();
     });
+
+
 
 async function confirmBooking() {
     if (!bookingTime.value) return alert("Select a slot");
@@ -147,18 +176,18 @@ async function confirmBooking() {
     startsAt.setHours(hours);
     startsAt.setMinutes(minutes);
 
-    const endsAt = new Date(startsAt.getTime() + 30 * 60 * 1000); // 30 min appointment
+    const endsAt = new Date(startsAt.getTime() + 30 * 60 * 1000);
 
     try {
-        await api.post('/appointments', {
+        await api.post('/storeAppointment', {
             doctor_id: doctorId.value,
             starts_at: startsAt.toISOString(),
             ends_at: endsAt.toISOString(),
-            status: 'pending',
+            status: 'confirmed',
         });
         alert('Appointment booked!');
         showBookingForm.value = false;
-        bookingTime.value = null;
+        bookingTime.value = '';
     } catch (err) {
         console.error(err);
         alert('Failed to book appointment');
@@ -226,7 +255,7 @@ async function confirmBooking() {
 }
 
 .day-cell:hover {
-    background-color: #d0eaff;
+    background-color: red;
 }
 
 .modal-overlay {
@@ -270,8 +299,13 @@ async function confirmBooking() {
 }
 
 .slot-list li.selected button {
-    background: #C0392B;
-    color: #fff;
+   background: #FFFFFF;
+    color: #C0392B;
+
+}
+
+.slot-list li.selected {
+
 }
 
 .modal-actions {
@@ -296,5 +330,12 @@ async function confirmBooking() {
 .book-appointment {
     color: #FFFFFF;
 }
+.unavailable-slot {
+
+    color: #aaa;
+    cursor: not-allowed;
+    border-color: #ccc;
+}
+
 </style>
 
