@@ -16,14 +16,21 @@
         <h2 class="scheduled-appointment"><strong>Scheduled Appointment</strong></h2>
         <p v-if="nextAppointment" class="doctor-text"> With Dr. {{ doctorName }} </p>
         <div class="three-squares">
-        <div v-if="appointmentDate" class="checkup-square">
+        <<div v-if="formattedAppointment.appointmentDate" class="checkup-square">
             <p class="checkup-dates">Date</p>
-            <p class="checkup-dates"> {{ appointmentDate }}</p>
+            <p class="checkup-dates">
+                {{ formattedAppointment.appointmentDate }}
+            </p>
         </div>
-            <div class="time-square">
+
+            <div v-if="formattedAppointment.appointmentTime" class="time-square">
                 <p class="checkup-dates">Time</p>
-                <p class="checkup-dates"> {{ appointmentTime }} {{ appointmentPeriod }}</p>
+                <p class="checkup-dates">
+                    {{ formattedAppointment.appointmentTime }}
+                    {{ formattedAppointment.appointmentPeriod }}
+                </p>
             </div>
+
         </div>
     </div>
     <div class="quick-actions-container">
@@ -54,12 +61,10 @@
             v-for="appointment in patientAppointments"
             :key="appointment.id"
             :appointment="appointment"
+            @delete="handleDeleteAppointment"
         />
         <DoctorUpcomingAppointmentsGrid v-else-if="role === 'doctor'" v-for="appointment in doctorAppointments" :key="appointment.id" :appointment="appointment" />
     </div>
-
-
-
 
 </template>
 <script setup>
@@ -100,10 +105,30 @@ const doctorName = computed(() => nextAppointment.value?.doctor?.name ?? '');
 
 
 
-const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppointment(nextAppointment);
+const formattedAppointment = useFormattedAppointment(nextAppointment);
+
+
 
 async function moveToBook() {
     await router.push('/book-appointment');
+}
+
+const handleDeleteAppointment = async (appointmentId) => {
+    try {
+        await appointmentStore.deleteAppointment(appointmentId);
+
+        if (role.value === "patient") {
+            patientAppointments.value = patientAppointments.value.filter((a) => a.id !== appointmentId);
+        } else if (role.value === "doctor") {
+            doctorAppointments.value = doctorAppointments.value.filter((a) => a.id !== appointmentId);
+        }
+
+        if (nextAppointment.value?.id === appointmentId) {
+            await appointmentStore.fetchUpcomingAppointment();
+        }
+    } catch (error) {
+        console.log('Failed to delete');
+    }
 }
 
 </script>

@@ -91,7 +91,7 @@ export const useAppointmentStore = defineStore('appointment', () => {
         try {
             const res = await api.get('/getAllMyAppointments');
 
-            nextAppointment.value = res.data.upcoming?.[0] ?? null;
+            nextAppointment.value = res.data.appointments?.[0] ?? null;
 
             if (nextAppointment.value && nextAppointment.value.doctor) {
                 doctor.value = nextAppointment.value.doctor.name;

@@ -1,5 +1,4 @@
 import { computed } from "vue";
-import {n} from "vue-router/dist/devtools-EWN81iOl.mjs";
 
 export function useFormattedAppointment(appointmentRef) {
     const appointmentDate = computed(() =>  {
