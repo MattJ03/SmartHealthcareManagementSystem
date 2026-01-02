@@ -5,7 +5,7 @@
         <p class="welcome-name">How are feeling today?</p>
     </div>
 
-    <div class="red-container" >
+    <div class="red-container">
     <div class="next-appointment-container">
         <div class="next-appoint-clock">
         <img :src="clock" class="img" alt="clock" />
@@ -16,7 +16,7 @@
         <h2 class="scheduled-appointment"><strong>Scheduled Appointment</strong></h2>
         <p v-if="nextAppointment" class="doctor-text"> With Dr. {{ doctorName }} </p>
         <div class="three-squares">
-        <<div v-if="formattedAppointment.appointmentDate" class="checkup-square">
+        <div v-if="formattedAppointment.appointmentDate" class="checkup-square">
             <p class="checkup-dates">Date</p>
             <p class="checkup-dates">
                 {{ formattedAppointment.appointmentDate }}
