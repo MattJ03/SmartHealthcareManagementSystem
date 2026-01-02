@@ -8,7 +8,7 @@
             </div>
             <div class="delete-section">
                 <button class="delete-btn" @click="$emit('delete', appointment.id)"> Cancel </button>
-
+                <button class="update-btn" @click="$emit('update', appointment.id)"> Update </button>
             </div>
         </div>
 
@@ -71,6 +71,7 @@ const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppo
 .delete-section {
     display: flex;
     align-items: center;
+    gap: 15px;
 }
 
 .delete-btn {
@@ -82,5 +83,19 @@ const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppo
     border-radius: 14px;
     font-size: 16px;
     color: #FFFFFF;
+    border: 0;
+
+}
+
+.update-btn {
+    padding-bottom: 15px;
+    padding-top: 15px;
+    padding-left: 25px;
+    padding-right: 25px;
+    background-color: #C0392B;
+    border-radius: 14px;
+    font-size: 16px;
+    background-color: #FFBF00;
+    border: 0;
 }
 </style>
