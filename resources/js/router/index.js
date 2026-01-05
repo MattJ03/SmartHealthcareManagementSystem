@@ -14,7 +14,7 @@ const routes = [
     { path: '/register-admin', component:RegisterAdmin, meta: {role: 'admin'}},
     { path: '/register-select', component: RegisterSelect, meta: {role: 'admin'}},
     { path: '/register-doctor', component: RegisterDoctor, meta: {role: 'admin'}},
-    { path: '/book-appointment', component: BookAppointment },
+    { path: '/book-appointment/:id?', name: 'BookAppointment', component: BookAppointment },
 
 ];
 

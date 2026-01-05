@@ -200,7 +200,7 @@ onMounted(async () => {
 
 // Confirm or update appointment
 async function confirmBooking() {
-    if (!bookingTime.value) return alert('Select a slot');
+    if (!bookingTime.value) return alert("Select a slot");
 
     const startsAt = new Date(selectedDate.value);
     const [hours, minutes] = bookingTime.value.split(':').map(Number);

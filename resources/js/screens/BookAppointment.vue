@@ -1,53 +1,44 @@
 <template>
     <Calander
+        v-if="!isEditMode || appointmentLoaded"
         :appointment="appointment"
-        v-if="appointment || !isEditMode"
         @submit="handleSubmit"
     />
-
-
-
 </template>
+
 <script setup>
 import Calander from "../components/Calander.vue";
-import {computed, onMounted} from 'vue';
+import { ref, computed, onMounted } from "vue";
 import { useAppointmentStore } from "../stores/AppointmentStore.js";
-import { useRouter, useRoute } from "vue-router";
-import router from "../router/index.js";
+import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
+const router = useRouter();
 const appointmentStore = useAppointmentStore();
 
-const id =  route.params.id;
-console.log(id);
+const id = route.params.id;
 const isEditMode = computed(() => !!id);
 
-const appointment = computed(() =>
-    appointmentStore.patientAppointments.find(
-        a => a.id === Number(id)
-    ) ?? null
-);
+const appointment = ref(null); // start with null
+const appointmentLoaded = ref(false); // only true once appointment is fetched
 
 onMounted(async () => {
-    if(isEditMode.value && !appointment.value) {
-       await appointmentStore.getAppointment(id);
+    if (isEditMode.value) {
+        // Fetch the appointment by ID
+        const fetched = await appointmentStore.getAppointment(id);
+        // assuming getAppointment returns the appointment object
+        appointment.value = fetched;
     }
+    appointmentLoaded.value = true;
 });
 
 async function handleSubmit(payload) {
-    if(isEditMode.value) {
+    if (isEditMode.value) {
         await appointmentStore.updateAppointment(id, payload);
-    }
-    else {
+    } else {
         await appointmentStore.createAppointment(payload);
     }
-    await router.push('/home');
+    router.push("/home");
 }
-
-
-
-
-
 </script>
-<style scoped>
-</style>
+

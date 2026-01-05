@@ -135,10 +135,9 @@ const handleDeleteAppointment = async (appointmentId) => {
 }
 
 function goToUpdate(appointmentId) {
-    router.push('/book-appointment', {
-        params: {
-            id: appointmentId,
-        },
+    router.push({
+        name: 'BookAppointment',
+        params: { id: appointmentId, },
     });
 }
 

@@ -39,7 +39,7 @@ export const useAppointmentStore = defineStore('appointment', () => {
         }
     }
 
-    const updateAppointment = async (payload, id) => {
+    const updateAppointment = async (id, payload) => {
         loading.value = true;
         error.value = '';
         try {
