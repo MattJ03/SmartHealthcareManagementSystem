@@ -26,7 +26,7 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(['delete']);
+const emit = defineEmits(['delete', 'update']);
 
 
 const appointmentRef = ref(props.appointment);

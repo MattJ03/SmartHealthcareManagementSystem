@@ -62,6 +62,7 @@
             :key="appointment.id"
             :appointment="appointment"
             @delete="handleDeleteAppointment"
+            @update="goToUpdate"
         />
         <DoctorUpcomingAppointmentsGrid v-else-if="role === 'doctor'" v-for="appointment in doctorAppointments" :key="appointment.id" :appointment="appointment" />
     </div>
@@ -71,7 +72,6 @@
 import NavBar from "../components/NavBar.vue";
 import UpcomingAppointmentsGrid from "../components/UpcomingAppointmentsGrid.vue";
 import { ref, reactive, computed, onMounted } from 'vue';
-import router from "../router/index.js";
 import { useAuthStore } from "../stores/AuthStore.js";
 import { useAppointmentStore } from "../stores/AppointmentStore.js";
 import { storeToRefs } from "pinia";
@@ -82,10 +82,13 @@ import book from '../assets/book.png';
 import history from '../assets/history.png'
 import {useFormattedAppointment} from "../composobles/useFormattedAppointment.js";
 import DoctorUpcomingAppointmentsGrid from "../components/DoctorUpcomingAppointmentsGrid.vue";
+import {useRouter} from "vue-router";
 
 
 const store = useAuthStore();
 const appointmentStore = useAppointmentStore();
+
+const router = useRouter();
 
 const { name, role } = storeToRefs(store);
 const { nextAppointment, patientAppointments, doctorAppointments } = storeToRefs(appointmentStore)
@@ -130,6 +133,16 @@ const handleDeleteAppointment = async (appointmentId) => {
         console.log('Failed to delete');
     }
 }
+
+function goToUpdate(appointmentId) {
+    router.push('/book-appointment', {
+        params: {
+            id: appointmentId,
+        },
+    });
+}
+
+
 
 </script>
 <style style>

@@ -131,6 +131,7 @@ export const useAppointmentStore = defineStore('appointment', () => {
          hasAppointments,
          fetchAllMyAppointments,
          createAppointment,
+         getAppointment,
          updateAppointment,
          deleteAppointment,
          fetchUpcomingAppointment,
