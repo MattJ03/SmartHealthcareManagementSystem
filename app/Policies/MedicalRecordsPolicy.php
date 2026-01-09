@@ -23,15 +23,15 @@ class MedicalRecordsPolicy
      */
     public function view(User $user, MedicalRecord $medicalRecord): bool
     {
-        return $user->patient_profile?->doctor_id === $medicalRecord->doctor_id || $user->id === $medicalRecord->patient_id;
+         return $user->id === $medicalRecord->patient_id || $user->hasRole('doctor') && $user->id === $medicalRecord->doctor_id;
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user, MedicalRecord $medicalRecord): bool
     {
-        return false;
+        return $user->hasRole('doctor') && $user->id === $medicalRecord->patient->doctor_id;
     }
 
     /**
