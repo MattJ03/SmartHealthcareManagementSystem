@@ -3,22 +3,19 @@
 
     <div class="calendar-container">
         <h1 class="book-appointment">
-            {{ appointment ? "Edit Appointment" : "Book Appointment" }}
+            {{ isEditMode ? "Edit Appointment" : "Book Appointment" }}
         </h1>
 
-        <!-- Month navigation -->
         <div class="month-nav">
             <button @click="prevMonth">&lt;</button>
             <span class="month-name">{{ monthName }} {{ currentYear }}</span>
             <button @click="nextMonth">&gt;</button>
         </div>
 
-        <!-- Weekdays header -->
         <div class="weekdays">
             <div v-for="day in weekdays" :key="day">{{ day }}</div>
         </div>
 
-        <!-- Calendar grid -->
         <div class="calendar-grid">
             <div
                 v-for="(date, index) in daysInMonth"
@@ -31,17 +28,18 @@
             </div>
         </div>
 
-        <!-- Booking modal -->
         <div v-if="showBookingForm" class="modal-overlay">
             <div class="modal-content">
                 <h2>
-                    {{ appointment ? "Edit Appointment" : "Book Appointment" }} -
+                    {{ isEditMode ? "Edit Appointment" : "Book Appointment" }} -
                     {{ selectedDateString }}
                 </h2>
 
                 <div v-if="availabilityStore.loading">Loading slots...</div>
                 <div v-else>
-                    <div v-if="availabilityStore.slots.length === 0">No available slots</div>
+                    <div v-if="availabilityStore.slots.length === 0">
+                        No available slots
+                    </div>
 
                     <ul class="slot-list">
                         <li v-for="slot in allPossibleSlots" :key="slot">
@@ -49,9 +47,9 @@
                                 @click="selectSlot(slot)"
                                 :disabled="!availabilityStore.slots.includes(slot)"
                                 :class="{
-                  'unavailable-slot': !availabilityStore.slots.includes(slot),
-                  selected: bookingTime === slot
-                }"
+                                    'unavailable-slot': !availabilityStore.slots.includes(slot),
+                                    selected: bookingTime === slot
+                                }"
                             >
                                 {{ slot }}
                             </button>
@@ -61,7 +59,7 @@
 
                 <div class="modal-actions">
                     <button @click="confirmBooking">
-                        {{ appointment ? "Update" : "Confirm" }}
+                        {{ isEditMode ? "Update" : "Confirm" }}
                     </button>
                     <button @click="closeModal">Cancel</button>
                 </div>
@@ -73,21 +71,20 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
 import NavBar from './NavBar.vue';
-import { useAvailabilityStore } from '../stores/AvailabilityStore.js';
-import { useAppointmentStore } from '../stores/AppointmentStore.js';
-import api from '../axios.js';
+import { useAvailabilityStore } from '../stores/AvailabilityStore';
+import { useAppointmentStore } from '../stores/AppointmentStore';
+import api from '../axios';
 
-// Props for edit mode
 const props = defineProps({
-    appointment: {
-        type: Object,
+    appointmentId: {
+        type: Number,
         default: null
     }
 });
 
 const emit = defineEmits(['submit']);
 
-// Reactive state
+
 const today = new Date();
 const currentMonth = ref(today.getMonth());
 const currentYear = ref(today.getFullYear());
@@ -100,29 +97,52 @@ const bookingTime = ref('');
 const doctorId = ref(null);
 const showBookingForm = ref(false);
 
+const isEditMode = computed(() => !!props.appointmentId);
+
+
+watch(
+    () => props.appointmentId,
+    async (id) => {
+        if (!id) return;
+
+        const appt = await appointmentStore.getAppointment(id);
+
+        const start = new Date(appt.starts_at);
+        selectedDate.value = start;
+        bookingTime.value = start.toTimeString().slice(0, 5);
+        showBookingForm.value = true;
+
+        const dateParam = start.toISOString().split('T')[0];
+        availabilityStore.getAvailableSlots(doctorId.value, dateParam);
+    },
+    { immediate: true }
+);
+
 const weekdays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
-// Generate all half-hour slots between 9:00–17:00
 const allPossibleSlots = computed(() => {
     if (!selectedDate.value) return [];
 
     const slots = [];
     let start = new Date(selectedDate.value);
     start.setHours(9, 0, 0, 0);
+
     const end = new Date(selectedDate.value);
     end.setHours(17, 0, 0, 0);
 
     while (start < end) {
-        const hours = start.getHours().toString().padStart(2, '0');
-        const minutes = start.getMinutes().toString().padStart(2, '0');
-        slots.push(`${hours}:${minutes}`);
+        slots.push(
+            `${start.getHours().toString().padStart(2,'0')}:${start
+                .getMinutes()
+                .toString()
+                .padStart(2,'0')}`
+        );
         start = new Date(start.getTime() + 30 * 60 * 1000);
     }
 
     return slots;
 });
 
-// Calendar days for the current month
 const daysInMonth = computed(() => {
     const days = [];
     const firstDay = new Date(currentYear.value, currentMonth.value, 1);
@@ -137,14 +157,14 @@ const daysInMonth = computed(() => {
 });
 
 const monthName = computed(() =>
-    new Date(currentYear.value, currentMonth.value).toLocaleString('default', { month: 'long' })
+    new Date(currentYear.value, currentMonth.value).toLocaleString('default', {
+        month: 'long'
+    })
 );
 
 const selectedDateString = computed(() =>
     selectedDate.value ? selectedDate.value.toLocaleDateString() : ''
 );
-
-// Month navigation
 function prevMonth() {
     currentMonth.value--;
     if (currentMonth.value < 0) {
@@ -152,6 +172,7 @@ function prevMonth() {
         currentYear.value--;
     }
 }
+
 function nextMonth() {
     currentMonth.value++;
     if (currentMonth.value > 11) {
@@ -160,83 +181,64 @@ function nextMonth() {
     }
 }
 
-// Select a date from the calendar
 function selectDate(date) {
     selectedDate.value = date;
     showBookingForm.value = true;
 
     if (doctorId.value) {
-        const dateParam = selectedDate.value.toISOString().split('T')[0];
+        const dateParam = date.toISOString().split('T')[0];
         availabilityStore.getAvailableSlots(doctorId.value, dateParam);
     }
 }
 
-// Select a time slot
 function selectSlot(slot) {
     bookingTime.value = slot;
 }
 
-// Close the modal
 function closeModal() {
     showBookingForm.value = false;
     bookingTime.value = '';
 }
 
-// Prefill for edit mode
+
 onMounted(async () => {
     const res = await api.get('/patient/doctor');
     doctorId.value = res.data.doctorId;
-
-    if (props.appointment) {
-        const start = new Date(props.appointment.starts_at);
-        selectedDate.value = start;
-        bookingTime.value = start.toTimeString().slice(0, 5);
-        showBookingForm.value = true;
-
-        const dateParam = start.toISOString().split('T')[0];
-        availabilityStore.getAvailableSlots(doctorId.value, dateParam);
-    }
 });
 
-// Confirm or update appointment
+
 async function confirmBooking() {
-    if (!bookingTime.value) return alert("Select a slot");
+    if (!bookingTime.value) {
+        alert('Select a slot');
+        return;
+    }
 
     const startsAt = new Date(selectedDate.value);
-    const [hours, minutes] = bookingTime.value.split(':').map(Number);
-    startsAt.setHours(hours, minutes);
+    const [h, m] = bookingTime.value.split(':').map(Number);
+    startsAt.setHours(h, m);
 
     const endsAt = new Date(startsAt.getTime() + 30 * 60 * 1000);
 
-    try {
-        if (props.appointment) {
-            // UPDATE existing appointment
-            await appointmentStore.updateAppointment(props.appointment.id, {
-                doctor_id: doctorId.value,
-                starts_at: startsAt.toISOString(),
-                ends_at: endsAt.toISOString(),
-                status: 'confirmed'
-            });
-            alert('Appointment updated!');
-        } else {
-            // CREATE new appointment
-            await appointmentStore.createAppointment({
-                doctor_id: doctorId.value,
-                starts_at: startsAt.toISOString(),
-                ends_at: endsAt.toISOString(),
-                status: 'confirmed'
-            });
-            alert('Appointment booked!');
-        }
+    const payload = {
+        doctor_id: doctorId.value,
+        starts_at: startsAt.toISOString(),
+        ends_at: endsAt.toISOString(),
+        status: 'confirmed'
+    };
 
-        closeModal();
-        emit('submit');
-    } catch (err) {
-        console.error(err);
-        alert('Failed to book/update appointment');
+    if (isEditMode.value) {
+        await appointmentStore.updateAppointment(props.appointmentId, payload);
+        alert('Appointment updated!');
+    } else {
+        await appointmentStore.createAppointment(payload);
+        alert('Appointment booked!');
     }
+
+    closeModal();
+    emit('submit');
 }
 </script>
+
 
 <style scoped>
 .calendar-container {

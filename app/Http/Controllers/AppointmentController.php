@@ -49,8 +49,8 @@ class AppointmentController extends Controller
 
     }
 
-    public function updateAppointment(Request $request, AppointmentService $appointmentService) {
-        $appointment = Appointment::findOrFail($request->id);
+    public function updateAppointment(Request $request, int $id, AppointmentService $appointmentService) {
+        $appointment = Appointment::findOrFail($id);
         $this->authorize('update', $appointment);
 
         $validatedData = $request->validate([

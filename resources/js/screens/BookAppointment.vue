@@ -1,7 +1,6 @@
 <template>
     <Calander
-        v-if="!isEditMode || appointmentLoaded"
-        :appointment="appointment"
+        :appointment-id="Number(route.params.id)"
         @submit="handleSubmit"
     />
 </template>
@@ -19,26 +18,27 @@ const appointmentStore = useAppointmentStore();
 const id = route.params.id;
 const isEditMode = computed(() => !!id);
 
-const appointment = ref(null); // start with null
-const appointmentLoaded = ref(false); // only true once appointment is fetched
+const appointment = ref(null);
+const appointmentLoaded = ref(false);
 
 onMounted(async () => {
     if (isEditMode.value) {
         // Fetch the appointment by ID
         const fetched = await appointmentStore.getAppointment(id);
-        // assuming getAppointment returns the appointment object
+
         appointment.value = fetched;
     }
     appointmentLoaded.value = true;
 });
 
+
 async function handleSubmit(payload) {
-    if (isEditMode.value) {
-        await appointmentStore.updateAppointment(id, payload);
+    if (route.params.id) {
+        await appointmentStore.updateAppointment(route.params.id, payload);
     } else {
         await appointmentStore.createAppointment(payload);
     }
-    router.push("/home");
+    router.push('/home');
 }
 </script>
 
