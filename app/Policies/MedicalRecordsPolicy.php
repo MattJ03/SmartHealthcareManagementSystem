@@ -39,7 +39,7 @@ class MedicalRecordsPolicy
      */
     public function update(User $user, MedicalRecord $medicalRecord): bool
     {
-        return false;
+        return $user->hasRole('doctor') && $user->id === $medicalRecord->patient->doctor_id;
     }
 
     /**
