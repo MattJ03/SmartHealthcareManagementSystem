@@ -27,11 +27,11 @@ class MedicalRecordFactory extends Factory
         $patient->assignRole('patient');
 
         $patientProfile = PatientProfile::factory()->create([
-            'patient_id' => $patient->id,
-            'user_id' => $doctor->id,
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
         ]);
 
-        $extension = fake()->randomElement(['pdf, docx, doc, ppt, pptx, odt, png, jpg, jpeg']);
+        $extension = fake()->randomElement(['pdf', 'docx', 'doc', 'ppt', 'pptx', 'odt', 'png', 'jpg', 'jpeg']);
         $fileName = Str::uuid() . '.' . $extension;
 
 
@@ -43,7 +43,7 @@ class MedicalRecordFactory extends Factory
             'file_size' => fake()->numberBetween(50_000, 2_000_000),
             'title' => fake()->title(),
             'notes' => fake()->text(),
-
+            'doctor_id' => $patientProfile->doctor_id,
         ];
     }
 }
