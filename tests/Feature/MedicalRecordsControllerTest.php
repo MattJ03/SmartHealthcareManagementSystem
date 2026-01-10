@@ -6,6 +6,8 @@ use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use App\Models\MedicalRecord;
+use Database\Factories\MedicalRecordFactory;
 
 
 class MedicalRecordsControllerTest extends TestCase
@@ -24,5 +26,7 @@ class MedicalRecordsControllerTest extends TestCase
         Parent::setUp();
         $this->seed(RolePermissionSeeder::class);
     }
+
+
 
 }
