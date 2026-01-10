@@ -23,7 +23,6 @@ const appointmentLoaded = ref(false);
 
 onMounted(async () => {
     if (isEditMode.value) {
-        // Fetch the appointment by ID
         const fetched = await appointmentStore.getAppointment(id);
 
         appointment.value = fetched;
