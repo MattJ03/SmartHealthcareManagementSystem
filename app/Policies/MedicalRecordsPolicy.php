@@ -47,7 +47,7 @@ class MedicalRecordsPolicy
      */
     public function delete(User $user, MedicalRecord $medicalRecord): bool
     {
-        return false;
+        return $user->hasRole('doctor') && $user->id === $medicalRecord->patient->doctor_id;
     }
 
     /**

@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('patient_id')->constrained('patient_profiles')->onDelete('cascade');
             $table->string('file_path');
             $table->string('file_type')->nullable();
+            $table->string('file_size')->nullable();
+            $table->string('title');
             $table->text('notes')->nullable();
             $table->foreignId('doctor_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
