@@ -48,6 +48,9 @@ class AuthControllerTest extends TestCase
         $admin->assignRole('admin');
         Sanctum::actingAs($admin);
 
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+
         $payload = [
             'name' => 'jane Doe',
             'email' => 'janedoe@gmail.com',
@@ -55,11 +58,12 @@ class AuthControllerTest extends TestCase
             'password_confirmation' => 'password2',
             'contact_number' => '053682759',
             'emergency_contact' => '54325252',
+            'doctor_id' => $doctor->id,
         ];
 
         $response = $this->postJson('/api/registerPatient', $payload);
              $response->assertStatus(201);
-            $response->assertJson(['message' => 'Patient Registered Successfully'], 201);
+            $response->assertJson(['message' => 'Patient registered successfully'], 201);
     }
 
     public function test_register_must_have_name(): void {
@@ -119,7 +123,7 @@ class AuthControllerTest extends TestCase
 
         $response = $this->postJson('/api/registerDoctor', $payload);
         $response->assertStatus(201);
-        $response->assertJson(['message' => 'Doctor Registered Successfully'], 201);
+        $response->assertJson(['message' => 'Doctor registered successfully'], 201);
     }
 
     public function test_doctor_cannot_register_doctor(): void {
