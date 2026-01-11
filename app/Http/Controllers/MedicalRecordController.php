@@ -51,10 +51,6 @@ class MedicalRecordController extends Controller
     }
 
     public function deleteMedicalRecord(Request $request, $id) {
-        abort_unless(
-            auth()->id() === $request->get('doctor_id'), 403
-        );
-
         $record = MedicalRecord::findOrFail($id);
         $this->authorize('delete', $record);
         $record->delete();

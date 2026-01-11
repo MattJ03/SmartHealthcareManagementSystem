@@ -225,4 +225,28 @@ class MedicalRecordControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
+    public function test_store_medical_record_notes_can_be_null(): void {
+        Storage::fake('private');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+        Sanctum::actingAs($doctor);
+
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $record = [
+            'patient_id' => $patientProfile->id,
+            'title' => 'Blood Tests 2',
+            'file' => UploadedFile::fake()->create('results.pdf', 500, 'application/pdf'),
+        ];
+
+        $response = $this->postJson('/api/storeMedicalRecord', $record);
+        $response->assertStatus(201);
+    }
+
 }
