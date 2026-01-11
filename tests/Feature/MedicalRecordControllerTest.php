@@ -325,4 +325,26 @@ class MedicalRecordControllerTest extends TestCase
         $response->assertStatus(403);
     }
 
+    public function test_delete_medical_record(): void {
+        Storage::fake('private');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+        Sanctum::actingAs($doctor);
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $record = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+        ]);
+
+        $response = $this->deleteJson('/api/deleteMedicalRecord/' . $record->id);
+        $response->assertStatus(200);
+    }
+
+
 }

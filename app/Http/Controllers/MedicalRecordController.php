@@ -50,7 +50,7 @@ class MedicalRecordController extends Controller
         ], 201);
     }
 
-    public function deleteMedicalRecord(Request $request, $id) {
+    public function deleteRecord(Request $request, $id) {
         $record = MedicalRecord::findOrFail($id);
         $this->authorize('delete', $record);
         $record->delete();
