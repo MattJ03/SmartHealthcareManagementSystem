@@ -8,7 +8,7 @@ use App\Http\Controllers\DoctorAvailabilityController;
 use App\Models\PatientProfile;
 use App\Http\Controllers\UserDirectoryController;
 use App\Http\Controllers\DoctorController;
-use App\Http\Controllers\MedicalRecordsController;
+use App\Http\Controllers\MedicalRecordController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
@@ -35,6 +35,6 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('getDoctors', [UserDirectoryController::class, 'getDoctors']);
     Route::get('/doctors/{doctor}/availability', DoctorAvailabilityController::class);
 
-    Route::post('/storeMedicalRecord', [MedicalRecordsController::class, 'storeRecord']);
+    Route::post('/storeMedicalRecord', [MedicalRecordController::class, 'storeRecord']);
 });
 

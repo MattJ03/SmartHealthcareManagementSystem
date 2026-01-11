@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Policies\MedicalRecordsPolicy;
+use App\Policies\MedicalRecordPolicy;
 use App\Models\MedicalRecord;
 use Illuminate\Support\Facades\Log;
 
-class MedicalRecordsController extends Controller
+
+class MedicalRecordController extends Controller
 {
     public function storeRecord(Request $request) {
-        $this->authorize('create', MedicalRecordsPolicy::class);
+                $this->authorize('create', MedicalRecord::class);
 
        $validatedData = $request->validate([
             'patient_id' => 'required|exists:patient_profiles,id',

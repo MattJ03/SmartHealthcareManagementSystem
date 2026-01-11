@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use Database\Factories\PatientProfileFactory;
 
-class MedicalRecordsControllerTest extends TestCase
+class MedicalRecordControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
     /**

@@ -8,7 +8,7 @@ use Illuminate\Auth\Access\Response;
 use App\Models\PatientProfile;
 
 
-class MedicalRecordsPolicy
+class MedicalRecordPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -23,7 +23,7 @@ class MedicalRecordsPolicy
      */
     public function view(User $user, MedicalRecord $medicalRecord): bool
     {
-         return $user->id === $medicalRecord->patient_id || $user->hasRole('doctor') && $user->id === $medicalRecord->doctor_id;
+         return false;
     }
 
     /**
