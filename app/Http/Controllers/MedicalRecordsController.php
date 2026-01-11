@@ -12,8 +12,7 @@ use Illuminate\Support\Facades\Log;
 class MedicalRecordsController extends Controller
 {
     public function storeRecord(Request $request) {
-
-        $this->authorize('create', MedicalRecord::class);
+        $this->authorize('create', MedicalRecordsPolicy::class);
 
        $validatedData = $request->validate([
             'patient_id' => 'required|exists:patient_profiles,id',
@@ -39,8 +38,8 @@ class MedicalRecordsController extends Controller
         return response()->json([
             'record' => $record,
             'message' => 'record created',
-            'uploaded_by' => $validatedData['doctor_id'],
-        ]);
+            'uploaded_by' => auth()->id(),
+        ], 201);
 
 
     }

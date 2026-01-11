@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class MedicalRecord extends Model
 {
     use HasFactory;
-    protected $fillable = ['patient_id', 'file_path', 'file_type', 'note', 'doctor_id'];
+    protected $fillable = ['patient_id', 'title', 'file_path', 'file_type', 'note', 'doctor_id'];
 
     public function patient() {
         return $this->belongsTo(PatientProfile::class, 'patient_id');

@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class PatientProfile extends Model
 {
+    use HasFactory;
     protected $fillable = ['user_id', 'emergency_contact', 'doctor_id'];
 
     public function user() {

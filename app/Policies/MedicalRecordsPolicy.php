@@ -29,9 +29,9 @@ class MedicalRecordsPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user, MedicalRecord $medicalRecord): bool
+    public function create(User $user): bool
     {
-        return $user->hasRole('doctor') && $user->id === $medicalRecord->patient->doctor_id;
+        return $user->hasRole('doctor');
     }
 
     /**

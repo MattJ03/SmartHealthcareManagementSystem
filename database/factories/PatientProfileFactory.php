@@ -19,13 +19,11 @@ class PatientProfileFactory extends Factory
      */
     public function definition(): array
     {
-        $patient = User::factory()->create();
-        $doctor = User::factory()->create();
 
         return [
-            'user_id' => $patient->id,
-            'emergency_contact' => $this->faker->phoneNumber(),
-            'doctor_id' => $doctor->id,
+            'user_id' => User::factory(),
+            'emergency_contact' => fake()->phoneNumber(),
+            'doctor_id' => User::factory(),
         ];
     }
 }
