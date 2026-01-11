@@ -48,7 +48,21 @@ class MedicalRecordController extends Controller
             'message' => 'record created',
             'uploaded_by' => auth()->id(),
         ], 201);
+    }
 
+    public function deleteMedicalRecord(Request $request, $id) {
+        abort_unless(
+            auth()->id() === $request->get('doctor_id'), 403
+        );
 
+        $record = MedicalRecord::findOrFail($id);
+        $this->authorize('delete', $record);
+        $record->delete();
+
+        Log::info('record deleted by: ' . auth()->id());
+        return response()->json([
+            'message' => 'record deleted',
+            'deleted_by' => auth()->id(),
+        ], 200);
     }
 }
