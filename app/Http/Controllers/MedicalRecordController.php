@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PatientProfile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -23,6 +24,12 @@ class MedicalRecordController extends Controller
         ]);
 
         $path = $request->file('file')->store('medical-records', 'private');
+
+        $patientProfile = PatientProfile::findOrFail($validatedData['patient_id']);
+
+        abort_unless(
+            auth()->id() === $patientProfile->doctor_id, 403
+        );
 
         $record = MedicalRecord::create([
             'patient_id' => $validatedData['patient_id'],

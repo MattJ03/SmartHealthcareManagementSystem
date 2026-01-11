@@ -147,4 +147,82 @@ class MedicalRecordControllerTest extends TestCase
 
     }
 
+    public function test_store_medical_record_returns_correct_doctor(): void {
+        Storage::fake('private');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $record = [
+          'patient_id' => $patientProfile->id,
+          'title' => 'Blood Tests 2',
+          'notes' => 'Patient showing low blood cell count',
+          'file' => UploadedFile::fake()->create('results.pdf', 500, 'application/pdf'),
+        ];
+
+        $response = $this->postJson('/api/storeMedicalRecord', $record);
+        $response->assertStatus(201)
+            ->assertJsonFragment([
+                'uploaded_by' => $patientProfile->doctor_id,
+            ]);
+    }
+
+    public function test_store_medical_record_requires_doctor_id(): void {
+        Storage::fake('private');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+        Sanctum::actingAs($doctor);
+
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        $doctor2 = User::factory()->create();
+        $doctor2->assignRole('doctor');
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor2->id
+        ]);
+
+        $record = [
+          'patient_id' => $patientProfile->id,
+          'title' => 'Blood Tests 2',
+          'notes' => 'Patient showing low blood cell count',
+          'file' => UploadedFile::fake()->create('results.pdf', 500, 'application/pdf'),
+        ];
+
+        $response = $this->postJson('/api/storeMedicalRecord', $record);
+        $response->assertStatus(403);
+}
+
+    public function test_store_medical_record_requires_patient_id(): void {
+        Storage::fake('private');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+        Sanctum::actingAs($doctor);
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $record = [
+            'title' => 'Blood Tests 2',
+            'notes' => 'Patient showing low blood cell count',
+            'file' => UploadedFile::fake()->create('results.pdf', 500, 'application/pdf'),
+        ];
+
+        $response = $this->postJson('/api/storeMedicalRecord', $record);
+        $response->assertStatus(422);
+    }
+
 }
