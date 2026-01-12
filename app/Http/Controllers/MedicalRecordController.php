@@ -65,4 +65,16 @@ class MedicalRecordController extends Controller
             'deleted_by' => auth()->id(),
         ], 200);
     }
+
+    public function showRecord(Request $request, $id) {
+        $record = MedicalRecord::findOrFail($id);
+        $this->authorize('view', $record);
+
+        Log::info('record viewed by: ' . auth()->id());
+
+        return response()->json([
+            'record' => $record,
+            'message' => 'record got',
+        ]);
+    }
 }

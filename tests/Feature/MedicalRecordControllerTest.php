@@ -443,7 +443,6 @@ class MedicalRecordControllerTest extends TestCase
     {
         Storage::fake('private');
 
-        // Create users
         $doctor = User::factory()->create();
         $doctor->assignRole('doctor');
 
@@ -452,42 +451,31 @@ class MedicalRecordControllerTest extends TestCase
 
         Sanctum::actingAs($doctor);
 
-        // Patient profile links patient ↔ doctor
         $patientProfile = PatientProfile::factory()->create([
             'user_id'   => $patient->id,
             'doctor_id' => $doctor->id,
         ]);
 
-        // Create a real fake file on the private disk
         $filePath = 'medical-records/test.pdf';
         Storage::disk('private')->put($filePath, 'fake pdf content');
 
-        // Create DB record pointing to that file
         $record = MedicalRecord::factory()->create([
             'patient_id' => $patientProfile->id,
             'doctor_id'  => $doctor->id,
             'file_path'  => $filePath,
         ]);
 
-        // Sanity check (optional but helpful)
         Storage::disk('private')->assertExists($filePath);
 
-        // Delete the record
         $response = $this->deleteJson('/api/deleteMedicalRecord/' . $record->id);
 
         $response->assertStatus(200);
 
-        // Assert DB row is gone
         $this->assertDatabaseMissing('medical_records', [
             'id' => $record->id,
         ]);
 
-        // Assert file is deleted from private disk
         Storage::disk('private')->assertMissing($filePath);
-
-
     }
-
-
 
 }
