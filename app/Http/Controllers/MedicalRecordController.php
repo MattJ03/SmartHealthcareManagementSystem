@@ -66,15 +66,23 @@ class MedicalRecordController extends Controller
         ], 200);
     }
 
-    public function showRecord(Request $request, $id) {
+    public function showRecord($id) {
         $record = MedicalRecord::findOrFail($id);
         $this->authorize('view', $record);
 
-        Log::info('record viewed by: ' . auth()->id());
+        Log::info('record view by: ' . auth()->id());
 
-        return response()->json([
-            'record' => $record,
-            'message' => 'record got',
-        ]);
+        abort_unless(
+            Storage::disk('private')->exists($record->file_path), 404
+        );
+
+        return response()->file(
+            Storage::disk('private')->path($record->file_path),
+          ['Content-Type' => mime_content_type(
+              Storage::disk('private')->path($record->file_path)
+          ),
+              'Content-Disposition' => 'inline; filename="'. $record->title . '"',
+              ]
+        );
     }
 }
