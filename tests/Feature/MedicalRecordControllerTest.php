@@ -346,5 +346,51 @@ class MedicalRecordControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_delete_record_removes_from_db_correctly(): void {
+        Storage::fake('private');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+        Sanctum::actingAs($doctor);
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $record = MedicalRecord::factory()->count(5)->create([
+            'patient_id' => $patientProfile->id,
+        ]);
+
+        $response = $this->deleteJson('/api/deleteMedicalRecord/' . $record[0]->id);
+        $response->assertStatus(200);
+        $this->assertDatabaseCount('medical_records', 4);
+    }
+
+    public function test_admin_cannot_delete_medical_record(): void {
+        Storage::fake('private');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        Sanctum::actingAs($admin);
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $record = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+        ]);
+
+        $response = $this->deleteJson('/api/deleteMedicalRecord/' . $record->id);
+        $response->assertStatus(403);
+
+    }
+
 
 }
