@@ -37,5 +37,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/storeMedicalRecord', [MedicalRecordController::class, 'storeRecord']);
     Route::delete('/deleteMedicalRecord/{id}', [MedicalRecordController::class, 'deleteRecord']);
+    Route::get('/showMedicalRecord/{id}', [MedicalRecordController::class, 'showRecord']);
 });
 

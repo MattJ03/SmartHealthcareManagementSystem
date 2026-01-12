@@ -478,4 +478,24 @@ class MedicalRecordControllerTest extends TestCase
         Storage::disk('private')->assertMissing($filePath);
     }
 
+    public function test_show_medical_record(): void {
+        Storage::fake('private');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $record = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+        ]);
+
+
+    }
+
 }
