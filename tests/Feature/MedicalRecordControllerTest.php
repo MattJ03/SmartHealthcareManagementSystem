@@ -495,7 +495,72 @@ class MedicalRecordControllerTest extends TestCase
             'patient_id' => $patientProfile->id,
         ]);
 
+        $response = $this->getJson('/showMedicalRecord/' . $record->id);
+        $response->assertStatus(200);
+    }
+
+    public function test_show_medical_record_returns_file(): void {
+        Storage::fake('private');
+
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+        Sanctum::actingAs($doctor);
+
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $fakePdfPath = 'medical-records/results.pdf';
+        Storage::disk('private')->put($fakePdfPath, '%PDF-1.4 fake pdf content');
+
+        $record = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $fakePdfPath,
+            'file_type' => 'pdf',
+            'title' => 'results.pdf',
+        ]);
+
+        $response = $this->get('/showMedicalRecord/' . $record->id);
+
+        $response->assertStatus(200);
+        $content = Storage::disk('private')->get($record->file_path);
+        $this->assertStringContainsString('%PDF-1.4', $content);
+    }
+
+    public function test_show_wrong_id_doesnt_return_file(): void {
+        Storage::fake('private');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+      //  $file = UploadedFile::fake()->create('results.pdf', 500, 'application/pdf');
+        $fakePath = 'medical-records/results.pdf';
+        Storage::disk('private')->put($fakePath, '%PDF-1.4');
+
+        $record = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $fakePath,
+            'file_type' => 'pdf',
+            'title' => 'results.pdf',
+        ]);
+
+        $content = Storage::disk('private')->get($record->file_path);
+        $this->assertStringContainsString('%PDF-1.4', $content);
 
     }
+
+
+
 
 }
