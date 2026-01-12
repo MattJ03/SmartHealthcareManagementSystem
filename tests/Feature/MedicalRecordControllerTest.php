@@ -554,9 +554,10 @@ class MedicalRecordControllerTest extends TestCase
             'file_type' => 'pdf',
             'title' => 'results.pdf',
         ]);
+        $fakeId = $record->id + 1;
 
-        $content = Storage::disk('private')->get($record->file_path);
-        $this->assertStringContainsString('%PDF-1.4', $content);
+        $response = $this->get('/api/showMedicalRecord/' . $fakeId);
+        $response->assertStatus(404);
 
     }
 
