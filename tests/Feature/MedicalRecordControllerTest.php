@@ -59,7 +59,6 @@ class MedicalRecordControllerTest extends TestCase
         ];
 
         $response = $this->postJson('/api/storeMedicalRecord', $record);
-        $response->dump();
         $response->assertStatus(201);
     }
 
@@ -325,6 +324,32 @@ class MedicalRecordControllerTest extends TestCase
         $response->assertStatus(403);
     }
 
+    public function test_store_medical_record_found_in_private_disk(): void {
+        Storage::fake('private');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        Sanctum::actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $record = [
+            'patient_id' => $patientProfile->id,
+            'title' => 'Blood Tests 2',
+            'notes' => 'Patient showing low blood cell count',
+            'file' => UploadedFile::fake()->create('results.pdf', 500, 'application/pdf'),
+        ];
+
+        $response = $this->postJson('/api/storeMedicalRecord', $record);
+        $response->assertStatus(201);
+        $medicalRecord = MedicalRecord::all()->first();
+        $response = Storage::disk('private')->assertExists($medicalRecord->file_path);
+    }
+
     public function test_delete_medical_record(): void {
         Storage::fake('private');
         $doctor = User::factory()->create();
@@ -389,8 +414,80 @@ class MedicalRecordControllerTest extends TestCase
 
         $response = $this->deleteJson('/api/deleteMedicalRecord/' . $record->id);
         $response->assertStatus(403);
+    }
+
+    public function test_other_doctor_cannot_delete_medical_record(): void {
+        Storage::fake('private');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+        $doctorOther = User::factory()->create();
+        $doctorOther->assignRole('doctor');
+        Sanctum::actingAs($doctorOther);
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $record = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+        ]);
+
+        $response = $this->deleteJson('/api/deleteMedicalRecord/' . $record->id);
+        $response->assertStatus(403);
+    }
+
+    public function test_delete_removes_record_from_private_disk(): void
+    {
+        Storage::fake('private');
+
+        // Create users
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
+
+        $patient = User::factory()->create();
+        $patient->assignRole('patient');
+
+        Sanctum::actingAs($doctor);
+
+        // Patient profile links patient ↔ doctor
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id'   => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        // Create a real fake file on the private disk
+        $filePath = 'medical-records/test.pdf';
+        Storage::disk('private')->put($filePath, 'fake pdf content');
+
+        // Create DB record pointing to that file
+        $record = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+            'doctor_id'  => $doctor->id,
+            'file_path'  => $filePath,
+        ]);
+
+        // Sanity check (optional but helpful)
+        Storage::disk('private')->assertExists($filePath);
+
+        // Delete the record
+        $response = $this->deleteJson('/api/deleteMedicalRecord/' . $record->id);
+
+        $response->assertStatus(200);
+
+        // Assert DB row is gone
+        $this->assertDatabaseMissing('medical_records', [
+            'id' => $record->id,
+        ]);
+
+        // Assert file is deleted from private disk
+        Storage::disk('private')->assertMissing($filePath);
+
 
     }
+
 
 
 }

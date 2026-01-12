@@ -55,7 +55,11 @@ class MedicalRecordController extends Controller
         $this->authorize('delete', $record);
         $record->delete();
 
-        Log::info('record deleted by: ' . auth()->id());
+        Log::info('record deleted by: ' . auth()->id() . ' from database');
+
+        Storage::disk('private')->delete($record->file_path);
+
+        Log::info('record deleted by: ' . auth()->id() . ' from storage');
         return response()->json([
             'message' => 'record deleted',
             'deleted_by' => auth()->id(),
