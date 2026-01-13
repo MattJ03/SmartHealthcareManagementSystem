@@ -85,4 +85,26 @@ class MedicalRecordController extends Controller
               ]
         );
     }
+
+    public function getAllRecords(Request $request) {
+        $record = MedicalRecord::where('doctor_id', auth()->id())
+                                      ->where('patient_id', $request->query('patient_id'))
+                                       ->get();
+
+        if($record->isEmpty()) {
+            return response()->json([
+                'records' => [],
+                'message' => 'records not found',
+            ]);
+        }
+
+            return response()->file(
+                Storage::disk('private')->path($record->file_path),
+                ['Content-Type' => mime_content_type(
+                    Storage::disk('private')->path($record->file_path)
+                ),
+                    'Content-Disposition' => 'inline; filename="'. $record->title . '"',]
+            );
+
+    }
 }

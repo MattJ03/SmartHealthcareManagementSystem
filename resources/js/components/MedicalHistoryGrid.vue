@@ -1,40 +1,42 @@
 <template>
-    <div class="container">
         <div class="record-grid">
-            <p> {{}}</p>
+            <img :src="openFile" alt="openFile" class="openFile" />
 
         </div>
 
-    </div>
 </template>
 <script setup>
 import { ref, reactive, computed } from "vue";
+import openFile from '../assets/openFile.png';
 
-const props = defineProps({
-    appointment: {
-        type: Object,
-        required: true,
-    }
-});
 
-const appointmentRef = ref(props.appointment);
+const emit = defineEmits(['open']);
+
 
 </script>
 <style scoped>
-.container {
-    width: 100%;
-    background-color: #FFFFFF;
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
-}
 .record-grid {
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
-    width: 20%;
-    border: 1px solid #FFFFFF;
+    justify-content: space-between;
+
     background-color: #C0392B;
+    border-radius: 14px;
+    padding: 12px;
+    min-height: 100px;
+
+    cursor: pointer;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+}
+
+
+.openFile {
+    height: 40px;
+    align-self: flex-end;
 }
 </style>
