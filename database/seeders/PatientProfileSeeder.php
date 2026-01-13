@@ -16,12 +16,13 @@ class PatientProfileSeeder extends Seeder
     public function run(): void
     {
         $patients = User::role('patient')->get();
-        $doctor = User::role('doctor')->get();
+        $doctors = User::role('doctor')->get();
 
         foreach ($patients as $patient) {
             PatientProfile::create([
                 'user_id' => $patient->id,
-                'doctor_id' => $doctor->id,
+                'doctor_id' => $doctors->random()->id,
+                'emergency_contact' => fake()->phoneNumber(),
             ]);
         }
     }
