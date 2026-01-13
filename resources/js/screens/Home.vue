@@ -40,7 +40,7 @@
                 <img :src="book" alt="book" class="quick-actions-img" />
                 <p class="quick-actions-text">Book Appointment</p>
             </div>
-            <div class="quick-actions-white-square">
+            <div class="quick-actions-white-square" @click="moveToRecords">
                 <img :src="history" alt="history" class="quick-actions-img" />
                 <p class="quick-actions-text">Medical Records</p>
             </div>
@@ -114,6 +114,10 @@ const formattedAppointment = useFormattedAppointment(nextAppointment);
 
 async function moveToBook() {
     await router.push('/book-appointment');
+}
+
+async function moveToRecords() {
+    await router.push('/medical-records');
 }
 
 const handleDeleteAppointment = async (appointmentId) => {

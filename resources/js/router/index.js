@@ -6,6 +6,7 @@ import RegisterAdmin from "../screens/RegisterAdmin.vue";
 import RegisterSelect from "../screens/RegisterSelect.vue";
 import RegisterDoctor from "../screens/RegisterDoctor.vue";
 import BookAppointment from "../screens/BookAppointment.vue";
+import MedicalRecords from "../screens/MedicalRecords.vue";
 
 const routes = [
     { path: '/login', component: Login },
@@ -15,6 +16,7 @@ const routes = [
     { path: '/register-select', component: RegisterSelect, meta: {role: 'admin'}},
     { path: '/register-doctor', component: RegisterDoctor, meta: {role: 'admin'}},
     { path: '/book-appointment/:id?', name: 'BookAppointment', component: BookAppointment },
+    { path: '/medical-records', name: 'MedicalRecords', component: MedicalRecords },
 
 ];
 
