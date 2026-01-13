@@ -23,8 +23,8 @@ class AppointmentFactory extends Factory
         $patient->assignRole('patient');
 
         return [
-            'patient_id' => User::factory(),
-            'doctor_id' => $doctor->id,
+            'patient_id' => null,
+            'doctor_id' => null,
             'starts_at' => $starts->format("Y-m-d H:i:s"),
             'ends_at' => $starts->copy()->addMinutes(30)->format('Y-m-d H:i:s'),
             'status' => 'confirmed',
