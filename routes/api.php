@@ -38,6 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/storeMedicalRecord', [MedicalRecordController::class, 'storeRecord']);
     Route::delete('/deleteMedicalRecord/{id}', [MedicalRecordController::class, 'deleteRecord']);
     Route::get('/showMedicalRecord/{id}', [MedicalRecordController::class, 'showRecord']);
+    Route::get('/getAllRecords', [MedicalRecordController::class, 'getAllRecords']);
     Route::get('/me', fn () => auth()->user()->load('profile.doctor'));
 });
 

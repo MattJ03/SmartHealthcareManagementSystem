@@ -9,5 +9,9 @@ export const useMedicalRecordStores = defineStore('medicalRecords', () => {
     const patientSelectedRecord = ref(null);
     const hasRecord = computed(() => patientRecords.value.length > 0);
 
-    const fetchPatientRecord
+    const fetchPatientRecord = (async) => {}
+    loading.value = true;
+    try {
+        const res = await api.get()
+    }
 })
