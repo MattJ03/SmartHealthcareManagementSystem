@@ -23,6 +23,7 @@ export const useAuthStore = defineStore('auth', () => {
            localStorage.setItem('token', token.value);
            localStorage.setItem('role', role.value);
            localStorage.setItem('name', name.value);
+           await fetchUser();
        } catch (error) {
            console.log(error.response?.data || error.message);
            token.value = null;
@@ -35,6 +36,21 @@ export const useAuthStore = defineStore('auth', () => {
            loading.value = false;
        }
    }
+
+    async function fetchUser() {
+        loading.value = true;
+        try {
+            const res = await api.get('/me');
+            user.value = res.data;
+
+            // 🔑 compatibility layer (important)
+            user.value.doctor_id = user.value.profile?.doctor_id ?? null;
+        } catch (err) {
+            user.value = null;
+        } finally {
+            loading.value = false;
+        }
+    }
 
    async function patientRegister(payload) {
        return register('/registerPatient', payload);
@@ -70,6 +86,7 @@ export const useAuthStore = defineStore('auth', () => {
         role,
         name,
         loading,
+        fetchUser,
         error,
         isAdmin,
         login,

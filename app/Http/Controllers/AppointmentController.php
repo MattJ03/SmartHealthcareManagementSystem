@@ -141,9 +141,5 @@ class AppointmentController extends Controller
         ]);
     }
 
-    public function getSoonestAppointment() {
-        $user = auth()->user();
-        return $user;
-    }
 
 }

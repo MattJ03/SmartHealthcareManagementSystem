@@ -16,7 +16,7 @@ class AppointmentFactory extends Factory
     public function definition(): array
     {
 
-        $starts = Carbon::today()->setTime(9, 0);
+        $starts = now()->addDays(rand(1, 30));
         $doctor = User::factory()->create();
         $doctor->assignRole('doctor');
         $patient = User::factory()->create();

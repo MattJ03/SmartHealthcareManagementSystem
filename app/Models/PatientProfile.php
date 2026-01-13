@@ -17,4 +17,8 @@ class PatientProfile extends Model
     public function doctor() {
         return $this->belongsTo(User::class, 'doctor_id');
 }
+
+public function appointments() {
+        return $this->hasMany(Appointment::class, 'patient_id');
+}
 }

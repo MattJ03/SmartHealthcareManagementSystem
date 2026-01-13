@@ -33,10 +33,11 @@ Route::middleware('auth:sanctum')->group(function () {
    });
 
   Route::get('getDoctors', [UserDirectoryController::class, 'getDoctors']);
-    Route::get('/doctors/{doctor}/availability', DoctorAvailabilityController::class);
+  Route::get('/doctors/{doctor}/availability', DoctorAvailabilityController::class);
 
     Route::post('/storeMedicalRecord', [MedicalRecordController::class, 'storeRecord']);
     Route::delete('/deleteMedicalRecord/{id}', [MedicalRecordController::class, 'deleteRecord']);
     Route::get('/showMedicalRecord/{id}', [MedicalRecordController::class, 'showRecord']);
+    Route::get('/me', fn () => auth()->user()->load('profile.doctor'));
 });
 
