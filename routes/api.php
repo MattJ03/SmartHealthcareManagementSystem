@@ -15,6 +15,7 @@ Route::middleware('auth:sanctum')->group(function () {
    Route::post('/registerPatient', [AuthController::class, 'patientRegister']);
    Route::post('/registerDoctor', [AuthController::class, 'doctorRegister']);
    Route::post('/registerAdmin', [AuthController::class, 'adminRegister']);
+   Route::post('/logout', [AuthController::class, 'logout']);
 
    Route::post('/storeAppointment', [AppointmentController::class, 'storeAppointment']);
    Route::put('/updateAppointment/{id}', [AppointmentController::class, 'updateAppointment']);

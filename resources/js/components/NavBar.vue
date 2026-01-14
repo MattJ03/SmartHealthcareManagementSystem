@@ -5,7 +5,7 @@
        </div>
        <div class="nav-links">
            <button v-if="authStore.isAdmin" class="btn-create-account" type="button" @click="moveToRegister"> Create New User</button>
-           <button class="btn-create-account" type="button" @click="logoutUser" />
+           <button class="btn-create-account" type="button" @click="logoutUser">Logout</button>
        </div>
    </nav>
 </template>
@@ -24,7 +24,8 @@ async function returnHome() {
 const authStore = useAuthStore();
 
 async function logoutUser() {
-
+    await authStore.logout();
+    await router.push('/login')
 }
 </script>
 <style scoped>
@@ -46,6 +47,7 @@ async function logoutUser() {
     background-color: #FAF9F6;
     border-radius: 14px;
     font-size: 16px;
+    gap: 10px;
     border: none;
     cursor: pointer;
 }

@@ -76,6 +76,21 @@ export const useAuthStore = defineStore('auth', () => {
        }
     }
 
+    async function logout() {
+       loading.value = true;
+       try {
+           const res = await api.post('/logout');
+           localStorage.removeItem('token');
+           localStorage.removeItem('role');
+           localStorage.removeItem('name');
+
+       } catch(error) {
+           error.value = error.value.response?.data || 'Failed to logout'
+       } finally {
+           loading.value = false;
+       }
+    }
+
 
 
 
@@ -93,7 +108,7 @@ export const useAuthStore = defineStore('auth', () => {
         patientRegister,
         doctorRegister,
         adminRegister,
-
+        logout,
     };
 
 });
