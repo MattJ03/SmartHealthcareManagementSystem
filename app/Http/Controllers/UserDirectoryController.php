@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PatientProfile;
 use Illuminate\Http\Request;
 use App\Models\User;
 
@@ -21,5 +22,10 @@ class UserDirectoryController extends Controller
             'doctors' => $doctors,
             'message' => 'Doctors retrieved successfully',
         ]);
+    }
+
+    public function getDoctorsPatients(Request $request) {
+
+
     }
 }

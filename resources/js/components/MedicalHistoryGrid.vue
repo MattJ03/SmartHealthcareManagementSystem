@@ -1,5 +1,6 @@
 <template>
-        <div class="record-grid">
+        <div class="record-grid" @click="handleClick">
+            <p class="title"> {{ medicalRecord.title }}</p>
             <img :src="openFile" alt="openFile" class="openFile" />
 
         </div>
@@ -12,6 +13,16 @@ import openFile from '../assets/openFile.png';
 
 const emit = defineEmits(['open']);
 
+const props = defineProps({
+    medicalRecord: {
+        type: Object,
+        required: true,
+    },
+});
+
+const handleClick = () => {
+    emit('open', props.medicalRecord);
+}
 
 </script>
 <style scoped>
@@ -24,6 +35,7 @@ const emit = defineEmits(['open']);
     border-radius: 14px;
     padding: 12px;
     min-height: 100px;
+    border: 1px solid #C0392B;
 
     cursor: pointer;
 }
@@ -37,6 +49,8 @@ const emit = defineEmits(['open']);
 
 .openFile {
     height: 40px;
-    align-self: flex-end;
+    align-items: center;
+    width: 50%;
+    margin: auto;
 }
 </style>

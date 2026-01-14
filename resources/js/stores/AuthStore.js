@@ -43,7 +43,6 @@ export const useAuthStore = defineStore('auth', () => {
             const res = await api.get('/me');
             user.value = res.data;
 
-            // 🔑 compatibility layer (important)
             user.value.doctor_id = user.value.profile?.doctor_id ?? null;
         } catch (err) {
             user.value = null;

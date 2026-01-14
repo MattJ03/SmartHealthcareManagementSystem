@@ -86,22 +86,41 @@ class MedicalRecordController extends Controller
         );
     }
 
-    public function getAllRecords(Request $request) {
-        $records = MedicalRecord::where('doctor_id', auth()->id())
-                                      ->where('patient_id', $request->query('patient_id'))
-                                       ->get();
+    public function getAllRecords(Request $request)
+    {
+        $user = auth()->user();
 
-        if($records->isEmpty()) {
-            return response()->json([
-                'records' => [],
-                'message' => 'records not found',
-            ]);
+        if ($user->hasRole('doctor')) {
+
+            $patientId = $request->query('patient_id');
+            if (!$patientId) {
+                return response()->json([
+                    'records' => [],
+                    'message' => 'No patient_id provided',
+                ], 400);
+            }
+
+            $records = MedicalRecord::where('doctor_id', $user->id)
+                ->where('patient_id', $patientId)
+                ->get();
+        } else {
+            $patientProfile = $user->profile;
+            if (!$patientProfile) {
+                return response()->json([
+                    'records' => [],
+                    'message' => 'Patient profile not found',
+                ], 404);
+            }
+
+            $records = MedicalRecord::where('patient_id', $patientProfile->id)->get();
         }
 
-            return response()->json([
-                'records' => $records,
-                'message' => 'records retrieved',
-            ]);
+        Log::info('number of records returned: ' . $records->count());
 
+        return response()->json([
+            'records' => $records,
+            'message' => 'Records retrieved',
+        ]);
     }
+
 }

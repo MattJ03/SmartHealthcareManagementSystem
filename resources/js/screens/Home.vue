@@ -154,6 +154,7 @@ function goToUpdate(appointmentId) {
     background-color: #C0392B;
     width: 85%;
     margin: auto;
+    margin-top: 24px;
     color: #FFFFFF;
     padding: 20px;
     border-radius: 14px;

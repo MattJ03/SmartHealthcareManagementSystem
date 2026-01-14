@@ -35,7 +35,7 @@ export const useMedicalRecordStores = defineStore('medicalRecords', () => {
     const deleteRecord = async (id) => {
         loading.value = true;
         try {
-            const res = await api.delete('/deleteMedicalRecord/{$id}');
+            const res = await api.delete(`/deleteMedicalRecord/{$id}`);
             patientRecords.value = patientRecords.value.filter(r => r.id !== id);
             if (selectedRecord.value?.id === id) selectedRecord.value = null;
         } catch (err) {

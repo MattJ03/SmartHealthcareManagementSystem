@@ -1,10 +1,11 @@
 <template>
    <nav class="nav-bar">
        <div class="logo">
-           <img :src="whitePill" class="logo" alt="logo" />
+           <img :src="whitePill" class="logo" alt="logo" @click="returnHome"/>
        </div>
        <div class="nav-links">
            <button v-if="authStore.isAdmin" class="btn-create-account" type="button" @click="moveToRegister"> Create New User</button>
+           <button class="btn-create-account" type="button" @click="logoutUser" />
        </div>
    </nav>
 </template>
@@ -16,7 +17,15 @@ import router from "../router/index.js";
 async function moveToRegister() {
     await router.push('/register-select');
 }
+
+async function returnHome() {
+    await router.push('/home');
+}
 const authStore = useAuthStore();
+
+async function logoutUser() {
+
+}
 </script>
 <style scoped>
 .nav-bar {
