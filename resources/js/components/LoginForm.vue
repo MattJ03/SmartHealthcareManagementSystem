@@ -86,5 +86,6 @@ async function submit() {
 }
 .btn-reg:hover {
     background: #8B0000;
+    cursor: pointer;
 }
 </style>

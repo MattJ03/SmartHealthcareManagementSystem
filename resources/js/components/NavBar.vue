@@ -33,7 +33,6 @@ async function logoutUser() {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 2px;
     align-items: center;
     gap: 1rem;
     padding-left: 30px;
@@ -48,8 +47,10 @@ async function logoutUser() {
     border-radius: 14px;
     font-size: 16px;
     gap: 10px;
+    margin: 10px;
     border: none;
     cursor: pointer;
+    padding: 0 15px;
 }
 .logo {
     height: 70px;
