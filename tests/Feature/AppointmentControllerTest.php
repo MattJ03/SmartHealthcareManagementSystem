@@ -159,8 +159,12 @@ class AppointmentControllerTest extends TestCase
         $patient = User::factory()->create();
         $patient->assignRole('patient');
         Sanctum::actingAs($patient);
+        $doctor = User::factory()->create()->assignRole('doctor');
 
-        $appointment = Appointment::factory()->make()->toArray();
+        $appointment = Appointment::factory()->make([
+            'doctor_id' => $doctor->id,
+                ]
+        )->toArray();
         $response = $this->postJson('/api/storeAppointment', $appointment);
 
         $response->assertStatus(201);
@@ -171,8 +175,11 @@ class AppointmentControllerTest extends TestCase
         $patient = User::factory()->create();
         $patient->assignRole('patient');
         Sanctum::actingAs($patient);
+        $doctor = User::factory()->create()->assignRole('doctor');
 
-        $appointment = Appointment::factory()->make()->toArray();
+        $appointment = Appointment::factory()->make([
+            'doctor_id' => $doctor->id,
+        ])->toArray();
         $response = $this->postJson('/api/storeAppointment', $appointment);
         $response->assertStatus(201);
         $this->assertDatabaseHas('appointments', [
