@@ -4,7 +4,9 @@
             <div class="img-wrapper">
             <img :src="file" alt="fileImage" class="img" />
             </div>
+            <div class="type-wrapper">
             <p class="title-report">Title Report</p>
+        </div>
         </div>
     </div>
 </template>
@@ -23,14 +25,21 @@ import file from '../assets/file.png';
     padding: 35px 35px;
 
 }
+.top-of-grid {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+
+}
 .img-wrapper {
-    height: 60px;
+    height: 70px;
     background-color: rgba(55, 64, 166, 0.2);
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 14px;
-
+    width: 70px;
 }
 .img {
     height: 42px;
@@ -38,5 +47,15 @@ import file from '../assets/file.png';
 }
 .title-report {
 
+}
+.type-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 35px;
+    background-color: rgba(55, 64, 166, 0.2);
+    border-radius: 14px;
+    text-align: center;
+    padding: 3px 10px;
 }
 </style>
