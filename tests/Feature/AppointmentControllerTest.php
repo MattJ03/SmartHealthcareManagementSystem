@@ -565,9 +565,13 @@ class AppointmentControllerTest extends TestCase
          public function test_index_doesnt_show_cancelled_appointments(): void {
              $patient = User::factory()->create();
              $patient->assignRole('patient');
+             $doctor = User::factory()->create();
+             $doctor->assignRole('doctor');
              Sanctum::actingAs($patient);
 
              Appointment::factory()->count(100)->create([
+                 'patient_id' => $patient->id,
+                 'doctor_id' => $doctor->id,
                  'status' => 'confirmed',
              ]);
              $this->assertDatabaseCount('appointments', 100);
@@ -581,9 +585,13 @@ class AppointmentControllerTest extends TestCase
          public function test_index_all_after_time_now(): void {
           $patient = User::factory()->create();
           $patient->assignRole('patient');
+          $doctor = User::factory()->create();
+          $doctor->assignRole('doctor');
           Sanctum::actingAs($patient);
 
           Appointment::factory()->count(10)->create([
+              'patient_id' => $patient->id,
+              'doctor_id' => $doctor->id,
               'starts_at' => Carbon::yesterday()->addMinutes(60)->format('Y-m-d H:i:s'),
           ]);
           $this->assertCount(10, Appointment::all());
@@ -597,16 +605,20 @@ class AppointmentControllerTest extends TestCase
          public function test_index_return_confirmed_dont_pull_non_confirmed_appointments(): void {
           $patient = User::factory()->create();
           $patient->assignRole('patient');
+          $doctor = User::factory()->create();
+          $doctor->assignRole('doctor');
           Sanctum::actingAs($patient);
 
           Appointment::factory()->count(5)->create([
               'patient_id' => $patient->id,
+              'doctor_id' => $doctor->id,
               'starts_at' => now()->addHour(),
               'status' => 'confirmed',
           ]);
           $this->assertCount(5, Appointment::all());
           Appointment::factory()->count(5)->create([
               'patient_id' => $patient->id,
+               'doctor_id' => $doctor->id,
                'starts_at' => now()->addMinutes(60)->format('Y-m-d H:i:s'),
                'status' => 'cancelled',
           ]);
@@ -627,15 +639,21 @@ class AppointmentControllerTest extends TestCase
              $response->assertJsonStructure([
                  'message',
              ]);
+             $response->assertJsonFragment([
+                 'message' => 'there are no appointments',
+             ]);
          }
 
          public function test_correct_json_response(): void {
            $patient = User::factory()->create();
            $patient->assignRole('patient');
+           $doctor = User::factory()->create();
+           $doctor->assignRole('doctor');
            Sanctum::actingAs($patient);
 
            Appointment::factory()->count(10)->create([
                'patient_id' => $patient->id,
+               'doctor_id' => $doctor->id,
                'starts_at' => now()->addHour(),
                'status' => 'confirmed',
            ]);
@@ -649,10 +667,13 @@ class AppointmentControllerTest extends TestCase
     public function test_delete_appointment(): void {
         $patient = User::factory()->create();
         $patient->assignRole('patient');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
         Sanctum::actingAs($patient);
 
         $appointment = Appointment::factory()->create([
            'patient_id' => $patient->id,
+           'doctor_id' => $doctor->id,
            'starts_at' => now()->addHour(),
            'status' => 'confirmed',
         ]);
@@ -665,10 +686,13 @@ class AppointmentControllerTest extends TestCase
     public function test_attribute_not_found_after_delete(): void {
         $patient = User::factory()->create();
         $patient->assignRole('patient');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
         Sanctum::actingAs($patient);
 
         $appointment = Appointment::factory()->create([
            'patient_id' => $patient->id,
+           'doctor_id' => $doctor->id,
            'starts_at' => now()->addHour(),
            'status' => 'confirmed',
         ]);
@@ -685,15 +709,19 @@ class AppointmentControllerTest extends TestCase
     public function test_delete_doesnt_delete_entire_appointments_table(): void {
         $patient = User::factory()->create();
         $patient->assignRole('patient');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
         Sanctum::actingAs($patient);
 
         $appointment = Appointment::factory()->count(3)->create([
             'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
         ]);
         $this->assertDatabaseCount('appointments', 3);
 
         $appointment1 = Appointment::factory()->create([
             'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
         ]);
         $response = $this->deleteJson('/api/deleteAppointment/' . $appointment1->id);
         $this->assertDatabaseCount('appointments', 3);
@@ -702,6 +730,8 @@ class AppointmentControllerTest extends TestCase
     public function test_admin_can_delete_appointment_booked_by_patient(): void { //dont sanctum admin yet wanna see code
         $patient = User::factory()->create();
         $patient->assignRole('patient');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
 
         $admin = User::factory()->create();
         $admin->assignRole('admin');
@@ -709,6 +739,7 @@ class AppointmentControllerTest extends TestCase
 
         $appointment = Appointment::factory()->create([
            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
         ]);
 
         $response = $this->deleteJson('/api/deleteAppointment/' . $appointment->id);
@@ -726,6 +757,7 @@ class AppointmentControllerTest extends TestCase
 
         $appointment = Appointment::factory()->create([
             'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
         ]);
         $this->assertDatabaseCount('appointments', 1);
 
@@ -746,12 +778,14 @@ class AppointmentControllerTest extends TestCase
     public function test_patient_cannot_delete_appointment_thats_not_theirs(): void {
         $patient = User::factory()->create();
         $patient->assignRole('patient');
-
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
         $patient2 = User::factory()->create();
         $patient2->assignRole('patient');
         Sanctum::actingAs($patient);
         $appointment = Appointment::factory()->create([
             'patient_id' => $patient2->id,
+            'doctor_id' => $doctor->id,
         ]);
         $this->assertDatabaseCount('appointments', 1);
         $response = $this->deleteJson('/api/deleteAppointment/' . $appointment->id);
@@ -762,10 +796,13 @@ class AppointmentControllerTest extends TestCase
     public function test_correct_json_response_delete(): void {
         $patient = User::factory()->create();
         $patient->assignRole('patient');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
         Sanctum::actingAs($patient);
 
         $appointment = Appointment::factory()->create([
             'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
         ]);
         $this->assertDatabaseCount('appointments', 1);
         $response = $this->deleteJson('/api/deleteAppointment/' . $appointment->id);
