@@ -69,10 +69,14 @@ class AppointmentControllerTest extends TestCase
         $admin->assignRole('admin');
         $patient = User::factory()->create();
         $patient->assignRole('patient');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
 
         Sanctum::actingAs($admin);
 
-        $appointment = Appointment::factory()->make()->toArray();
+        $appointment = Appointment::factory()->make([
+            'doctor_id' => $doctor->id,
+        ])->toArray();
         $appointment['patient_id'] = $patient['id'];
         $response = $this->postJson('/api/storeAppointment', $appointment);
         $response->assertStatus(201);
@@ -299,6 +303,7 @@ class AppointmentControllerTest extends TestCase
         Sanctum::actingAs($patient);
 
         Appointment::factory()->create([
+            'patient_id' => $patient->id,
            'doctor_id' => $doctor->id,
            'starts_at' => Carbon::tomorrow()->addMinutes(60)->format('Y-m-d H:i:s'),
            'ends_at' => Carbon::tomorrow()->addMinutes(75)->format('Y-m-d H:i:s'),
@@ -493,6 +498,8 @@ class AppointmentControllerTest extends TestCase
     public function test_correct_json_returned_from_success_update(): void {
         $patient = User::factory()->create();
         $patient->assignRole('patient');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
         Sanctum::actingAs($patient);
 
         $doctor = User::factory()->create();
@@ -500,7 +507,7 @@ class AppointmentControllerTest extends TestCase
 
         $appointment = Appointment::factory()->create([
             'patient_id' => $patient->id,
-
+            'doctor_id' => $doctor->id,
         ]);
 
         $response = $this->putJson('/api/updateAppointment/' . $appointment->id, [
