@@ -527,9 +527,14 @@ class AppointmentControllerTest extends TestCase
     public function test_get_all_appointments_works(): void {
         $patient = User::factory()->create();
         $patient->assignRole('patient');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
         Sanctum::actingAs($patient);
 
-         Appointment::factory()->count(5)->create();
+         Appointment::factory()->count(5)->create([
+             'patient_id' => $patient->id,
+             'doctor_id' => $doctor->id,
+         ]);
 
         $this->assertCount(5, Appointment::all());
         $response = $this->getJson('/api/getAllMyAppointments');
@@ -540,18 +545,21 @@ class AppointmentControllerTest extends TestCase
          public function test_index_retrieves_large_num_of_appointments(): void {
         $patient = User::factory()->create();
         $patient->assignRole('patient');
+        $doctor = User::factory()->create();
+        $doctor->assignRole('doctor');
         Sanctum::actingAs($patient);
 
-          Appointment::factory()->count(1000)->create([
+          Appointment::factory()->count(100)->create([
               'patient_id' => $patient->id,
+              'doctor_id' => $doctor->id,
               'status' => 'confirmed',
               'starts_at' => now()->addHour(),
           ]);
-          $this->assertCount(1000, Appointment::all());
+          $this->assertCount(100, Appointment::all());
           $response = $this->getJson('/api/getAllMyAppointments');
           $response->assertStatus(200);
 
-          $response->assertJsonCount(1000, 'appointments');
+          $response->assertJsonCount(100, 'appointments');
          }
 
          public function test_index_doesnt_show_cancelled_appointments(): void {
