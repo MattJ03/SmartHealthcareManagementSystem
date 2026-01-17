@@ -1,56 +1,42 @@
 <template>
-        <div class="record-grid" @click="handleClick">
-            <p class="title"> {{ medicalRecord.title }}</p>
-            <img :src="openFile" alt="openFile" class="openFile" />
-
+    <div class="grid">
+        <div class="top-of-grid">
+            <div class="img-wrapper">
+            <img :src="file" alt="fileImage" class="img" />
+            </div>
+            <p class="title-report">Title Report</p>
         </div>
-
+    </div>
 </template>
 <script setup>
 import { ref, reactive, computed } from "vue";
-import openFile from '../assets/openFile.png';
-
-
-const emit = defineEmits(['open']);
-
-const props = defineProps({
-    medicalRecord: {
-        type: Object,
-        required: true,
-    },
-});
-
-const handleClick = () => {
-    emit('open', props.medicalRecord);
-}
+import file from '../assets/file.png';
 
 </script>
 <style scoped>
-.record-grid {
+.grid {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    background-color: #C0392B;
+    border: 1px solid #000000;
     border-radius: 14px;
-    padding: 12px;
-    min-height: 100px;
-    border: 1px solid #C0392B;
+    width: 550px;
+    height: 300px;
+    padding: 35px 35px;
 
-    cursor: pointer;
 }
-
-.title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #fff;
-}
-
-
-.openFile {
-    height: 40px;
+.img-wrapper {
+    height: 60px;
+    background-color: rgba(55, 64, 166, 0.2);
+    display: flex;
+    justify-content: center;
     align-items: center;
-    width: 50%;
-    margin: auto;
+    border-radius: 14px;
+
+}
+.img {
+    height: 42px;
+
+}
+.title-report {
+
 }
 </style>
