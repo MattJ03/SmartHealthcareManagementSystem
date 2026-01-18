@@ -9,14 +9,16 @@
         </div>
         </div>
         <div class="info-record">
-           <p class="time"> {{ medicalRecord.created_at }}</p>
-            <p class="time"> {{ medicalRecord.doctor }}</p>
+            <p class="time"> {{ formatDate(medicalRecord.created_at) }}</p>
         </div>
     </div>
 </template>
 <script setup>
 import { ref, reactive, computed } from "vue";
 import file from '../assets/file.png';
+import { useFormattedDate } from "../composobles/useFormattedDate.js";
+
+const { formatDate } = useFormattedDate();
 
 const props = defineProps({
     medicalRecord: {
