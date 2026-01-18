@@ -19,6 +19,15 @@
             <p class="time"> Dr. {{ medicalRecord.doctor?.name }}</p>
             </div>
         </div>
+        <hr class="divider" />
+           <div class="button-row">
+               <button class="view-button">
+                   <img :src="eye" /> View
+               </button>
+               <button class="download-button">
+                   <img
+               </button>
+           </div>
     </div>
 </template>
 <script setup>
@@ -26,8 +35,10 @@ import { ref, reactive, computed } from "vue";
 import file from '../assets/file.png';
 import { useFormattedDate } from "../composobles/useFormattedDate.js";
 import calenderIcon from '../assets/calendar.png';
-const { formatDate } = useFormattedDate();
 import user from '../assets/user.png';
+import eye from '../assets/eye.png';
+
+const { formatDate } = useFormattedDate();
 
 const props = defineProps({
     medicalRecord: {
@@ -69,7 +80,7 @@ const props = defineProps({
 
 }
 .title-report {
-
+    color: rgba(55, 64, 166, 1);
 }
 
 .title {
@@ -82,7 +93,7 @@ const props = defineProps({
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 35px;
+    height: 25px;
     background-color: rgba(55, 64, 166, 0.2);
     border-radius: 14px;
     text-align: center;
@@ -99,12 +110,45 @@ const props = defineProps({
     margin: 2px;
 }
 .time-wrapper {
+    opacity: 70%;
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 9px;
 }
 .cal-image {
     height: 18px;
+}
+
+.divider {
+    margin-top: 25px;
+    border-top: 1px solid rgba(0, 0, 0, 0.01);
+    width: 100%;
+}
+.button-row {
+    display: flex;
+    margin-top: 15px;
+}
+.view-button {
+    width: 75%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #4856f2;
+    border-radius: 14px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: #FFFFFF;
+    gap: 6px;
+    font-size: 18px;
+
+}
+.view-button img {
+    height: 22px;
+
+}
+.download-button {
+    display: flex;
+    justify-content: center;
 
 }
 </style>
