@@ -14,7 +14,10 @@
                 <img :src="calenderIcon" alt="calenderImage" class="cal-image" />
             <p class="time"> {{ formatDate(medicalRecord.created_at) }}</p>
             </div>
+            <div class="time-wrapper">
+            <img :src="user" alt="peopleIcon" class="cal-image" />
             <p class="time"> Dr. {{ medicalRecord.doctor?.name }}</p>
+            </div>
         </div>
     </div>
 </template>
@@ -22,9 +25,9 @@
 import { ref, reactive, computed } from "vue";
 import file from '../assets/file.png';
 import { useFormattedDate } from "../composobles/useFormattedDate.js";
-import calenderIcon from '../assets/calendar.png'
-
+import calenderIcon from '../assets/calendar.png';
 const { formatDate } = useFormattedDate();
+import user from '../assets/user.png';
 
 const props = defineProps({
     medicalRecord: {
