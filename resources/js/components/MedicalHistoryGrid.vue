@@ -21,7 +21,7 @@
         </div>
         <hr class="divider" />
            <div class="button-row">
-               <button class="view-button">
+               <button class="view-button" @click="handleClick">
                    <img :src="eye" /> View
                </button>
                <button class="download-button">
@@ -42,12 +42,18 @@ import download from '../assets/download.png';
 
 const { formatDate } = useFormattedDate();
 
+const emit = defineEmits(['open']);
+
 const props = defineProps({
     medicalRecord: {
         type: Object,
         required: true,
     },
 });
+
+const handleClick = () => {
+    emit('open', props.medicalRecord);
+}
 
 </script>
 <style scoped>
