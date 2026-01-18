@@ -8,11 +8,22 @@
             <p class="title-report">Title Report</p>
         </div>
         </div>
+        <div class="info-record">
+           <p class="time"> {{ medicalRecord.created_at }}</p>
+            <p class="time"> {{ medicalRecord.doctor }}</p>
+        </div>
     </div>
 </template>
 <script setup>
 import { ref, reactive, computed } from "vue";
 import file from '../assets/file.png';
+
+const props = defineProps({
+    medicalRecord: {
+        type: Object,
+        required: true,
+    },
+});
 
 </script>
 <style scoped>
@@ -57,5 +68,14 @@ import file from '../assets/file.png';
     border-radius: 14px;
     text-align: center;
     padding: 3px 10px;
+}
+.info-record {
+    display: flex;
+    flex-direction: row;
+
+}
+.time {
+    font-size: 18px;
+
 }
 </style>
