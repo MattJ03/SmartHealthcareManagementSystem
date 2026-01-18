@@ -10,6 +10,7 @@
         </div>
         <div class="info-record">
             <p class="time"> {{ formatDate(medicalRecord.created_at) }}</p>
+            <p class="time"> {{ medicalRecord.}}</p>
         </div>
     </div>
 </template>

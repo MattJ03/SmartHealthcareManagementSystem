@@ -102,6 +102,7 @@ class MedicalRecordController extends Controller
 
             $records = MedicalRecord::where('doctor_id', $user->id)
                 ->where('patient_id', $patientId)
+                ->with('doctor:id,name')
                 ->get();
         } else {
             $patientProfile = $user->profile;
