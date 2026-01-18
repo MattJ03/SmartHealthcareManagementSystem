@@ -113,7 +113,9 @@ class MedicalRecordController extends Controller
                 ], 404);
             }
 
-            $records = MedicalRecord::where('patient_id', $patientProfile->id)->get();
+            $records = MedicalRecord::where('patient_id', $patientProfile->id)
+                ->with('doctor:id,name')
+                 ->get();
         }
 
         Log::info('number of records returned: ' . $records->count());

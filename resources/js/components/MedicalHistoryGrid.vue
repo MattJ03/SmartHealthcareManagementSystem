@@ -9,8 +9,12 @@
         </div>
         </div>
         <div class="info-record">
+            <p class="title"><strong> {{ medicalRecord.title }}</strong></p>
+            <div class="time-wrapper">
+                <img :src="calenderIcon" alt="calenderImage" class="cal-image" />
             <p class="time"> {{ formatDate(medicalRecord.created_at) }}</p>
-            <p class="time"> {{ medicalRecord.}}</p>
+            </div>
+            <p class="time"> Dr. {{ medicalRecord.doctor?.name }}</p>
         </div>
     </div>
 </template>
@@ -18,6 +22,7 @@
 import { ref, reactive, computed } from "vue";
 import file from '../assets/file.png';
 import { useFormattedDate } from "../composobles/useFormattedDate.js";
+import calenderIcon from '../assets/calendar.png'
 
 const { formatDate } = useFormattedDate();
 
@@ -33,10 +38,11 @@ const props = defineProps({
 .grid {
     display: flex;
     border: 1px solid #000000;
+    flex-direction: column;
     border-radius: 14px;
     width: 550px;
-    height: 300px;
-    padding: 35px 35px;
+
+    padding: 20px;
 
 }
 .top-of-grid {
@@ -62,6 +68,13 @@ const props = defineProps({
 .title-report {
 
 }
+
+.title {
+   font-size: 25px;
+    margin: 2px;
+    padding-top: 25px;
+    padding-bottom: 10px;
+}
 .type-wrapper {
     display: flex;
     justify-content: center;
@@ -74,11 +87,21 @@ const props = defineProps({
 }
 .info-record {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 
 }
 .time {
     font-size: 18px;
+    padding-top: 6px;
+    margin: 2px;
+}
+.time-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+.cal-image {
+    height: 18px;
 
 }
 </style>
