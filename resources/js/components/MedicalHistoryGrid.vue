@@ -25,7 +25,7 @@
                    <img :src="eye" /> View
                </button>
                <button class="download-button">
-                   <img
+                   <img :src="download" />
                </button>
            </div>
     </div>
@@ -37,6 +37,8 @@ import { useFormattedDate } from "../composobles/useFormattedDate.js";
 import calenderIcon from '../assets/calendar.png';
 import user from '../assets/user.png';
 import eye from '../assets/eye.png';
+import download from '../assets/download.png';
+
 
 const { formatDate } = useFormattedDate();
 
@@ -127,9 +129,10 @@ const props = defineProps({
 .button-row {
     display: flex;
     margin-top: 15px;
+    justify-content: space-between;
 }
 .view-button {
-    width: 75%;
+    width: 83%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -143,12 +146,20 @@ const props = defineProps({
 
 }
 .view-button img {
-    height: 22px;
+    height: 28px;
 
 }
 .download-button {
     display: flex;
     justify-content: center;
-
+     align-items: center;
+    background-color: #FFFFFF;
+    border-radius: 14px;
+    padding-right: 20px;
+    padding-left: 20px;
+    border: 2px solid #4856f2;
+}
+.download-button img {
+    height: 22px;
 }
 </style>
