@@ -564,7 +564,7 @@ class MedicalRecordControllerTest extends TestCase
         Storage::fake('private');
         $patient = User::factory()->create()->assignRole('patient');
         $doctor = User::factory()->create()->assignRole('doctor');
-        Sanctum::actingAs($patient);
+        $this->actingAs($doctor);
 
         $patientProfile = PatientProfile::factory()->create([
             'user_id' => $patient->id,
@@ -610,4 +610,109 @@ class MedicalRecordControllerTest extends TestCase
         $response->assertDownload();
     }
 
+    public function test_admin_cannot_download_file(): void {
+        Storage::fake('private');
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $admin = User::factory()->create()->assignRole('admin');
+        Sanctum::actingAs($admin);
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $filePath = 'medical-records/results.pdf';
+        Storage::disk('private')->put($filePath, '%PDF-1.4 fake pdf content');
+        $record = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $filePath,
+            'file_type' => 'pdf',
+            'title' => 'results.pdf',
+        ]);
+
+        $response = $this->get('api/downloadFile/' . $record->id . '/download');
+        $response->assertStatus(403);
+    }
+
+    public function test_cannot_download_file_that_doesnt_exist(): void {
+        Storage::fake('private');
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        Sanctum::actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $filePath = 'medical-records/results.pdf';
+        Storage::disk('private')->put($filePath, '%PDF-1.4 fake pdf content');
+
+        $record = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $filePath,
+            'file_type' => 'pdf',
+            'title' => 'results.pdf',
+        ]);
+
+        $response = $this->get('api/downloadFile/' . 5 . '/download');
+        $response->assertStatus(404);
+    }
+
+    public function test_accessing_file_on_wrong_disk_returns_404(): void {
+        Storage::fake('private');
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        Sanctum::actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $filePath = 'medical-records/results.pdf';
+        Storage::disk('public')->put($filePath, '%PDF-1.4 fake pdf content');
+
+        $record = MedicalRecord::factory()->create([
+           'patient_id' => $patientProfile->id,
+           'file_path' => $filePath,
+           'file_type' => 'pdf',
+           'title' => 'results.pdf',
+        ]);
+
+        $response = $this->get('api/downloadFile/' . $record->id . '/download');
+        $response->assertStatus(404);
+    }
+
+    public function test_patient_cannot_download_other_users_files(): void {
+        Storage::fake('private');
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $notPatient = User::factory()->create()->assignRole('patient');
+        Sanctum::actingAs($patient);
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $notPatientProfile = PatientProfile::factory()->create([
+            'user_id' => $notPatient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $filePath = 'medical-records/results.pdf';
+        Storage::disk('private')->put($filePath, '%PDF-1.4 fake pdf content');
+
+        $record = MedicalRecord::factory()->create([
+            'patient_id' => $notPatientProfile->id,
+            'file_path' => $filePath,
+            'file_type' => 'pdf',
+            'title' => 'results.pdf',
+        ]);
+        $response = $this->get('api/downloadFile/' . $record->id . '/download');
+        $response->assertStatus(403);
+
+    }
 }
