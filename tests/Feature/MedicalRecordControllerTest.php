@@ -558,10 +558,56 @@ class MedicalRecordControllerTest extends TestCase
 
         $response = $this->get('/api/showMedicalRecord/' . $fakeId);
         $response->assertStatus(404);
-
     }
 
+    public function test_download_file_works(): void {
+        Storage::fake('private');
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        Sanctum::actingAs($patient);
 
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
 
+        $filePath = 'medical-records/results.pdf';
+        Storage::disk('private')->put($filePath, '%PDF-1.4 fake pdf content');
+
+        $record = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $filePath,
+            'file_type' => 'pdf',
+            'title' => 'results.pdf',
+        ]);
+
+        $response = $this->get('api/downloadFile/' . $record->id . '/download');
+        $response->assertDownload();
+    }
+
+    public function test_doctor_can_download_file_from_their_patient(): void {
+        Storage::fake('private');
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        Sanctum::actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $filePath = 'medical-records/results.pdf';
+        Storage::disk('private')->put($filePath, '%PDF-1.4 fake pdf content');
+
+        $record = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $filePath,
+            'file_type' => 'pdf',
+            'title' => 'results.pdf',
+        ]);
+
+        $response = $this->get('api/downloadFile/' . $record->id . '/download');
+        $response->assertDownload();
+    }
 
 }
