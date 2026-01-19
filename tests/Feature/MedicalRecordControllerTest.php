@@ -537,7 +537,7 @@ class MedicalRecordControllerTest extends TestCase
         $doctor->assignRole('doctor');
         $patient = User::factory()->create();
         $patient->assignRole('patient');
-        Sanctum::actingAs($doctor);
+        $this->actingAs($doctor, 'sanctum');
 
         $patientProfile = PatientProfile::factory()->create([
             'user_id' => $patient->id,
@@ -560,11 +560,11 @@ class MedicalRecordControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_download_file_works(): void {
+    public function test_download_file_works_correctly(): void {
         Storage::fake('private');
         $patient = User::factory()->create()->assignRole('patient');
         $doctor = User::factory()->create()->assignRole('doctor');
-        $this->actingAs($doctor);
+        $this->actingAs($patient, 'sanctum');
 
         $patientProfile = PatientProfile::factory()->create([
             'user_id' => $patient->id,
@@ -581,7 +581,8 @@ class MedicalRecordControllerTest extends TestCase
             'title' => 'results.pdf',
         ]);
 
-        $response = $this->get('api/downloadFile/' . $record->id . '/download');
+        $response = $this->get('/api/downloadFile/' . $record->id . '/download');
+        $response->assertStatus(200);
         $response->assertDownload();
     }
 

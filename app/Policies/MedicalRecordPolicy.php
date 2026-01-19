@@ -24,7 +24,7 @@ class MedicalRecordPolicy
     public function view(User $user, MedicalRecord $medicalRecord): bool
     {
        if($user->hasRole('patient')) {
-           return $user->id === $medicalRecord->patient_id;
+           return $user->id === $medicalRecord->patient->user_id;
        }
 
        if($user->hasRole('doctor')) {
