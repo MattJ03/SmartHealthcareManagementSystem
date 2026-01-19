@@ -149,7 +149,7 @@ const handleClick = () => {
     color: #FFFFFF;
     gap: 6px;
     font-size: 18px;
-
+    cursor: pointer;
 }
 .view-button img {
     height: 28px;
@@ -164,6 +164,7 @@ const handleClick = () => {
     padding-right: 20px;
     padding-left: 20px;
     border: 2px solid #4856f2;
+    cursor: pointer;
 }
 .download-button img {
     height: 22px;

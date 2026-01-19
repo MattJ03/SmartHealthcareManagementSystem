@@ -126,4 +126,13 @@ class MedicalRecordController extends Controller
         ]);
     }
 
+    public function downloadFile(Request $request, MedicalRecord $record) {
+        $this->authorize('view', $record);
+
+        if(!Storage::disk('private')->exists($record->file_path)) {
+            abort(404, 'File not found');
+        }
+        return Storage::disk('private')->download($record->file_path);
+    }
+
 }
