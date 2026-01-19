@@ -24,7 +24,7 @@
                <button class="view-button" @click="handleClick">
                    <img :src="eye" /> View
                </button>
-               <button class="download-button">
+               <button class="download-button" @click="handleDownload">
                    <img :src="download" />
                </button>
            </div>
@@ -42,7 +42,7 @@ import download from '../assets/download.png';
 
 const { formatDate } = useFormattedDate();
 
-const emit = defineEmits(['open']);
+const emit = defineEmits(['open', 'download']);
 
 const props = defineProps({
     medicalRecord: {
@@ -55,6 +55,9 @@ const handleClick = () => {
     emit('open', props.medicalRecord);
 }
 
+const handleDownload = () => {
+    emit('download', props.medicalRecord);
+}
 </script>
 <style scoped>
 .grid {

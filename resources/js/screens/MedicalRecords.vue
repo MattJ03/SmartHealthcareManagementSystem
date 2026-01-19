@@ -6,6 +6,7 @@
      :key="record.id"
      :medical-record="record"
      @open="recordStore.openRecord"
+     @download="downloadRecord"
      ></MedicalHistoryGrid>
     </div>
 
@@ -60,9 +61,22 @@ if (role === 'doctor') {
 }
 });
 
-const openRecord = async () => {
+const downloadRecord = async (record) => {
+
+        const res = api.get(`/downloadFile/${record.id}/download`, {
+            responseType: 'blob',
+        });
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', res.data);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
 
 }
+
+
 
 </script>
 <style scoped>
