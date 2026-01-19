@@ -132,6 +132,8 @@ class MedicalRecordController extends Controller
         if(!Storage::disk('private')->exists($record->file_path)) {
             abort(404, 'File not found');
         }
+
+        Log::info($record->file_path . ' downloaded by: ' . auth()->id());
         return Storage::disk('private')->download($record->file_path);
     }
 
