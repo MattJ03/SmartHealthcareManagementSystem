@@ -9,6 +9,7 @@ use App\Models\Appointment;
 use App\Services\AppointmentService;
 use Database\Seeders\RolePermissionSeeder;
 use App\Policies\AppointmentPolicy;
+use Illuminate\Support\Facades\Log;
 class AppointmentController extends Controller
 {
     public function storeAppointment(Request $request, AppointmentService $appointmentService)
@@ -42,6 +43,7 @@ class AppointmentController extends Controller
 
 
         $appointment = $appointmentService->storeAppointment($patientId, $validatedData);
+        Log::info('appointment booked by: ' . $user);
         return response()->json([
             'appointment' => $appointment,
             'patient_id' => $patientId,
@@ -123,7 +125,7 @@ class AppointmentController extends Controller
     public function getAllDoctorAppointments() {
         $user = auth()->user();
         abort_unless($user->hasRole('doctor'), 403);
-        $appointments = Appointment::with('patient')
+        $appointments = Appointment::with('patientProfile.user', 'doctor')
                                          ->where('doctor_id', auth()->id())
                                          ->where('status', 'confirmed')
                                          ->where('starts_at', '>=', now())

@@ -5,6 +5,7 @@ import api from '../axios.js';
 export const useAppointmentStore = defineStore('appointment', () => {
     const role = ref(localStorage.getItem('role'));
     const doctor = ref(null);
+    const patientName = ref(null);
     const loading = ref(false);
     const error = ref(null);
     const appointment = ref(null);
@@ -111,12 +112,20 @@ export const useAppointmentStore = defineStore('appointment', () => {
         try {
             const res = await api.get('/getUpcomingAppointmentsDoctor');
             doctorAppointments.value = res.data.appointments;
+
+            // OPTIONAL: store the patient name for the next appointment red container
+            if (doctorAppointments.value.length > 0) {
+                nextAppointment.value = doctorAppointments.value[0];
+            } else {
+                nextAppointment.value = null;
+            }
         } catch (error) {
             error.value = error.response?.data?.message ?? 'Failing to fetch appointments';
         } finally {
             loading.value = false;
         }
-    }
+    };
+
 
     //go back at some point and fix error handling
 

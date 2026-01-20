@@ -1,7 +1,7 @@
 <template>
     <NavBar></NavBar>
     <div class="welcome-container">
-        <h1 class="welcome-name">Welcome back, {{ name }}</h1>
+        <h1 class="welcome-name">Welcome back {{ name }}</h1>
         <p class="welcome-name">How are you feeling today?</p>
     </div>
     <div class="red-container" v-if="isDoctor">
@@ -12,26 +12,30 @@
             </div>
             <button class="view-details-btn">View Details</button>
         </div>
+
         <h2 class="scheduled-appointment"><strong>Scheduled Appointment</strong></h2>
-        <p v-if="nextAppointment" class="doctor-text"> With Dr. {{ doctorName }} </p>
-        <div class="three-squares">
-            <div v-if="formattedAppointment.appointmentDate" class="checkup-square">
+
+        <!-- Safe patient name -->
+        <p v-if="nextDoctorAppointment" class="doctor-text">
+            With {{ nextDoctorAppointment.patient_profile?.user?.name ?? 'Loading...' }}
+        </p>
+
+        <div class="three-squares" v-if="nextDoctorAppointment">
+            <div v-if="formattedDoctorAppointment.appointmentDate" class="checkup-square">
                 <p class="checkup-dates">Date</p>
-                <p class="checkup-dates">
-                    {{ formattedAppointment.appointmentDate }}
-                </p>
+                <p class="checkup-dates">{{ formattedDoctorAppointment.appointmentDate }}</p>
             </div>
 
-            <div v-if="formattedAppointment.appointmentTime" class="time-square">
+            <div v-if="formattedDoctorAppointment.appointmentTime" class="time-square">
                 <p class="checkup-dates">Time</p>
                 <p class="checkup-dates">
-                    {{ formattedAppointment.appointmentTime }}
-                    {{ formattedAppointment.appointmentPeriod }}
+                    {{ formattedDoctorAppointment.appointmentTime }}
+                    {{ formattedDoctorAppointment.appointmentPeriod }}
                 </p>
             </div>
-
         </div>
     </div>
+
 
 
     <div class="red-container" v-if="isPatient">
@@ -134,6 +138,16 @@ onMounted(() => {
 })
 
 const doctorName = computed(() => nextAppointment.value?.doctor?.name ?? '');
+
+const nextDoctorAppointment = computed(() => {
+   return doctorAppointments.value?.length ? doctorAppointments.value[0] : null;
+});
+const patientName = computed(() => {
+    return nextDoctorAppointment.value?.patient?.user?.name ?? 'Loading...';
+});
+const formattedDoctorAppointment = useFormattedAppointment(nextDoctorAppointment);
+
+
 console.log('store.role =', store.role);
 console.log('role ref =', role.value);
 

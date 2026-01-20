@@ -2,7 +2,7 @@
     <div class="container">
         <div class="appointment-card">
             <div class="details">
-            <p class="patient-name"> {{ appointment.patient?.name ?? 'Loading...'}}</p>
+            <p class="patient-name"> {{ appointment.patient_profile.user.name ?? 'Loading...'}}</p>
             <p class="starts-at"> {{ appointmentDate ?? 'Loading...' }}</p>
             <p class="starts-at"> {{ appointmentTime }} {{ appointmentPeriod }}</p>
         </div>
