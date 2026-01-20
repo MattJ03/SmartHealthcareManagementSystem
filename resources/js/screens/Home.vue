@@ -4,8 +4,37 @@
         <h1 class="welcome-name">Welcome back, {{ name }}</h1>
         <p class="welcome-name">How are you feeling today?</p>
     </div>
+    <div class="red-container" v-if="isDoctor">
+        <div class="next-appointment-container">
+            <div class="next-appoint-clock">
+                <img :src="clock" class="img" alt="clock" />
+                <h2>Next Appointment</h2>
+            </div>
+            <button class="view-details-btn">View Details</button>
+        </div>
+        <h2 class="scheduled-appointment"><strong>Scheduled Appointment</strong></h2>
+        <p v-if="nextAppointment" class="doctor-text"> With Dr. {{ doctorName }} </p>
+        <div class="three-squares">
+            <div v-if="formattedAppointment.appointmentDate" class="checkup-square">
+                <p class="checkup-dates">Date</p>
+                <p class="checkup-dates">
+                    {{ formattedAppointment.appointmentDate }}
+                </p>
+            </div>
 
-    <div class="red-container" v-if="role.value === 'patient'">
+            <div v-if="formattedAppointment.appointmentTime" class="time-square">
+                <p class="checkup-dates">Time</p>
+                <p class="checkup-dates">
+                    {{ formattedAppointment.appointmentTime }}
+                    {{ formattedAppointment.appointmentPeriod }}
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="red-container" v-if="isPatient">
     <div class="next-appointment-container">
         <div class="next-appoint-clock">
         <img :src="clock" class="img" alt="clock" />
@@ -105,7 +134,11 @@ onMounted(() => {
 })
 
 const doctorName = computed(() => nextAppointment.value?.doctor?.name ?? '');
+console.log('store.role =', store.role);
+console.log('role ref =', role.value);
 
+const isPatient = computed(() => role.value === 'patient');
+const isDoctor = computed(() => role.value === 'doctor');
 
 
 const formattedAppointment = useFormattedAppointment(nextAppointment);
