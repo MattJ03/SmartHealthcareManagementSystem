@@ -42,7 +42,6 @@ const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppo
     flex-direction: row;
     border: 1px solid #E9DCC9;
     border-radius: 14px;
-    padding-right: px;
 }
 .starts-at {
     font-size: 18px;
@@ -54,12 +53,12 @@ const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppo
     display: flex;
     align-items: center;
     gap: 15px;
+    padding-right: 15px;
 }
 .details {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 20px;
     flex: 1;
 }
 
