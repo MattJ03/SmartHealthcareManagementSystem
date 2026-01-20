@@ -54,7 +54,7 @@ async function logoutUser() {
 }
 .logo {
     height: 70px;
-
+    cursor: pointer;
 }
 </style>
 

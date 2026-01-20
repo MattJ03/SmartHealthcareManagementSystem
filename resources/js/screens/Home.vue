@@ -117,7 +117,12 @@ async function moveToBook() {
 }
 
 async function moveToRecords() {
-    await router.push('/medical-records');
+    if(role.value === 'patient') {
+       await router.push({name: 'patient-medical-records'});
+    }
+    if(role.value === 'doctor') {
+        await router.push({name: 'doctor-medical-records'});
+    }
 }
 
 const handleDeleteAppointment = async (appointmentId) => {
