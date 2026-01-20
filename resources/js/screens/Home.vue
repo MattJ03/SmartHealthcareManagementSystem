@@ -2,10 +2,10 @@
     <NavBar></NavBar>
     <div class="welcome-container">
         <h1 class="welcome-name">Welcome back, {{ name }}</h1>
-        <p class="welcome-name">How are feeling today?</p>
+        <p class="welcome-name">How are you feeling today?</p>
     </div>
 
-    <div class="red-container">
+    <div class="red-container" v-if="role.value === 'patient'">
     <div class="next-appointment-container">
         <div class="next-appoint-clock">
         <img :src="clock" class="img" alt="clock" />
@@ -109,7 +109,7 @@ const doctorName = computed(() => nextAppointment.value?.doctor?.name ?? '');
 
 
 const formattedAppointment = useFormattedAppointment(nextAppointment);
-
+const doctorFormattedAppointment = useFormattedAppointment(doctorAppointments);
 
 
 async function moveToBook() {

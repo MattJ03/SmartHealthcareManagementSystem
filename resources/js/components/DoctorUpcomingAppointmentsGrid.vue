@@ -47,7 +47,7 @@ const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppo
     font-size: 18px;
 }
 .patient-name {
-    font-size: 16px;
+    font-size: 20px;
 }
 .delete-section {
     display: flex;
@@ -60,6 +60,7 @@ const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppo
     flex-direction: column;
     justify-content: center;
     flex: 1;
+    padding-left: 15px
 }
 
 .delete-btn {
