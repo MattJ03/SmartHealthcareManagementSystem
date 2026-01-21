@@ -736,6 +736,7 @@ class MedicalRecordControllerTest extends TestCase
             'file_path' => $filePath,
             'file_type' => 'pdf',
             'title' => 'results.pdf',
+            'doctor_id' => $doctor->id,
         ]);
 
         $filePath2 = 'medical-records/fake-results.pdf';
@@ -746,11 +747,12 @@ class MedicalRecordControllerTest extends TestCase
             'file_path' => $filePath2,
             'file_type' => 'pdf',
             'title' => 'results2.pdf',
+            'doctor_id' => $doctor->id,
         ]);
 
         $response = $this->get('api/doctor/records?search=results');
         $response->assertStatus(200)
-                  ->assertJsonCount(1, 'records');
+                  ->assertJsonCount(2, 'records');
         $response->dump();
     }
 }
