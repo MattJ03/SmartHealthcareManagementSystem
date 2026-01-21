@@ -126,6 +126,37 @@ class MedicalRecordController extends Controller
         ]);
     }
 
+    public function doctorIndex(Request $request) {
+        $user = auth()->user();
+
+        abort_unless($user->hasRole('doctor'), 403);
+
+        $query = MedicalRecord::where('doctor_id', $user->id)
+                                ->with(['doctor:id,name',
+                                     'patient.user:id,name',]);
+
+            if($request->filled('search')) {
+                $search = $request->query('search');
+                Log::info('user: ' . $user->id  . ' searched for: '. $search);
+
+
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'LIKE', '%' . $search . '%')
+                        ->orWhereHas('patient.user', function($q) use ($search) {
+                            $q->where('name', 'LIKE', '%' . $search . '%');
+                        });
+                });
+            }
+
+
+            $records = $query->orderBy('created_at', 'desc')->get();
+
+            return response()->json([
+                'records' => $records,
+                'message' => 'Records retrieved',
+            ]);
+    }
+
     public function downloadFile(Request $request, MedicalRecord $record) {
         $this->authorize('view', $record);
 

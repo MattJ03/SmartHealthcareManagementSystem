@@ -716,4 +716,41 @@ class MedicalRecordControllerTest extends TestCase
         $response->assertStatus(403);
 
     }
+
+    public function test_doctor_index_loads_all_records(): void {
+        Storage::fake('private');
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $filePath = 'medical-records/results.pdf';
+        Storage::disk('private')->put($filePath, '%PDF-1.4 fake pdf content');
+
+        $record1 = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $filePath,
+            'file_type' => 'pdf',
+            'title' => 'results.pdf',
+        ]);
+
+        $filePath2 = 'medical-records/fake-results.pdf';
+        Storage::disk('private')->put($filePath2, '%PDF-1.4 fake pdf content');
+
+        $record2 = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $filePath2,
+            'file_type' => 'pdf',
+            'title' => 'results2.pdf',
+        ]);
+
+        $response = $this->get('api/doctor/records?search=results');
+        $response->assertStatus(200)
+                  ->assertJsonCount(1, 'records');
+        $response->dump();
+    }
 }

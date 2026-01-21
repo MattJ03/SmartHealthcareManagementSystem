@@ -7,7 +7,7 @@
                 <p class="patient-dates">DOB: 04/12/03 | Patient ID: #12345</p>
             </div>
             <div class="search-wrapper">
-                <input type="text" class="search-bar" placeholder="Search patient..." >
+                <input type="text" name="search" class="search-bar" placeholder="Search patient..." >
                 <button class="cancel-button" type="button">X</button>
             </div>
         </div>

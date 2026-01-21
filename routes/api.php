@@ -40,6 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/deleteMedicalRecord/{id}', [MedicalRecordController::class, 'deleteRecord']);
     Route::get('/showMedicalRecord/{id}', [MedicalRecordController::class, 'showRecord']);
     Route::get('/getAllRecords', [MedicalRecordController::class, 'getAllRecords']);
+    Route::get('/doctor/records', [MedicalRecordController::class, 'doctorIndex']);
     Route::get('/downloadFile/{record}/download', [MedicalRecordController::class, 'downloadFile']);
     Route::get('/me', fn () => auth()->user()->load('profile.doctor'));
 });
