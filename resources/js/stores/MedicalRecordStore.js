@@ -6,6 +6,7 @@ export const useMedicalRecordStores = defineStore('medicalRecords', () => {
     const role = ref(localStorage.getItem('role'));
     const error = ref(null);
     const patientRecords = ref([]);
+    const records = ref([]);
     const selectedRecord = ref(null);
     const hasRecord = computed(() => patientRecords.value.length > 0);
 
@@ -64,10 +65,24 @@ export const useMedicalRecordStores = defineStore('medicalRecords', () => {
         selectedRecord.value ? `/showMedicalRecord/${selectedRecord.value.id}` : ""
     );
 
+    const fetchDoctorRecords = async (search = '') => {
+        loading.value = true;
+        error.value = null;
+        try {
+            const res = api.get(`doctorIndex`, {
+                params: search ? {search} : {},
+            });
+            records.value = res.data.records;
+        } finally {
+            loading.value = false;
+        }
+    }
+
     return {
         loading,
         error,
         patientRecords,
+        records,
         selectedRecord,
         hasRecord,
         fetchPatientRecords,

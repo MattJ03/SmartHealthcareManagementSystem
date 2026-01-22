@@ -7,7 +7,7 @@
                 <p class="patient-dates">DOB: 04/12/03 | Patient ID: #12345</p>
             </div>
             <div class="search-wrapper">
-                <input type="text" name="search" class="search-bar" placeholder="Search patient..." >
+                <input v-model="search" type="text" name="search" class="search-bar" placeholder="Search patient..." >
                 <button class="cancel-button" type="button">X</button>
             </div>
         </div>
@@ -27,10 +27,17 @@
 <script setup>
 import NavBar from "../components/NavBar.vue";
 import { ref, reactive, computed } from 'vue';
+import { watch } from "vue";
 import { useFormattedAppointment } from "../composobles/useFormattedAppointment.js";
 import { useMedicalRecordStores } from "../stores/MedicalRecordStore.js";
 import pill from '../assets/pill.PNG';
 import attach from '../assets/attach.svg';
+import api from "../axios.js";
+
+const medicalReocrdsStore = useMedicalRecordStores();
+
+const search = ref('');
+
 
 
 
