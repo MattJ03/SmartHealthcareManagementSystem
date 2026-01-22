@@ -753,6 +753,113 @@ class MedicalRecordControllerTest extends TestCase
         $response = $this->get('api/doctor/records?search=results');
         $response->assertStatus(200)
                   ->assertJsonCount(2, 'records');
-        $response->dump();
+
+    }
+
+    public function test_doctor_index_filters_results(): void {
+        Storage::fake('private');
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $filePath = 'medical-records/results.pdf';
+        Storage::disk('private')->put($filePath, '%PDF-1.4 fake pdf content');
+
+        $record1 = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $filePath,
+            'file_type' => 'pdf',
+            'title' => 'results.pdf',
+            'doctor_id' => $patientProfile->doctor->id,
+        ]);
+
+        $filePath2 = 'medical-records/fake.pdf';
+        Storage::disk('private')->put($filePath2, '%PDF-1.4 fake pdf content');
+        $record2 = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $filePath2,
+            'file_type' => 'pdf',
+            'title' => 'fake.pdf',
+            'doctor_id' => $patientProfile->doctor->id,
+        ]);
+
+        $response = $this->get('api/doctor/records?search=fake');
+        $response->assertStatus(200);
+        $response->assertJsonCount(1, 'records');
+    }
+
+    public function test_no_search_results_all_recods(): void {
+        Storage::fake('private');
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $filePath = 'medical-records/results.pdf';
+        Storage::disk('private')->put($filePath, '%PDF-1.4 fake pdf content');
+        $record1 = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $filePath,
+            'file_type' => 'pdf',
+            'title' => 'cathal.pdf',
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $filePath2 = 'medical-records/fake.pdf';
+        Storage::disk('private')->put($filePath2, '%PDF-1.4 fake pdf content');
+        $record2 = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $filePath2,
+            'file_type' => 'pdf',
+            'title' => 'jacksonBradford.pdf',
+            'doctor_id' => $patientProfile->doctor->id,
+        ]);
+        $response = $this->get('api/doctor/records');
+        $response->assertStatus(200)
+            ->assertJsonCount(2, 'records');
+    }
+
+    public function test_search_with_no_matches_returns_no_results(): void {
+        Storage::fake('private');
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $filePath = 'medical-records/results.pdf';
+        Storage::disk('private')->put($filePath, '%PDF-1.4 fake pdf content');
+        $record1 = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $filePath,
+            'file_type' => 'pdf',
+            'title' => 'results.pdf',
+            'doctor_id' => $patientProfile->doctor->id,
+        ]);
+        $filePath2 = 'medical-records/fake.pdf';
+        Storage::disk('private')->put($filePath2, '%PDF-1.4 fake pdf content');
+        $record2 = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $filePath2,
+            'file_type' => 'pdf',
+            'title' => 'fake.pdf',
+            'doctor_id' => $patientProfile->doctor->id,
+        ]);
+
+        $response = $this->get('api/doctor/records?search=zzz');
+        $response->assertStatus(200)
+            ->assertJsonCount(0, 'records');
     }
 }
