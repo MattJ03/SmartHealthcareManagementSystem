@@ -11,7 +11,7 @@
                 <button class="cancel-button" type="button">X</button>
             </div>
         </div>
-
+ //new container here tomorrow
         <div class="attach-container">
             <div class="attach-items">
                 <div class="attach-circle">
@@ -21,7 +21,13 @@
                 <p>Add medical documents for this patient</p>
             </div>
         </div>
-
+        <MedicalHistoryGrid
+            v-for="record in medicalRecordStores.records"
+            :key="record.id"
+            :medical-record="record"
+            @open="medicalRecordStores.openRecord"
+            @download="downloadRecord"
+        ></MedicalHistoryGrid>
     </div>
 </template>
 <script setup>
@@ -33,6 +39,7 @@ import { useMedicalRecordStores } from "../stores/MedicalRecordStore.js";
 import pill from '../assets/pill.PNG';
 import attach from '../assets/attach.svg';
 import api from "../axios.js";
+import MedicalHistoryGrid from "../components/MedicalHistoryGrid.vue";
 
 const medicalRecordStores = useMedicalRecordStores();
 
@@ -44,7 +51,21 @@ onMounted(async () => {
  watch(search, (newValue) => {
      medicalRecordStores.fetchDoctorRecords(search);
      console.log(search);
- })
+ });
+
+ const downloadRecord = async (record) => {
+     const res = await api.get(`downloadFile/${record.id}/download`, {
+         responseType: 'blob',
+     });
+
+     const url = window.URL.createObjectURL(new Blob([res.data]));
+     const link = document.createElement('a');
+     link.href = url;
+     link.setAttribute('download', record.title);
+     document.body.appendChild(link);
+     link.click();
+     link.remove();
+}
 
 
 </script>
@@ -85,6 +106,7 @@ onMounted(async () => {
     width: 50px;
 }
 .container {
+
     margin: auto;
     padding: 25px 25px;
     width: 85%;
