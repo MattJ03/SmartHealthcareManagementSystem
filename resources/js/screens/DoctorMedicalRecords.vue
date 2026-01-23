@@ -1,4 +1,4 @@
-<template>
+<template xmlns="http://www.w3.org/1999/html">
 <NavBar></NavBar>
     <div class="container">
         <div class="top-of-container">
@@ -29,7 +29,16 @@
             @download="downloadRecord"
         ></MedicalHistoryGrid>
         </div>
-
+    </div>
+    <div v-if="medicalRecordStores.selectedRecord" class="modal-overlay" @click.self="medicalRecordStores.closeRecord()">
+        <div class="modal-content">
+            <button @click="medicalRecordStores.closeRecord()" class="close-btn">X</button>
+           <iframe
+               :src="medicalRecordStores.pdfUrl"
+               width="100%"
+               height="100%" >
+               </iframe>
+        </div>
     </div>
 </template>
 <script setup>
@@ -52,7 +61,7 @@ onMounted(async () => {
 });
  watch(search, (newValue) => {
      medicalRecordStores.fetchDoctorRecords(newValue);
-     console.log(search);
+     console.log(newValue);
  });
 
  const downloadRecord = async (record) => {
@@ -174,6 +183,42 @@ onMounted(async () => {
     font-size: 20px;
     padding-left: 25px;
     padding-right: 25px;
+    cursor: pointer;
+
+}
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+.modal-content {
+    position: relative;
+    width: 90%;
+    height: 90%;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+}
+.close-btn {
+    padding-bottom: 15px;
+    padding-top: 15px;
+    padding-left: 25px;
+    padding-right: 25px;
+    background-color: #C0392B;
+    border-radius: 14px;
+    font-size: 16px;
+    color: #FFFFFF;
+    border: 0;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 10px;
     cursor: pointer;
 }
 </style>
