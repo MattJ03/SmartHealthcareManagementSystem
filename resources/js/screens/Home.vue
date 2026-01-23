@@ -15,7 +15,6 @@
 
         <h2 class="scheduled-appointment"><strong>Scheduled Appointment</strong></h2>
 
-        <!-- Safe patient name -->
         <p v-if="nextDoctorAppointment" class="doctor-text">
             With {{ nextDoctorAppointment.patient_profile?.user?.name ?? 'Loading...' }}
         </p>

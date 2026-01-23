@@ -40,7 +40,11 @@ const search = ref('');
 
 onMounted(async () => {
     medicalRecordStores.fetchDoctorRecords();
-})
+});
+ watch(search, (newValue) => {
+     medicalRecordStores.fetchDoctorRecords(search);
+     console.log(search);
+ })
 
 
 </script>

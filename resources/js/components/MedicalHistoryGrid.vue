@@ -14,10 +14,14 @@
                 <img :src="calenderIcon" alt="calenderImage" class="cal-image" />
             <p class="time"> {{ formatDate(medicalRecord.created_at) }}</p>
             </div>
-            <div class="time-wrapper">
+            <div class="time-wrapper" v-if="isPatient">
             <img :src="user" alt="peopleIcon" class="cal-image" />
             <p class="time"> Dr. {{ medicalRecord.doctor?.name }}</p>
             </div>
+        </div>
+        <div class="time-wrapper" v-if="isDoctor">
+            <img :src="user" alt="peopleIcon" class="cal-image" />
+            <p class="time"> {{ medicalRecord.patient_profile?.user.name }}</p>
         </div>
         <hr class="divider" />
            <div class="button-row">
@@ -34,13 +38,20 @@
 import { ref, reactive, computed } from "vue";
 import file from '../assets/file.png';
 import { useFormattedDate } from "../composobles/useFormattedDate.js";
+import {useAuthStore} from "../stores/AuthStore.js";
 import calenderIcon from '../assets/calendar.png';
 import user from '../assets/user.png';
 import eye from '../assets/eye.png';
 import download from '../assets/download.png';
+import {storeToRefs} from "pinia";
 
+const store = useAuthStore();
 
 const { formatDate } = useFormattedDate();
+const {name, role} = storeToRefs(store);
+
+const isPatient = computed(() => role.value === 'patient');
+const isDoctor = computed(() => role.value === 'doctor');
 
 const emit = defineEmits(['open', 'download']);
 
