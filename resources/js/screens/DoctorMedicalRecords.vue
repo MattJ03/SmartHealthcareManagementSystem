@@ -7,8 +7,8 @@
                 <p class="patient-dates">DOB: 04/12/03 | Patient ID: #12345</p>
             </div>
             <div class="search-wrapper">
-                <input v-model="search" type="text" name="search" class="search-bar" placeholder="Search patient..." >
-                <button class="cancel-button" type="button">X</button>
+                <input v-model="search" type="text" name="search" class="search-bar" placeholder="Search patient...">
+                <button class="cancel-button" type="button" @click="cancelSearch">X</button>
             </div>
         </div>
         <div class="grid-records-container">
@@ -76,6 +76,11 @@ onMounted(async () => {
      document.body.appendChild(link);
      link.click();
      link.remove();
+}
+
+const cancelSearch = async () => {
+     search.value = '';
+
 }
 
 
@@ -184,7 +189,9 @@ onMounted(async () => {
     padding-left: 25px;
     padding-right: 25px;
     cursor: pointer;
-
+}
+.cancel-button:hover {
+    background-color: #8B0000;
 }
 .modal-overlay {
     position: fixed;
@@ -220,5 +227,8 @@ onMounted(async () => {
     margin-left: 10px;
     margin-bottom: 10px;
     cursor: pointer;
+}
+.close-btn:hover {
+    background-color: #8B0000;
 }
 </style>

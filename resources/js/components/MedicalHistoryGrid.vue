@@ -69,6 +69,7 @@ const handleClick = () => {
 const handleDownload = () => {
     emit('download', props.medicalRecord);
 }
+
 </script>
 <style scoped>
 .grid {
