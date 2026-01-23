@@ -127,6 +127,7 @@ class MedicalRecordController extends Controller
     }
 
     public function doctorIndex(Request $request) {
+        Log::info('function began');
         $user = auth()->user();
 
         abort_unless($user->hasRole('doctor'), 403);

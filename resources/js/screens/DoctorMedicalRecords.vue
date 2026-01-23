@@ -26,7 +26,7 @@
 </template>
 <script setup>
 import NavBar from "../components/NavBar.vue";
-import { ref, reactive, computed } from 'vue';
+import {ref, reactive, computed, onMounted} from 'vue';
 import { watch } from "vue";
 import { useFormattedAppointment } from "../composobles/useFormattedAppointment.js";
 import { useMedicalRecordStores } from "../stores/MedicalRecordStore.js";
@@ -34,11 +34,13 @@ import pill from '../assets/pill.PNG';
 import attach from '../assets/attach.svg';
 import api from "../axios.js";
 
-const medicalReocrdsStore = useMedicalRecordStores();
+const medicalRecordStores = useMedicalRecordStores();
 
 const search = ref('');
 
-
+onMounted(async () => {
+    medicalRecordStores.fetchDoctorRecords();
+})
 
 
 </script>

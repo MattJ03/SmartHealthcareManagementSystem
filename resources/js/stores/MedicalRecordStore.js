@@ -69,7 +69,7 @@ export const useMedicalRecordStores = defineStore('medicalRecords', () => {
         loading.value = true;
         error.value = null;
         try {
-            const res = api.get(`doctorIndex`, {
+            const res = await api.get(`doctor/records`, {
                 params: search ? {search} : {},
             });
             records.value = res.data.records;
@@ -91,6 +91,7 @@ export const useMedicalRecordStores = defineStore('medicalRecords', () => {
         deleteRecord,
         createRecord,
         pdfUrl,
+        fetchDoctorRecords,
     };
 
 });
