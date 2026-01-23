@@ -21,7 +21,7 @@
         </div>
         <div class="time-wrapper" v-if="isDoctor">
             <img :src="user" alt="peopleIcon" class="cal-image" />
-            <p class="time"> {{ medicalRecord.patient_profile?.user.name }}</p>
+            <p class="time"> {{ medicalRecord.patient?.user.name }}</p>
         </div>
         <hr class="divider" />
            <div class="button-row">
