@@ -11,7 +11,7 @@
                 <button class="cancel-button" type="button">X</button>
             </div>
         </div>
- //new container here tomorrow
+        <div class="grid-records-container">
         <div class="attach-container">
             <div class="attach-items">
                 <div class="attach-circle">
@@ -28,6 +28,8 @@
             @open="medicalRecordStores.openRecord"
             @download="downloadRecord"
         ></MedicalHistoryGrid>
+        </div>
+
     </div>
 </template>
 <script setup>
@@ -49,7 +51,7 @@ onMounted(async () => {
     medicalRecordStores.fetchDoctorRecords();
 });
  watch(search, (newValue) => {
-     medicalRecordStores.fetchDoctorRecords(search);
+     medicalRecordStores.fetchDoctorRecords(newValue);
      console.log(search);
  });
 
@@ -114,6 +116,13 @@ onMounted(async () => {
     margin-top: 30px;
     border-radius: 14px;
     border: 1px solid #FFFFFF;
+}
+
+.grid-records-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
 }
 
 .top-of-container {
