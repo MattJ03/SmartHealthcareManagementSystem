@@ -27,10 +27,11 @@ class UserDirectoryController extends Controller
     public function getDoctorsPatients(Request $request) {
         $user = auth()->user();
 
-        abort_unless($user->hasRole('doctor' || 'admin'), 403);
+        abort_unless($user->hasRole('doctor'), 403);
 
-        $patients = User::role('patient')->where('doctor_id', $user->id)->select('id', 'name')->get();
-
+        $patients = PatientProfile::where('doctor_id', $user->id)
+                                    ->with('user:id,name')
+                                    ->get();
         if($patients->isEmpty()) {
             return response()->json([
                 'patients' => [],

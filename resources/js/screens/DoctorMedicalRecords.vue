@@ -51,7 +51,7 @@
                 <label>Patient</label>
                 <select v-model="form.patientId" required >
                     <option disabled value="">Select Patient</option>
-                    //create controller method to get all a doctors patient eager loading patients
+
                 </select>
                 <label>Title</label>
                 <input v-model="form.title" type="text" required />
