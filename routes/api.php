@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
    });
 
   Route::get('getDoctors', [UserDirectoryController::class, 'getDoctors']);
+  Route::get('/doctorPatients', [UserDirectoryController::class, 'getDoctorsPatients']);
   Route::get('/doctors/{doctor}/availability', DoctorAvailabilityController::class);
 
     Route::post('/storeMedicalRecord', [MedicalRecordController::class, 'storeRecord']);

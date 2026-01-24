@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 class MedicalRecordController extends Controller
 {
     public function storeRecord(Request $request) {
-                $this->authorize('create', MedicalRecord::class);
+        $this->authorize('create', MedicalRecord::class);
 
        $validatedData = $request->validate([
             'patient_id' => 'required|exists:patient_profiles,id',

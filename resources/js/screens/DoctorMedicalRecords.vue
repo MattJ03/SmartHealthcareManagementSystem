@@ -7,12 +7,12 @@
                 <p class="patient-dates">DOB: 04/12/03 | Patient ID: #12345</p>
             </div>
             <div class="search-wrapper">
-                <input v-model="search" type="text" name="search" class="search-bar" placeholder="Search patient...">
+                <input v-model="search" type="text" name="search" class="search-bar" placeholder="Search patient or title...">
                 <button class="cancel-button" type="button" @click="cancelSearch">X</button>
             </div>
         </div>
-        <div class="grid-records-container">
-        <div class="attach-container">
+        <div class="grid-records-container" >
+        <div class="attach-container" @click="showUploadModal = true">
             <div class="attach-items">
                 <div class="attach-circle">
                     <img :src="attach" alt="attach" />
@@ -40,6 +40,24 @@
                </iframe>
         </div>
     </div>
+    <div
+        v-if="showUploadModal"
+        class="modal-overlay"
+        @click.self="showUploadModal = false"
+    >
+        <div class="upload-model-content">
+            <h2>Upload Medical Record</h2>
+            <form @submit.prevent="submitRecord" class="upload-form">
+                <label>Patient</label>
+                <select v-model="form.patientId" required >
+                    <option disabled value="">Select Patient</option>
+                    //create controller method to get all a doctors patient eager loading patients
+                </select>
+                <label>Title</label>
+                <input v-model="form.title" type="text" required />
+            </form>
+        </div>
+    </div>
 </template>
 <script setup>
 import NavBar from "../components/NavBar.vue";
@@ -55,6 +73,12 @@ import MedicalHistoryGrid from "../components/MedicalHistoryGrid.vue";
 const medicalRecordStores = useMedicalRecordStores();
 
 const search = ref('');
+const showUploadModal = ref(false);
+const form = reactive({
+    patientId: '',
+    title: '',
+    file: null,
+});
 
 onMounted(async () => {
     medicalRecordStores.fetchDoctorRecords();
@@ -91,7 +115,6 @@ const cancelSearch = async () => {
     border-radius: 14px;
     border: dotted rgba(72, 86, 242, 0.5);;
     width: 30%;
-
     padding: 25px;
     display: flex;
     flex-direction: column;
@@ -230,5 +253,54 @@ const cancelSearch = async () => {
 }
 .close-btn:hover {
     background-color: #8B0000;
+}
+.show-upload-model-content {
+    width: 420px;
+    max-width: 90%;
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+}
+.upload-modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.upload-form input {
+    height: 42px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 0 12px;
+    font-size: 15px;
+}
+
+.button-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+button.cancel {
+    background: transparent;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+button.submit {
+    background-color: #4856f2;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    cursor: pointer;
 }
 </style>
