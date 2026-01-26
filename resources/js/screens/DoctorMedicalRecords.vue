@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="grid-records-container" >
-        <div class="attach-container" @click="showUploadModal = true">
+        <div class="attach-container" @click="openUploadModal">
             <div class="attach-items">
                 <div class="attach-circle">
                     <img :src="attach" alt="attach" />
@@ -45,16 +45,20 @@
         class="modal-overlay"
         @click.self="showUploadModal = false"
     >
-        <div class="upload-model-content">
+        <div class="show-upload-model-content">
             <h2>Upload Medical Record</h2>
             <form @submit.prevent="submitRecord" class="upload-form">
-                <label>Patient</label>
-                <select v-model="form.patientId" required >
+                <label class="form-field">Patient</label>
+                <select v-model="form.patientId" required @click="getMyPatients" class="dropdown" >
                     <option disabled value="">Select Patient</option>
-
+                    <option v-for="patient in doctorsPatients" :key="patient.id" :value="patient.id" class="patient-dropdown">
+                        {{ patient.user.name }}
+                    </option>
                 </select>
-                <label>Title</label>
-                <input v-model="form.title" type="text" required />
+                <label class="form-field">Title</label>
+                <input v-model="form.title" type="text" required class="form-upload-title" />
+                <label class="form-field">Upload file</label>
+                <input type="file" @change="handleFileUpload" accept="application/pdf" >
             </form>
         </div>
     </div>
@@ -71,6 +75,7 @@ import api from "../axios.js";
 import MedicalHistoryGrid from "../components/MedicalHistoryGrid.vue";
 
 const medicalRecordStores = useMedicalRecordStores();
+const loading = ref(false);
 
 const search = ref('');
 const showUploadModal = ref(false);
@@ -79,6 +84,8 @@ const form = reactive({
     title: '',
     file: null,
 });
+
+const doctorsPatients = ref([]);
 
 onMounted(async () => {
     medicalRecordStores.fetchDoctorRecords();
@@ -106,6 +113,30 @@ const cancelSearch = async () => {
      search.value = '';
 
 }
+
+const getMyPatients = async () => {
+     loading.value = true
+    try {
+         const res = await api.get('doctorPatients');
+         doctorsPatients.value = res.data.patients
+    } catch (error) {
+         console.log(error.value);
+    } finally {
+         loading.value = false;
+    }
+}
+const openUploadModal = async () => {
+    showUploadModal.value = true;
+
+    if (doctorsPatients.value.length === 0) {
+        await getMyPatients();
+    }
+};
+
+ const handleFileUpload = async (event) => {
+     form.file = event.target.files[0];
+ }
+
 
 
 </script>
@@ -270,7 +301,8 @@ const cancelSearch = async () => {
 .upload-form {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
+
 }
 
 .upload-form input {
@@ -302,5 +334,24 @@ button.submit {
     border-radius: 10px;
     padding: 10px 16px;
     cursor: pointer;
+}
+.dropdown {
+    padding: 12px 10px;
+    font-size: 18px;
+    border-radius: 14px;
+}
+.patient-dropdown {
+    padding: 15px 10px;
+    color: #8B0000;
+    border-radius: 14px;
+}
+.form-field {
+    font-size: 22px;
+}
+.form-upload-title {
+
+}
+.form-file-upload {
+
 }
 </style>
