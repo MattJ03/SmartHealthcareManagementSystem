@@ -59,6 +59,7 @@
                 <input v-model="form.title" type="text" required class="form-upload-title" />
                 <label class="form-field">Upload file</label>
                 <input type="file" @change="handleFileUpload" accept="application/pdf" >
+                <button type="submit" class="btn-submit">Upload</button>
             </form>
         </div>
     </div>
@@ -136,6 +137,7 @@ const openUploadModal = async () => {
  const handleFileUpload = async (event) => {
      form.file = event.target.files[0];
  }
+
 
 
 
@@ -353,5 +355,17 @@ button.submit {
 }
 .form-file-upload {
 
+}
+.btn-submit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    height: 50px;
+    width: 40%;
+    border-radius: 14px;
+    background-color: #C0392B;
+    font-size: 20px;
+    color: #FFFFFF;
 }
 </style>
