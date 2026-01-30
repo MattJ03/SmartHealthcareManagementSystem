@@ -138,6 +138,29 @@ const openUploadModal = async () => {
      form.file = event.target.files[0];
  }
 
+ const submitRecord = async () => {
+     if(!form.file || !form.title || !form.patientId) {
+         alert('No fields can be empty');
+         return;
+     }
+     const form = new FormData();
+     form.append('patient_id', form.patientId);
+     form.append('title', form.title);
+     form.append('file', form.file);
+
+      const res = api.post('/storeMedicalRecord', form, {
+          headers: {
+              "Content-Type": "multipart/form-data",
+          },
+      });
+     form.delete('patient_id');
+     form.delete('title');
+     form.delete('file');
+
+     showUploadModal.value = false;
+     await medicalRecordStores.fetchDoctorRecords();
+
+ };
 
 
 
@@ -148,6 +171,7 @@ const openUploadModal = async () => {
     border-radius: 14px;
     border: dotted rgba(72, 86, 242, 0.5);;
     width: 30%;
+
     padding: 25px;
     display: flex;
     flex-direction: column;
