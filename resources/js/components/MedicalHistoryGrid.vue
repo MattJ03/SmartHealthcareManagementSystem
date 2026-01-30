@@ -53,7 +53,7 @@ const {name, role} = storeToRefs(store);
 const isPatient = computed(() => role.value === 'patient');
 const isDoctor = computed(() => role.value === 'doctor');
 
-const emit = defineEmits(['open', 'download']);
+const emit = defineEmits(['open', 'download', 'select']);
 
 const props = defineProps({
     medicalRecord: {
@@ -68,6 +68,10 @@ const handleClick = () => {
 
 const handleDownload = () => {
     emit('download', props.medicalRecord);
+}
+
+const handleSelect = () => {
+    emit('select', props.medicalRecord);
 }
 
 </script>

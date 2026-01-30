@@ -27,6 +27,7 @@
             :medical-record="record"
             @open="medicalRecordStores.openRecord"
             @download="downloadRecord"
+            @click="getDetailsOfPatientInRecord"
         ></MedicalHistoryGrid>
         </div>
     </div>
@@ -87,6 +88,9 @@ const form = reactive({
 });
 
 const doctorsPatients = ref([]);
+const selectedPatientName = ref(null);
+const selectPatientContact = ref(null);
+const selectPatientId = ref(null);
 
 onMounted(async () => {
     medicalRecordStores.fetchDoctorRecords();
@@ -159,8 +163,8 @@ const openUploadModal = async () => {
 
      showUploadModal.value = false;
      await medicalRecordStores.fetchDoctorRecords();
-
  };
+
 
 
 
