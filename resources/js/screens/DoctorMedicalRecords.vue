@@ -143,19 +143,19 @@ const openUploadModal = async () => {
          alert('No fields can be empty');
          return;
      }
-     const form = new FormData();
-     form.append('patient_id', form.patientId);
-     form.append('title', form.title);
-     form.append('file', form.file);
+     const formData = new FormData();
+     formData.append('patient_id', form.patientId);
+     formData.append('title', form.title);
+     formData.append('file', form.file);
 
-      const res = api.post('/storeMedicalRecord', form, {
+      const res = api.post('/storeMedicalRecord', formData, {
           headers: {
               "Content-Type": "multipart/form-data",
           },
       });
-     form.delete('patient_id');
-     form.delete('title');
-     form.delete('file');
+     form.patientId = '';
+     form.title = '';
+     form.file = null;
 
      showUploadModal.value = false;
      await medicalRecordStores.fetchDoctorRecords();
@@ -170,7 +170,7 @@ const openUploadModal = async () => {
     background-color: rgba(72, 86, 242, 0.12);
     border-radius: 14px;
     border: dotted rgba(72, 86, 242, 0.5);;
-    width: 30%;
+    width: 69%;
 
     padding: 25px;
     display: flex;
@@ -213,8 +213,9 @@ const openUploadModal = async () => {
 }
 
 .grid-records-container {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
     gap: 20px;
 
 }
