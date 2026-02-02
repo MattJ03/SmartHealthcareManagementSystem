@@ -1,5 +1,7 @@
 <template>
-    <div class="grid" @click="handleSelect">
+    <div class="grid"
+         :class="{ selected: isSelected}"
+         @click="handleSelect">
         <div class="top-of-grid">
             <div class="img-wrapper">
             <img :src="file" alt="fileImage" class="img" />
@@ -60,6 +62,10 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    isSelected: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const handleClick = () => {
@@ -84,7 +90,16 @@ const handleSelect = () => {
     width: 550px;
 
     padding: 20px;
-
+}
+.grid.selected {
+    background-color: #000000;
+    border: 1px solid #000000;
+    color: #FFFFFF;
+}
+.grid.selected .title,
+.grid.selected .time,
+.grid.selected .title-report {
+    color: #fff;
 }
 .top-of-grid {
     display: flex;

@@ -25,6 +25,7 @@
             v-for="record in medicalRecordStores.records"
             :key="record.id"
             :medical-record="record"
+            :is-selected="selectedRecord?.id === record.id"
             @open="medicalRecordStores.openRecord"
             @download="downloadRecord"
             @select="selectRecord"
@@ -165,7 +166,8 @@ const openUploadModal = async () => {
 
  const selectRecord = (record) => {
      selectedRecord.value = record;
-     console.log('selected record id is: ' + selectedRecord.value.id)
+     console.log('selected record id is: ' + selectedRecord.value.id);
+
 }
 
 
