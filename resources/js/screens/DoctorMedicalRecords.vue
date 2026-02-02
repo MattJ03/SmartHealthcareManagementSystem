@@ -3,8 +3,8 @@
     <div class="container">
         <div class="top-of-container">
             <div class="patient-details">
-                <h2 class="patient-name">Patient: lorem Ipsum</h2>
-                <p class="patient-dates">DOB: 04/12/03 | Patient ID: #12345</p>
+                <h2 class="patient-name">Patient: {{ selectedRecord?.patient?.user?.name || 'No Record Selected' }}</h2>
+                <p class="patient-dates">Title: {{ selectedRecord?.title || 'No Record Selected' }}</p>
             </div>
             <div class="search-wrapper">
                 <input v-model="search" type="text" name="search" class="search-bar" placeholder="Search patient or title...">
@@ -27,7 +27,7 @@
             :medical-record="record"
             @open="medicalRecordStores.openRecord"
             @download="downloadRecord"
-            @click="getDetailsOfPatientInRecord"
+            @select="selectRecord"
         ></MedicalHistoryGrid>
         </div>
     </div>
@@ -88,9 +88,7 @@ const form = reactive({
 });
 
 const doctorsPatients = ref([]);
-const selectedPatientName = ref(null);
-const selectPatientContact = ref(null);
-const selectPatientId = ref(null);
+const selectedRecord = ref(null);
 
 onMounted(async () => {
     medicalRecordStores.fetchDoctorRecords();
@@ -165,6 +163,10 @@ const openUploadModal = async () => {
      await medicalRecordStores.fetchDoctorRecords();
  };
 
+ const selectRecord = (record) => {
+     selectedRecord.value = record;
+     console.log('selected record id is: ' + selectedRecord.value.id)
+}
 
 
 

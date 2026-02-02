@@ -1,5 +1,5 @@
 <template>
-    <div class="grid">
+    <div class="grid" @click="handleSelect">
         <div class="top-of-grid">
             <div class="img-wrapper">
             <img :src="file" alt="fileImage" class="img" />
