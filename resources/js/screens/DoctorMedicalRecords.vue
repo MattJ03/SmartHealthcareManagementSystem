@@ -179,7 +179,7 @@ const openUploadModal = async () => {
     border-radius: 14px;
     border: dotted rgba(72, 86, 242, 0.5);;
     width: 69%;
-
+    height: 290px;
     padding: 25px;
     display: flex;
     flex-direction: column;
