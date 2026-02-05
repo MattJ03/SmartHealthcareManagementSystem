@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AppointmentController;
@@ -9,6 +10,7 @@ use App\Models\PatientProfile;
 use App\Http\Controllers\UserDirectoryController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\MedicalRecordController;
+use Illuminate\Support\Facades\Log;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
@@ -44,5 +46,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/doctor/records', [MedicalRecordController::class, 'doctorIndex']);
     Route::get('/downloadFile/{record}/download', [MedicalRecordController::class, 'downloadFile']);
     Route::get('/me', fn () => auth()->user()->load('profile.doctor'));
+    Route::get('/mail-me', function () {
+        Log::info('mail route hit');
+        Mail::raw('Did this send?', function ($message) {
+            $message->to('fake@email.com')
+                ->subject('Test mail');
+
+        });
+        return 'email sent';
+    });
 });
 
