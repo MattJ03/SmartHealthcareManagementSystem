@@ -170,7 +170,7 @@ const openUploadModal = async () => {
 
 }
 
-
+api.get()
 </script>
 <style scoped>
 .attach-container {

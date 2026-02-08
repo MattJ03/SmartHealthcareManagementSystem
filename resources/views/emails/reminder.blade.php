@@ -9,7 +9,7 @@
     <tr>
         <!-- Image in top-left -->
         <td width="80" valign="top" style="padding-right: 15px;">
-            <img src="{{ asset('assets/whitepill.png') }}" alt="Pill" style="width: 60px; display: block;">
+            <img src="{{ asset('assets/whitePill.png') }}" alt="Pill" style="width: 60px; display: block;">
         </td>
         <!-- Text content -->
         <td valign="top">

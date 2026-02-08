@@ -46,14 +46,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/doctor/records', [MedicalRecordController::class, 'doctorIndex']);
     Route::get('/downloadFile/{record}/download', [MedicalRecordController::class, 'downloadFile']);
     Route::get('/me', fn () => auth()->user()->load('profile.doctor'));
-    Route::get('/mail-me', function () {
-        Log::info('mail route hit');
-        Mail::raw('Did this send?', function ($message) {
-            $message->to('fake@email.com')
-                ->subject('Test mail');
-
-        });
-        return 'email sent';
-    });
 });
 
