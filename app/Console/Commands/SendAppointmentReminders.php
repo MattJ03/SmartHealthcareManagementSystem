@@ -2,8 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Appointment;
 use Illuminate\Console\Command;
-
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReminderMail;
 class SendAppointmentReminders extends Command
 {
     /**
@@ -25,6 +28,16 @@ class SendAppointmentReminders extends Command
      */
     public function handle()
     {
+        $now = Carbon::now();
+        $oneWeekFromNow = $now->copy()->addWeeks();
 
+        $appointments = Appointment::whereBetween('starts_at', [$oneWeekFromNow->startOfDay()])
+                                                  ->get();
+
+        foreach($appointments as $appointment) {
+            Mail::to($appointment->patient->user->email)->send(new ReminderMail($appointment));
+
+            $this->info('Reminder email sent to patient ' . $appointment->patient->user->email);
+        }
     }
 }
