@@ -31,8 +31,8 @@ class SendAppointmentReminders extends Command
         $now = Carbon::now();
         $oneWeekFromNow = $now->copy()->addWeeks();
 
-        $appointments = Appointment::whereBetween('starts_at', [$oneWeekFromNow->startOfDay()])
-                                                  ->get();
+        $appointments = Appointment::whereBetween('starts_at', [$oneWeekFromNow->startOfDay(), $oneWeekFromNow->endOfDay()])->get();
+
 
         foreach($appointments as $appointment) {
             Mail::to($appointment->patient->user->email)->send(new ReminderMail($appointment));
