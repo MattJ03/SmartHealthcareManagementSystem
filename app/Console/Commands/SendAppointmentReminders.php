@@ -36,6 +36,7 @@ class SendAppointmentReminders extends Command
 
         foreach($appointments as $appointment) {
             Mail::to($appointment->patient->user->email)->send(new ReminderMail($appointment));
+            $appointment->update(['reminder_sent' => true]);
 
             $this->info('Reminder email sent to patient ' . $appointment->patient->user->email);
         }

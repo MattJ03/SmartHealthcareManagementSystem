@@ -19,7 +19,6 @@ return new class extends Migration
             $table->dateTime('ends_at');
             $table->enum('status', ['pending', 'confirmed', 'cancelled', 'completed'])->default('pending');
             $table->text('notes')->nullable();
-            $table->boolean('reminder_sent')->default(false);
             $table->timestamps();
         });
     }
