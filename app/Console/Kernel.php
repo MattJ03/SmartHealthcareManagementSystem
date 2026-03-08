@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // Run your appointment reminder command every day at 9 AM
-        $schedule->command('app:send-appointment-reminders')->dailyAt('09:00');
+        $schedule->command('app:send-appointment-reminders')->dailyAt('08:00');
     }
 
     /**
