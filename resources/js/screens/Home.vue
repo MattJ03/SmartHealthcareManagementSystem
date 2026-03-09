@@ -202,7 +202,7 @@ function goToUpdate(appointmentId) {
 <style style>
 
 .red-container {
-    background-color: #C0392B;
+    background-color: #305cde;
     width: 85%;
     margin: auto;
     margin-top: 24px;
@@ -240,7 +240,7 @@ function goToUpdate(appointmentId) {
     background-color: #FFFFFF;
     border-radius: 14px;
     font-size: 16px;
-    color: #C0392B;
+    color: #000080;
 }
 .view-details-btn:hover {
     background-color: #f0f0f0;
@@ -270,7 +270,7 @@ function goToUpdate(appointmentId) {
 
 .checkup-square {
     height: 44px;
-    background-color: #8B0000;
+    background-color: #000080;
     width: fit-content;
     height: 50px;
     border: none;
@@ -296,7 +296,7 @@ function goToUpdate(appointmentId) {
 
 }
 .time-square {
-    background-color: #8B0000;
+    background-color: #000080;
     border-radius: 14px;
     padding-top: 8px;
     padding-bottom: 8px;

@@ -5,6 +5,7 @@
        </div>
        <div class="nav-links">
            <button v-if="authStore.isAdmin" class="btn-create-account" type="button" @click="moveToRegister"> Create New User</button>
+           <button v-if="role === 'doctor'" class="btn-create-account" type="button" @click="moveToMyPatients"> My Patients</button>
            <button class="btn-create-account" type="button" @click="logoutUser">Logout</button>
        </div>
    </nav>
@@ -13,6 +14,9 @@
 import whitePill from "../assets/whitePill.png"
 import {useAuthStore} from "../stores/AuthStore.js";
 import router from "../router/index.js";
+import {storeToRefs} from "pinia";
+
+
 
 async function moveToRegister() {
     await router.push('/register-select');
@@ -23,9 +27,15 @@ async function returnHome() {
 }
 const authStore = useAuthStore();
 
+const { role } = storeToRefs(useAuthStore);
+
 async function logoutUser() {
     await authStore.logout();
     await router.push('/login')
+}
+
+async function moveToMypatients() {
+    await router.push('/');
 }
 </script>
 <style scoped>
