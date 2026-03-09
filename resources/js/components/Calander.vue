@@ -185,6 +185,7 @@ function selectDate(date) {
     selectedDate.value = date;
     showBookingForm.value = true;
 
+
     if (doctorId.value) {
         const dateParam = date.toISOString().split('T')[0];
         availabilityStore.getAvailableSlots(doctorId.value, dateParam);
@@ -348,8 +349,10 @@ async function confirmBooking() {
 
 }
 
-.slot-list li.selected {
-
+.slot-list button.selected {
+    background: #C0392B;
+    color: white;
+    border: 2px solid #8B0000;
 }
 
 .modal-actions {
