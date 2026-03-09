@@ -84,7 +84,10 @@ const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppo
     font-size: 16px;
     color: #FFFFFF;
     border: 0;
+}
 
+.delete-btn:hover {
+    cursor: pointer;
 }
 
 .update-btn {
@@ -97,5 +100,9 @@ const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppo
     font-size: 16px;
     background-color: #FFBF00;
     border: 0;
+}
+
+.update-btn:hover {
+    cursor: pointer;
 }
 </style>
