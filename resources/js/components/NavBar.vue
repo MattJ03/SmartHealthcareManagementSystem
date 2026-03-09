@@ -62,6 +62,10 @@ async function moveToMypatients() {
     cursor: pointer;
     padding: 0 15px;
 }
+
+.btn-create-account:hover {
+    background-color: #E9DCC9;
+}
 .logo {
     height: 70px;
     cursor: pointer;

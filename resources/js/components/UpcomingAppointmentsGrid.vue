@@ -88,7 +88,6 @@ const { appointmentDate, appointmentTime, appointmentPeriod } = useFormattedAppo
 
 .delete-btn:hover {
     cursor: pointer;
-    background-color: #8B0000;
 }
 
 .update-btn {

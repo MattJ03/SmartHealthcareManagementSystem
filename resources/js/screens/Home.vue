@@ -341,6 +341,10 @@ function goToUpdate(appointmentId) {
     width: 35px;
 }
 
+.quick-actions-white-square:hover {
+    background-color: #E9DCC9;
+}
+
 
 .quick-actions-text{
     margin: 0;
