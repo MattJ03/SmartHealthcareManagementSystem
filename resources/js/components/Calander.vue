@@ -244,7 +244,7 @@ async function confirmBooking() {
 <style scoped>
 .calendar-container {
     width: 1500px;
-    background-color: #C0392B;
+    background-color: #305cde;
     border-radius: 12px;
     padding: 20px;
     margin: 40px auto;

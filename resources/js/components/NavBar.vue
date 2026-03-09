@@ -38,7 +38,7 @@ async function logoutUser() {
     padding-left: 30px;
     padding-right: 30px;
     height: 90px;
-    background-color: #C0392B;
+    background-color: #305cde;
 }
 .btn-create-account {
   height: 50px;
