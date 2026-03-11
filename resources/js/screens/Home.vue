@@ -101,6 +101,7 @@
             v-for="appointment in doctorAppointments"
             :key="appointment.id" :appointment="appointment"
             @delete="handleDeleteAppointment"
+            @update="goToUpdate"
         />
     </div>
 
