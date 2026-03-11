@@ -96,7 +96,12 @@
             @delete="handleDeleteAppointment"
             @update="goToUpdate"
         />
-        <DoctorUpcomingAppointmentsGrid v-else-if="role === 'doctor'" v-for="appointment in doctorAppointments" :key="appointment.id" :appointment="appointment" />
+        <DoctorUpcomingAppointmentsGrid
+            v-else-if="role === 'doctor'"
+            v-for="appointment in doctorAppointments"
+            :key="appointment.id" :appointment="appointment"
+            @delete="handleDeleteAppointment"
+        />
     </div>
 
 </template>
