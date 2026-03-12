@@ -94,4 +94,18 @@ class UserDirectoryControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonCount(1, 'patients');
     }
+
+    public function test_all_doctors_returned(): void {
+        $admin = User::factory()->create()->assignRole('admin');
+        $this->actingAs($admin);
+        $doctor1 = User::factory()->create()->assignRole('doctor');
+        $doctor2 = User::factory()->create()->assignRole('doctor');
+        $doctor3 = User::factory()->create()->assignRole('doctor');
+        $doctor4 = User::factory()->create()->assignRole('doctor');
+        $doctor5 = User::factory()->create()->assignRole('doctor');
+
+        $response = $this->getJson('api/getDoctors');
+        $response->assertStatus(200);
+        $response->assertJsonCount(5, 'doctors');
+    }
 }
