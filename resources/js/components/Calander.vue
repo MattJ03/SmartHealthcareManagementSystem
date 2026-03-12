@@ -6,16 +6,18 @@
         <h1 class="book-appointment">
             {{ isEditMode ? "Edit Appointment" : "Book Appointment" }}
         </h1>
-
+            <div class="dropdown-container">
             <select class="patient-list-book" v-model="patientId">
                 <option value="">Book for Patient</option>
                 <option v-for="patient in userDirectoryStore.patients"
+                        class="dropdown-text"
                         :key="patient.id"
                         :value="patient.id"
                         >
                     {{ patient.user.name }}
                 </option>
             </select>
+                </div>
     </div>
         <div class="month-nav">
             <button @click="prevMonth">&lt;</button>
@@ -226,6 +228,7 @@ onMounted(async () => {
     }
     if(role.value === 'doctor') {
         console.log('you are doctor');
+        doctorId.value = authStore.user.id;
         await userDirectoryStore.fetchPatientsOfDoctor();
 
     }
@@ -285,10 +288,22 @@ async function confirmBooking() {
     padding-right: 60px;
 }
 
-.patient-list-book {
-
+.dropdown-container {
+    padding-top: 20px;
 }
 
+.patient-list-book {
+   height: 60px;
+    width: 200px;
+    font-size: 18px;
+    color: #6C757D;
+    border-radius: 14px;
+    border: none;
+}
+
+.dropdown-text {
+    font-size: 18px;
+}
 .month-nav {
     display: flex;
     align-items: center;
