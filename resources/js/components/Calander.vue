@@ -8,7 +8,13 @@
         </h1>
 
             <select class="patient-list-book" v-model="patientId">
-                <option v-for=""
+                <option value="">Book for Patient</option>
+                <option v-for="patient in userDirectoryStore.patients"
+                        :key="patient.id"
+                        :value="patient.id"
+                        >
+                    {{ patient.name }}
+                </option>
             </select>
     </div>
         <div class="month-nav">
@@ -78,7 +84,10 @@ import { ref, computed, onMounted, watch } from 'vue';
 import NavBar from './NavBar.vue';
 import { useAvailabilityStore } from '../stores/AvailabilityStore';
 import { useAppointmentStore } from '../stores/AppointmentStore';
+import { useUserDirectoryStore } from "../stores/UserDirectoryStore.js";
 import api from '../axios';
+import {useAuthStore} from "../stores/AuthStore.js";
+import {storeToRefs} from "pinia";
 
 const props = defineProps({
     appointmentId: {
@@ -93,15 +102,17 @@ const emit = defineEmits(['submit']);
 const today = new Date();
 const currentMonth = ref(today.getMonth());
 const currentYear = ref(today.getFullYear());
-
 const availabilityStore = useAvailabilityStore();
 const appointmentStore = useAppointmentStore();
+const authStore = useAuthStore();
+const userDirectoryStore = useUserDirectoryStore();
 const patientId = ref(null);
 
 const selectedDate = ref(null);
 const bookingTime = ref('');
 const doctorId = ref(null);
 const showBookingForm = ref(false);
+const { role } = storeToRefs(authStore);
 
 const isEditMode = computed(() => !!props.appointmentId);
 
@@ -209,8 +220,15 @@ function closeModal() {
 
 
 onMounted(async () => {
-    const res = await api.get('/patient/doctor');
-    doctorId.value = res.data.doctorId;
+    if(role.value === 'patient') {
+        const res = await api.get('/patient/doctor');
+        doctorId.value = res.data.doctorId;
+    }
+    if(role.value === 'doctor') {
+        console.log('you are doctor');
+        await userDirectoryStore.fetchPatientsOfDoctor();
+    }
+
 });
 
 
