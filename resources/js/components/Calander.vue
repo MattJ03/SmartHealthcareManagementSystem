@@ -13,7 +13,7 @@
                         :key="patient.id"
                         :value="patient.id"
                         >
-                    {{ patient.name }}
+                    {{ patient.user.name }}
                 </option>
             </select>
     </div>
@@ -227,6 +227,7 @@ onMounted(async () => {
     if(role.value === 'doctor') {
         console.log('you are doctor');
         await userDirectoryStore.fetchPatientsOfDoctor();
+
     }
 
 });
