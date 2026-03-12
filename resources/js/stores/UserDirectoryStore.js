@@ -3,6 +3,7 @@ import { ref, reactive, computed } from "vue";
 import api from "../axios.js";
 export const useUserDirectoryStore = defineStore('user', () => {
     const doctors = ref([]);
+    const patients = ref([]);
     const loading = ref(null);
     const error = ref(null);
 

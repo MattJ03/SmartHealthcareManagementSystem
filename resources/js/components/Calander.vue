@@ -2,10 +2,15 @@
     <NavBar />
 
     <div class="calendar-container">
+        <div class="top-of-calender">
         <h1 class="book-appointment">
             {{ isEditMode ? "Edit Appointment" : "Book Appointment" }}
         </h1>
 
+            <select class="patient-list-book" v-model="patientId">
+                <option v-for=""
+            </select>
+    </div>
         <div class="month-nav">
             <button @click="prevMonth">&lt;</button>
             <span class="month-name">{{ monthName }} {{ currentYear }}</span>
@@ -91,6 +96,7 @@ const currentYear = ref(today.getFullYear());
 
 const availabilityStore = useAvailabilityStore();
 const appointmentStore = useAppointmentStore();
+const patientId = ref(null);
 
 const selectedDate = ref(null);
 const bookingTime = ref('');
@@ -221,6 +227,7 @@ async function confirmBooking() {
     const endsAt = new Date(startsAt.getTime() + 30 * 60 * 1000);
 
     const payload = {
+        patient_id: patientId.value,
         doctor_id: doctorId.value,
         starts_at: startsAt.toISOString(),
         ends_at: endsAt.toISOString(),
@@ -251,6 +258,16 @@ async function confirmBooking() {
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
+}
+
+.top-of-calender {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 60px;
+}
+
+.patient-list-book {
+
 }
 
 .month-nav {
