@@ -20,10 +20,25 @@ export const useUserDirectoryStore = defineStore('user', () => {
         }
     }
 
+    const fetchPatientsOfDoctor = async () => {
+        loading.value = true;
+        error.value = '';
+        try {
+            const res = await api.get('/doctorPatients');
+            patients.value = res.data.patients;
+        } catch(error) {
+            error.value = error.response?.message;
+        } finally {
+            loading.value = false;
+        }
+    }
+
     return {
         doctors,
+        patients,
         loading,
         error,
         fetchDoctors,
+        fetchPatientsOfDoctor,
     }
 });
