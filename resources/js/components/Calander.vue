@@ -227,10 +227,19 @@ onMounted(async () => {
         doctorId.value = res.data.doctorId;
     }
     if(role.value === 'doctor') {
-        console.log('you are doctor');
-        doctorId.value = authStore.user.id;
+        // Make sure the user object is loaded
+        if(!authStore.user) {
+            await authStore.fetchUser();
+        }
+
+
+        doctorId.value = authStore.user?.id ?? null;
+
+        // Load patients for the doctor
         await userDirectoryStore.fetchPatientsOfDoctor();
 
+        console.log('Logged-in doctor ID:', doctorId.value);
+        console.log('Patients:', userDirectoryStore.patients);
     }
 
 });
