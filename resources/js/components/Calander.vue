@@ -235,7 +235,6 @@ onMounted(async () => {
 
         doctorId.value = authStore.user?.id ?? null;
 
-        // Load patients for the doctor
         await userDirectoryStore.fetchPatientsOfDoctor();
 
         console.log('Logged-in doctor ID:', doctorId.value);
@@ -248,6 +247,10 @@ onMounted(async () => {
 async function confirmBooking() {
     if (!bookingTime.value) {
         alert('Select a slot');
+        return;
+    }
+    if(!patientId.value) {
+        alert('Select a patient to book for');
         return;
     }
 
