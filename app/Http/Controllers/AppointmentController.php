@@ -30,6 +30,15 @@ class AppointmentController extends Controller
             $patientId = $user->id;
         }
 
+        if($user->hasRole('doctor')) {
+            $request->validate([
+                'patient_id' => 'required|exists:users,id',
+            ]);
+            $patient = User::findOrFail($request->patient_id);
+            abort_unless($patient->hasRole('patient'), 403);
+            $patientId = $patient->id;
+        }
+
         if($user->hasRole('admin')) {
             $request->validate([
                 'patient_id' => 'required|exists:users,id',
@@ -38,7 +47,6 @@ class AppointmentController extends Controller
             $patient = User::findOrFail($request->patient_id);
             abort_unless($patient->hasRole('patient'), 403);
             $patientId = $patient->id;
-
         }
 
 
