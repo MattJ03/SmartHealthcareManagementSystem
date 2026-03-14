@@ -79,6 +79,7 @@ export const useAppointmentStore = defineStore('appointment', () => {
             const res = await api.get(`/getMyAppointment/${id}`);
             appointment.value = res.data.appointment;
             doctor.value = res.data.doctor_name;
+
         } catch (error) {
             error.value = error.response?.data?.message ?? 'Failed to get Appointment';
         } finally {

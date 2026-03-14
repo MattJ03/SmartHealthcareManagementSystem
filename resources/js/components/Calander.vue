@@ -125,6 +125,9 @@ watch(
         if (!id) return;
 
         const appt = await appointmentStore.getAppointment(id);
+        if(!appt) return;
+
+        patientId.value = appt.patient_id
 
         const start = new Date(appt.starts_at);
         selectedDate.value = start;
