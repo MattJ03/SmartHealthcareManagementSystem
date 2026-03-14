@@ -8,7 +8,7 @@
         </h1>
             <div class="dropdown-container">
             <select class="patient-list-book" v-model="patientId">
-                <option value="">Book for Patient</option>
+                <option disabled value="">Book for Patient</option>
                 <option v-for="patient in userDirectoryStore.patients"
                         class="dropdown-text"
                         :key="patient.id"
@@ -312,6 +312,10 @@ async function confirmBooking() {
     color: #6C757D;
     border-radius: 14px;
     border: none;
+    cursor: pointer;
+}
+.patient-list-book:hover {
+    background-color: #E9DCC9;
 }
 
 .dropdown-text {
@@ -361,10 +365,12 @@ async function confirmBooking() {
     border-radius: 6px;
     cursor: pointer;
     transition: background 0.2s;
+
 }
 
 .day-cell:hover {
-    background-color: red;
+    background-color: #000000;
+    color: #F2F0EF;
 }
 
 .modal-overlay {

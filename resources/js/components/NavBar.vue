@@ -6,7 +6,7 @@
        <div class="nav-links">
            <button v-if="authStore.isAdmin" class="btn-create-account" type="button" @click="moveToRegister"> Create New User</button>
            <button v-if="role === 'doctor'" class="btn-create-account" type="button" @click="moveToMyPatients"> My Patients</button>
-           <button class="btn-create-account" type="button" @click="logoutUser">Logout</button>
+           <button class="btn-logout" type="button" @click="logoutUser">Logout</button>
        </div>
    </nav>
 </template>
@@ -64,6 +64,23 @@ async function moveToMypatients() {
 }
 
 .btn-create-account:hover {
+    background-color: #E9DCC9;
+}
+
+.btn-logout {
+    height: 50px;
+    color: #000000;
+    background-color: #FAF9F6;
+    border-radius: 14px;
+    font-size: 16px;
+    gap: 10px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+    padding: 0 15px;
+}
+
+.btn-logout:hover {
     background-color: #E9DCC9;
 }
 .logo {
