@@ -71,7 +71,7 @@
                 </div>
 
                 <div class="modal-actions">
-                    <button @click="confirmBooking">
+                    <button @click="confirmBooking" :disabled="!bookingTime">
                         {{ isEditMode ? "Update" : "Confirm" }}
                     </button>
                     <button @click="closeModal">Cancel</button>
@@ -251,6 +251,7 @@ async function confirmBooking() {
     }
     if(!patientId.value) {
         alert('Select a patient to book for');
+        closeModal();
         return;
     }
 
@@ -436,6 +437,9 @@ async function confirmBooking() {
 }
 .modal-actions button:hover {
     background-color: #8B0000;
+}
+.modal-actions button:disabled {
+    background-color: #EBEBE4;
 }
 .book-appointment {
     color: #FFFFFF;
