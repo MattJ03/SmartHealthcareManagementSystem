@@ -26,7 +26,7 @@ class AppointmentPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasRole(['patient', 'admin']);
+        return $user->hasRole(['patient', 'doctor', 'admin']);
     }
 
     /**
