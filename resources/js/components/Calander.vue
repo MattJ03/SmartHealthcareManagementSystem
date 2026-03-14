@@ -8,7 +8,7 @@
         </h1>
             <div class="dropdown-container">
             <select class="patient-list-book" v-model="patientId">
-                <option disabled value="">Book for Patient</option>
+                <option disabled value="" >Book for Patient</option>
                 <option v-for="patient in userDirectoryStore.patients"
                         class="dropdown-text"
                         :key="patient.id"
@@ -108,7 +108,7 @@ const availabilityStore = useAvailabilityStore();
 const appointmentStore = useAppointmentStore();
 const authStore = useAuthStore();
 const userDirectoryStore = useUserDirectoryStore();
-const patientId = ref(null);
+const patientId = ref('');
 
 const selectedDate = ref(null);
 const bookingTime = ref('');

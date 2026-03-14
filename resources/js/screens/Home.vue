@@ -340,6 +340,7 @@ function goToUpdate(appointmentId) {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    transition: 0.2s;
 }
 
 .quick-actions-white-square img {
