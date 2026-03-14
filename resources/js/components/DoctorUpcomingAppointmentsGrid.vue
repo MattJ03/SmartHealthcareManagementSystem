@@ -4,7 +4,7 @@
             <div class="details">
             <p class="patient-name"> {{ appointment.patient_profile.user.name ?? 'Loading...'}}</p>
             <p class="starts-at"> {{ appointmentDate ?? 'Loading...' }}</p>
-            <p class="starts-at"> {{ appointmentTime }} {{ appointmentPeriod }}</p>
+            <p class="starts-at"> {{ appointmentTime }} {{ appointmentPeriod ?? 'Loading' }}</p>
         </div>
             <div class="delete-section">
                 <button class="delete-btn" @click="$emit('delete', appointment.id)"> Cancel </button>

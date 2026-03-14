@@ -274,6 +274,12 @@ async function confirmBooking() {
 
     if (isEditMode.value) {
         await appointmentStore.updateAppointment(props.appointmentId, payload);
+        if(role.value === 'patient') {
+            await appointmentStore.fetchAllMyAppointments();
+        }
+        if(role.value === 'doctor') {
+            await appointmentStore.getUpcomingDoctorAppointments();
+        }
         alert('Appointment updated!');
     } else {
         await appointmentStore.createAppointment(payload);
