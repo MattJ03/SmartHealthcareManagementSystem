@@ -1,7 +1,8 @@
 <template>
     <NavBar></NavBar>
     <div class="welcome-container">
-        <h1 class="welcome-name">Welcome back {{ name }}</h1>
+        <h1 v-if="role === 'patient' || role === 'admin'"  class="welcome-name">Welcome back {{ name }}</h1>
+        <h1 v-if="role === 'doctor'" class="welcome-name">Welcome back Dr. {{ name }}</h1>
         <p class="welcome-name">How are you feeling today?</p>
     </div>
     <div class="red-container" v-if="isDoctor">
