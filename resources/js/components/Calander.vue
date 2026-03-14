@@ -21,6 +21,7 @@
     </div>
         <div class="month-nav">
             <button @click="prevMonth">&lt;</button>
+            <img :src="calender" class="calender-image" />
             <span class="month-name">{{ monthName }} {{ currentYear }}</span>
             <button @click="nextMonth">&gt;</button>
         </div>
@@ -90,6 +91,7 @@ import { useUserDirectoryStore } from "../stores/UserDirectoryStore.js";
 import api from '../axios';
 import {useAuthStore} from "../stores/AuthStore.js";
 import {storeToRefs} from "pinia";
+import calender from '../assets/calendar(2).png';
 
 const props = defineProps({
     appointmentId: {
@@ -335,7 +337,7 @@ async function confirmBooking() {
 .month-nav {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
     margin-bottom: 20px;
 }
 
@@ -467,6 +469,10 @@ async function confirmBooking() {
     color: #aaa;
     cursor: not-allowed;
     border-color: #ccc;
+}
+.calender-image {
+    height: 20px;
+    width: 20px;
 }
 
 </style>
