@@ -82,7 +82,7 @@
                 <img :src="messages" alt="messages" class="quick-actions-img" />
                 <p class="quick-actions-text">Messages</p>
             </div>
-            <div class="quick-actions-white-square">
+            <div class="quick-actions-white-square" @click="moveToAlerts">
                 <img :src="alert" alt="alert" class="quick-actions-img" />
                 <p class="quick-actions-text">Alerts</p>
             </div>
@@ -175,6 +175,10 @@ async function moveToRecords() {
     if(role.value === 'doctor') {
         await router.push({name: 'doctor-medical-records'});
     }
+}
+
+async function moveToAlerts() {
+    await router.push({name: 'alerts'});
 }
 
 const handleDeleteAppointment = async (appointmentId) => {

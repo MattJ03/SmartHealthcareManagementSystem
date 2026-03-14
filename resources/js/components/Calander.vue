@@ -313,9 +313,11 @@ async function confirmBooking() {
     border-radius: 14px;
     border: none;
     cursor: pointer;
+
 }
 .patient-list-book:hover {
     background-color: #E9DCC9;
+
 }
 
 .dropdown-text {
@@ -370,6 +372,7 @@ async function confirmBooking() {
 
 .day-cell:hover {
     background-color: #000000;
+    transition: background 0.4s;
     color: #F2F0EF;
 }
 

@@ -8,6 +8,7 @@ import RegisterDoctor from "../screens/RegisterDoctor.vue";
 import BookAppointment from "../screens/BookAppointment.vue";
 import PatientMedicalRecords from "../screens/PatientMedicalRecords.vue";
 import DoctorMedicalRecords from "../screens/DoctorMedicalRecords.vue";
+import Alerts from "../screens/Alerts.vue";
 
 const routes = [
     { path: '/login', component: Login },
@@ -19,6 +20,7 @@ const routes = [
     { path: '/book-appointment/:id?', name: 'BookAppointment', component: BookAppointment },
     { path: '/patient/medical-records', name: 'patient-medical-records', component: PatientMedicalRecords, meta: {role: 'patient'} },
     { path: '/doctor/medical-records', name: 'doctor-medical-records', component: DoctorMedicalRecords, meta: {role: 'doctor'}},
+    { path: '/alerts', name: 'alerts', component: Alerts },
 ];
 
 const router = createRouter({
