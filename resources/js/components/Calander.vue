@@ -7,7 +7,7 @@
             {{ isEditMode ? "Edit Appointment" : "Book Appointment" }}
         </h1>
             <div class="dropdown-container">
-            <select class="patient-list-book" v-model="patientId">
+            <select v-if="role === 'doctor'" class="patient-list-book" v-model="patientId">
                 <option disabled value="" >Book for Patient</option>
                 <option v-for="patient in userDirectoryStore.patients"
                         class="dropdown-text"
@@ -254,10 +254,12 @@ async function confirmBooking() {
         alert('Select a slot');
         return;
     }
-    if(!patientId.value) {
-        alert('Select a patient to book for');
-        closeModal();
-        return;
+    if(role.value === 'doctor' || role.value === 'admin') {
+        if (!patientId.value) {
+            alert('Select a patient to book for');
+            closeModal();
+            return;
+        }
     }
 
     const startsAt = new Date(selectedDate.value);
