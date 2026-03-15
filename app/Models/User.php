@@ -60,4 +60,7 @@ class User extends Authenticatable
     public function doctorProfile() {
         return $this->hasOne(DoctorProfile::class, 'user_id', 'id');
     }
+    public function logs() {
+        return $this->hasMany(ActivityLog::class);
+    }
 }
