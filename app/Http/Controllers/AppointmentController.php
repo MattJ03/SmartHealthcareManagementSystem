@@ -54,7 +54,7 @@ class AppointmentController extends Controller
         $appointment = $appointmentService->storeAppointment($patientId, $validatedData);
         Log::info('appointment booked by: ' . $user);
 
-        $prefix = $user->hasRole('doctor') ? 'Dr. ' : ($user->hasRole('admin') ? 'Admin ' : '');
+        $prefix = $user->hasRole('doctor') ? 'Dr. ' : ($user->hasRole('admin') ? 'Admin ' : ' patient ');
         ActivityLog::create([
             'user_id' => $user->id,
             'action' => 'appointment booked',
@@ -90,13 +90,13 @@ class AppointmentController extends Controller
         }
         $appointment = $appointmentService->updateAppointment($appointment->id, $validatedData);
 
-        $prefix = $user->hasRole('doctor') ? 'Dr.' : ($user->hasRole('admin') ? 'Admin ' : '');
+        $prefix = $user->hasRole('doctor') ? 'Dr. ' : ($user->hasRole('admin') ? 'Admin ' : '');
         ActivityLog::create([
            'user_id' => $user->id,
             'action' => 'appointment updated',
             'entity_type' => 'appointment',
             'entity_id' => $appointment->id,
-            'description' => $prefix . 'updated an appointment for ' . $appointment->patient->name,
+            'description' => $prefix . $appointment->doctor->name . ' updated an appointment for ' . $appointment->patient->name,
         ]);
 
         return response()->json([

@@ -121,4 +121,32 @@ class ActivityLogTest extends TestCase
         $this->assertDatabaseCount('activity_logs', 2);
     }
 
+    public function test_description_is_correct_for_update_activity_log_for_store_appointment(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+
+        $appointment = Appointment::factory([
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->make()->toArray();
+
+        $response = $this->postJson('/api/storeAppointment', $appointment);
+
+        $appointmentId = $response->json('appointment.id');
+        $response->assertStatus(201);
+        $this->assertDatabaseCount('activity_logs', 1);
+
+        $updateAppointment = Appointment::factory([
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->make()->toArray();
+
+        $response2 = $this->putJson('/api/updateAppointment/' . $appointmentId, $updateAppointment);
+        $response2->assertStatus(200);
+        $this->assertDatabaseHas('activity_logs', [
+            'description' => 'Dr. ' . $doctor->name . ' updated an appointment for ' . $patient->name,
+        ]);
+    }
+
 }
