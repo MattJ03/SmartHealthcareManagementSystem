@@ -90,6 +90,15 @@ class AppointmentController extends Controller
         }
         $appointment = $appointmentService->updateAppointment($appointment->id, $validatedData);
 
+        $prefix = $user->hasRole('doctor') ? 'Dr.' : ($user->hasRole('admin') ? 'Admin ' : '');
+        ActivityLog::create([
+           'user_id' => $user->id,
+            'action' => 'appointment updated',
+            'entity_type' => 'appointment',
+            'entity_id' => $appointment->id,
+            'description' => $prefix . 'updated an appointment for ' . $appointment->patient->name,
+        ]);
+
         return response()->json([
            'appointment' => $appointment,
            'message' => 'Appointment updated successfully',
