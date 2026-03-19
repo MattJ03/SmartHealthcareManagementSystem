@@ -64,4 +64,61 @@ class ActivityLogTest extends TestCase
         $this->assertDatabaseCount('activity_logs', 1);
     }
 
+    public function test_store_appointment_creates_log_in_db_doctor_booked(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+
+        $appointment = Appointment::factory([
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->make()->toArray();
+
+        $response = $this->postJson('/api/storeAppointment', $appointment);
+        $response->assertStatus(201);
+        $this->assertDatabaseCount('activity_logs', 1);
+    }
+
+    public function test_store_appointment_creates_log_in_db_admin_booked(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $admin = User::factory()->create()->assignRole('admin');
+        $this->actingAs($admin);
+
+        $appointment = Appointment::factory([
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->make()->toArray();
+
+        $response = $this->postJson('/api/storeAppointment', $appointment);
+        $response->assertStatus(201);
+        $this->assertDatabaseCount('activity_logs', 1);
+    }
+
+    public function test_update_appointment_after_store_shows_2_entries(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($patient);
+
+        $appointment = Appointment::factory([
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->make()->toArray();
+
+        $response1 = $this->postJson('/api/storeAppointment', $appointment);
+        $appointmentId = $response1->json('appointment.id');
+        $response1->assertStatus(201);
+
+        $this->assertDatabaseCount('activity_logs', 1);
+
+        $updateAppointment = Appointment::factory([
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->make()->toArray();
+
+        $response2 = $this->putJson('/api/updateAppointment/' . $appointmentId, $updateAppointment);
+        $response2->assertStatus(200);
+        $this->assertDatabaseCount('activity_logs', 2);
+    }
+
 }
