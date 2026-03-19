@@ -10,6 +10,7 @@ use App\Services\AppointmentService;
 use Database\Seeders\RolePermissionSeeder;
 use App\Policies\AppointmentPolicy;
 use Illuminate\Support\Facades\Log;
+use App\Models\ActivityLog;
 class AppointmentController extends Controller
 {
     public function storeAppointment(Request $request, AppointmentService $appointmentService)
@@ -52,6 +53,17 @@ class AppointmentController extends Controller
 
         $appointment = $appointmentService->storeAppointment($patientId, $validatedData);
         Log::info('appointment booked by: ' . $user);
+
+        $prefix = $user->hasRole('doctor') ? 'Dr. ' : ($user->hasRole('admin') ? 'Admin ' : '');
+        ActivityLog::create([
+            'user_id' => $user->id,
+            'action' => 'appointment booked',
+            'entity_type' => 'appointment',
+            'entity_id' => $appointment->id,
+            'description' => $prefix . $user->name . ' booked an appointment for ' . $appointment->patient->name,
+        ]);
+
+
         return response()->json([
             'appointment' => $appointment,
             'patient_id' => $patientId,
