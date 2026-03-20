@@ -241,7 +241,55 @@ class ActivityLogTest extends TestCase
         $response->assertStatus(201);
     }
 
+    public function test_no_log_generated_for_failed_medical_record_upload(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
 
+        $patientProfile = PatientProfile::factory([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->create();
+
+        $payload = [
+            'patient_id' => $patientProfile->id,
+            'title' => '',
+            'notes' => 'Test notes',
+            'file' => UploadedFile::fake()->create('file.pdf', 500, 'application/pdf'),
+        ];
+
+        $response = $this->postJson('/api/storeMedicalRecord', $payload);
+        $recordId = $response->json('record.id');
+        $response->assertStatus(422);
+
+        $this->assertDatabaseMissing('activity_logs', [
+            'entity_id' => $recordId,
+        ]);
+    }
+
+    public function test_description_formatted_correctly_for_store_record_log(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->create();
+
+        $payload = [
+            'patient_id' => $patientProfile->id,
+            'title' => 'Test title',
+            'notes' => 'Test notes',
+            'file' => UploadedFile::fake()->create('file.pdf', 500, 'application/pdf'),
+        ];
+
+        $response = $this->postJson('/api/storeMedicalRecord', $payload);
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('activity_logs', [
+            'description' => 'Dr. ' . $doctor->name . ' created a medical record for ' . $patient->name,
+        ]);
+    }
 
 
 }

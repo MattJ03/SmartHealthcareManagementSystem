@@ -48,7 +48,7 @@ class MedicalRecordController extends Controller
             'action' => 'store_medical_record',
             'entity_type' => 'medical_record',
             'entity_id' => $record->id,
-            'description' => 'Dr. ' . $record->doctor->name . ' created a medical record for ' . $record->patient->name,
+            'description' => 'Dr. ' . $record->doctor->name . ' created a medical record for ' . $record->patient->user->name,
         ]);
 
         return response()->json([
