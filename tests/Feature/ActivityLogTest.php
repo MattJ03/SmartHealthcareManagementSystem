@@ -149,4 +149,21 @@ class ActivityLogTest extends TestCase
         ]);
     }
 
+    public function test_store_appointment_shows_the_correct_activity_log_action(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($patient);
+
+        $appointment = Appointment::factory([
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->make()->toArray();
+
+        $response = $this->postJson('/api/storeAppointment', $appointment);
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('activity_logs', [
+            'action' => 'appointment booked',
+        ]);
+    }
+
 }

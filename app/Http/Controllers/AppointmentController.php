@@ -136,6 +136,15 @@ class AppointmentController extends Controller
         $this->authorize('delete', $appointment);
 
         $appointment->delete();
+        $prefix = $user->hasRole('doctor') ? 'Dr. ' : ($user->hasRole('admin') ? 'Admin ' : 'Patient ');
+        ActivityLog::create([
+            'user_id' => $user->id,
+            'action' => 'appointment deleted',
+            'entity_type' => 'appointment',
+            'entity_id' => $appointment->id,
+            'description' => $prefix . $appointment->doctor->name . ' deleted an appointment for ' . $appointment->patient->name,
+        ]);
+
         return response()->json(['message' => 'Appointment deleted'], 200);
     }
 
