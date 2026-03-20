@@ -44,7 +44,11 @@ class MedicalRecordController extends Controller
 
         Log::info('record created by: ' . auth()->id());
         ActivityLog::create([
-
+            'user_id' => $record->doctor->id,
+            'action' => 'store_medical_record',
+            'entity_type' => 'medical_record',
+            'entity_id' => $record->id,
+            'description' => 'Dr. ' . $record->doctor->name . ' created a medical record for ' . $record->patient->name,
         ]);
 
         return response()->json([
