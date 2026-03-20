@@ -291,5 +291,72 @@ class ActivityLogTest extends TestCase
         ]);
     }
 
+    public function test_delete_record_creates_activity_log(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->create();
+
+        $payload = [
+            'patient_id' => $patientProfile->id,
+            'title' => 'Test title',
+            'notes' => 'Test notes',
+            'file' => UploadedFile::fake()->create('file.pdf', 500, 'application/pdf'),
+        ];
+
+        $response = $this->postJson('/api/storeMedicalRecord', $payload);
+        $response->assertStatus(201);
+        $response2 = $this->deleteJson('/api/deleteMedicalRecord/' . $response->json('record.id'));
+        $this->assertDatabaseCount('activity_logs', 2);
+    }
+
+    public function test_description_format_is_correct_in_log_for_delete(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->create();
+
+        $payload = [
+            'patient_id' => $patientProfile->id,
+            'title' => 'Test title',
+            'notes' => 'Test notes',
+            'file' => UploadedFile::fake()->create('file.pdf', 500, 'application/pdf'),
+        ];
+
+        $response = $this->postJson('/api/storeMedicalRecord', $payload);
+        $response->assertStatus(201);
+        $response2 = $this->deleteJson('/api/deleteMedicalRecord/' . $response->json('record.id'));
+        $this->assertDatabaseHas('activity_logs', [
+            'description' => 'Dr. ' . $doctor->name . ' deleted the record ' . $payload['title'],
+        ]);
+    }
+
+    public function test_activity_log_shows_correct_id(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id
+        ])->create();
+
+        $record = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id
+        ]);
+
+        $response = $this->deleteJson('/api/deleteMedicalRecord/' . $record->id);
+        $this->assertDatabaseHas('activity_logs', [
+            'user_id' => $doctor->id,
+        ]);
+    }
 
 }
