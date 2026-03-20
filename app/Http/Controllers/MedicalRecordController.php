@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\PatientProfile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Request;
@@ -42,6 +43,9 @@ class MedicalRecordController extends Controller
         ]);
 
         Log::info('record created by: ' . auth()->id());
+        ActivityLog::create([
+
+        ]);
 
         return response()->json([
             'record' => $record,

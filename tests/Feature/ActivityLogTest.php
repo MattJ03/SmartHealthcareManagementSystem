@@ -166,4 +166,55 @@ class ActivityLogTest extends TestCase
         ]);
     }
 
+    public function test_delete_appointment_stores_correct_activity_log_action(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+
+        $appointment = Appointment::factory([
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->create();
+
+        $response = $this->deleteJson('/api/deleteAppointment/' . $appointment->id);
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('activity_logs', [
+            'action' => 'appointment deleted',
+        ]);
+    }
+
+    public function test_delete_appointment_shows_correct_description(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+
+        $appointment = Appointment::factory([
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->create();
+
+        $response = $this->deleteJson('/api/deleteAppointment/' . $appointment->id);
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('activity_logs', [
+           'description' => 'Dr. ' . $appointment->doctor->name . ' deleted an appointment for ' . $appointment->patient->name,
+        ]);
+    }
+
+    public function test_activity_log_has_correct_entity(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($patient);
+
+        $appointment = Appointment::factory([
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->create();
+
+        $response = $this->deleteJson('/api/deleteAppointment/' . $appointment->id);
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('activity_logs', [
+           'entity_type' => 'appointment',
+        ]);
+    }
+
 }
