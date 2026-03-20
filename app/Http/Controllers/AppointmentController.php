@@ -52,7 +52,7 @@ class AppointmentController extends Controller
 
 
         $appointment = $appointmentService->storeAppointment($patientId, $validatedData);
-        Log::info('appointment booked by: ' . $user);
+        Log::info('appointment booked by: ' . $user . ' for time ' . $appointment->starts_at);
 
         $prefix = $user->hasRole('doctor') ? 'Dr. ' : ($user->hasRole('admin') ? 'Admin ' : ' patient ');
         ActivityLog::create([

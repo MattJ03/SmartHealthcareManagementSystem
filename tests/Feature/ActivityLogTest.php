@@ -2,16 +2,19 @@
 namespace Tests\Feature;
 
 use App\Models\ActivityLog;
+use App\Models\MedicalRecord;
+use App\Models\PatientProfile;
 use App\Models\User;
 use App\Http\Controllers\AppointmentController;
 use App\Models\Appointment;
 use Carbon\Carbon;
 use Database\Seeders\RolePermissionSeeder;
+use Faker\Provider\Medical;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 use Database\Factories\UserFactory;
 use Database\Factories\AppointmentFactory;
-
 
 class ActivityLogTest extends TestCase
 {
@@ -216,6 +219,28 @@ class ActivityLogTest extends TestCase
            'entity_type' => 'appointment',
         ]);
     }
+
+    public function test_store_record_creates_activity_log(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->create();
+
+        $payload = [
+            'patient_id' => $patientProfile->id,
+            'title' => 'Test title',
+            'notes' => 'Test notes',
+            'file' => UploadedFile::fake()->create('file.pdf', 500, 'application/pdf'),
+        ];
+
+        $response = $this->postJson('/api/storeMedicalRecord', $payload);
+        $response->assertStatus(201);
+    }
+
 
 
 

@@ -28,13 +28,17 @@ export const useAppointmentStore = defineStore('appointment', () => {
     };
 
     const createAppointment = async (payload) => {
+        console.log("Payload before sending:", payload);
+
         loading.value = true;
         error.value = '';
         try {
             const res = await api.post(`/storeAppointment`, payload);
+            console.log("Response from backend:", res.data);
             patientAppointments.value.push(res.data.appointment);
         } catch (error) {
-            error.value = error.response?.data?.message;
+            console.error("Error response:", error.response?.data);
+            error.value = error.response?.data?.message ?? 'Failed to create appointment';
         } finally {
             loading.value = false;
         }

@@ -1,0 +1,13 @@
+[90m= [39m[34;4mApp\Models\Appointment[39;24m {#6125
+    [34mid[39m: [35m92[39m,
+    [34mpatient_id[39m: [35m1[39m,
+    [34mdoctor_id[39m: [35m8[39m,
+    [34mstarts_at[39m: "[32m2026-04-17 08:00:00[39m",
+    [34mends_at[39m: "[32m2026-04-17 08:30:00[39m",
+    [34mstatus[39m: "[32mconfirmed[39m",
+    [34mnotes[39m: [36mnull[39m,
+    [34mcreated_at[39m: "[32m2026-03-20 13:05:12[39m",
+    [34mupdated_at[39m: "[32m2026-03-20 13:05:12[39m",
+    [34mreminder_sent[39m: [35m0[39m,
+  }
+

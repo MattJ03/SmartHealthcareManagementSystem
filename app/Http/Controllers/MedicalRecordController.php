@@ -68,6 +68,14 @@ class MedicalRecordController extends Controller
         Storage::disk('private')->delete($record->file_path);
 
         Log::info('record deleted by: ' . auth()->id() . ' from storage');
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'delete_medical_record',
+            'entity_type' => 'medical_record',
+            'entity_id' => $record->id,
+            'description' => 'Dr. ' . $record->doctor->name . ' deleted the record ' . $record->title,
+        ]);
+
         return response()->json([
             'message' => 'record deleted',
             'deleted_by' => auth()->id(),
@@ -78,12 +86,21 @@ class MedicalRecordController extends Controller
         $record = MedicalRecord::findOrFail($id);
         $this->authorize('view', $record);
 
+        $user = auth()->user();
         Log::info('record view by: ' . auth()->id());
 
         abort_unless(
             Storage::disk('private')->exists($record->file_path), 404
         );
 
+        $prefix = auth()->user()->hasRole('doctor') ? 'Dr. ' : (auth()->user()->hasRole('Admin' ) ? 'Admin' : 'Patient ');
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'view_medical_record',
+            'entity_type' => 'medical_record',
+            'entity_id' => $record->id,
+            'description' => $prefix . $user->name . ' viewed the record ' . $record->title,
+        ]);
         return response()->file(
             Storage::disk('private')->path($record->file_path),
           ['Content-Type' => mime_content_type(

@@ -263,14 +263,15 @@ async function confirmBooking() {
     }
 
     const startsAt = new Date(selectedDate.value);
+
     const [h, m] = bookingTime.value.split(':').map(Number);
     startsAt.setHours(h, m);
 
     const endsAt = new Date(startsAt.getTime() + 30 * 60 * 1000);
 
     const payload = {
-        patient_id: patientId.value,
-        doctor_id: doctorId.value,
+        patient_id: Number(patientId.value),
+        doctor_id: Number(doctorId.value),
         starts_at: startsAt.toISOString(),
         ends_at: endsAt.toISOString(),
         status: 'confirmed'
