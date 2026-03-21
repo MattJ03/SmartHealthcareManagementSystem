@@ -12,6 +12,7 @@ use Database\Seeders\RolePermissionSeeder;
 use Faker\Provider\Medical;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use Database\Factories\UserFactory;
 use Database\Factories\AppointmentFactory;
@@ -371,6 +372,7 @@ class ActivityLogTest extends TestCase
 
         $record = MedicalRecord::factory([
             'patient_id' => $patientProfile->id,
+            'doctor_id' => $doctor->id,
         ])->create();
 
         $response = $this->deleteJson('/api/deleteMedicalRecord/' . $record->id);
@@ -379,6 +381,64 @@ class ActivityLogTest extends TestCase
         $this->assertDatabaseMissing('activity_logs', [
             'entity_id' => $record->id,
         ]);
+    }
+
+    public function test_log_created_when_doctor_views_record(): void {
+        Storage::fake('private');
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+
+        $this->actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->create();
+
+        $fakePath = 'medical-records/fake.pdf';
+        Storage::disk('private')->put($fakePath, '%PDF-1.4 fake pdf content');
+
+        $record = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $fakePath,
+            'file_type' => 'pdf',
+            'doctor_id' => $doctor->id
+        ]);
+
+        $response = $this->get('/api/showMedicalRecord/' . $record->id);
+        $response->assertStatus(200);
+        $this->assertDatabaseCount('activity_logs', 1);
+    }
+
+    public function test_two_records_when_user_views_record_twice(): void {
+        Storage::fake('private');
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->create();
+
+        $fakePath = 'medical-records/fake.pdf';
+        Storage::disk('private')->put($fakePath, '%PDF-1.4 fake pdf content');
+
+        $record = MedicalRecord::factory([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $fakePath,
+            'doctor_id' => $doctor->id,
+        ])->create();
+
+        $response1 = $this->get('/api/showMedicalRecord/' . $record->id);
+        $response1->assertStatus(200);
+        $response2 = $this->get('/api/showMedicalRecord/' . $record->id);
+        $response2->assertStatus(200);
+        $this->assertDatabaseCount('activity_logs', 2);
+    }
+
+    public function test_description_formatted_correct_for_show_record(): void {
+
     }
 
 
