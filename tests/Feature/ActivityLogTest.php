@@ -491,4 +491,30 @@ class ActivityLogTest extends TestCase
         ]);
     }
 
+    public function test_patient_id_shows_id_in_log_for_download_file(): void {
+        Storage::fake('private');
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($patient);
+
+        $patientProfile = PatientProfile::factory([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->create();
+        $fakePath = 'medical-records/fake.pdf';
+        Storage::fake('private')->put($fakePath, '%PDF-1.4 fake pdf content');
+
+        $record = MedicalRecord::factory([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $fakePath,
+            'doctor_id' => $doctor->id,
+        ])->create();
+
+        $response = $this->get('/api/downloadFile/' . $record->id . '/download');
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('activity_logs', [
+            'user_id' => $patient->id,
+        ]);
+    }
+
 }
