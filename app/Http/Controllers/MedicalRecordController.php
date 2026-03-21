@@ -93,7 +93,7 @@ class MedicalRecordController extends Controller
             Storage::disk('private')->exists($record->file_path), 404
         );
 
-        $prefix = auth()->user()->hasRole('doctor') ? 'Dr. ' : (auth()->user()->hasRole('admin' ) ? 'Admin' : 'Patient ');
+        $prefix = auth()->user()->hasRole('doctor') ? 'Dr. ' : (auth()->user()->hasRole('admin' ) ? 'Admin ' : 'Patient ');
         ActivityLog::create([
             'user_id' => auth()->id(),
             'action' => 'view_medical_record',

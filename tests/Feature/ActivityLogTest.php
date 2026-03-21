@@ -438,8 +438,57 @@ class ActivityLogTest extends TestCase
     }
 
     public function test_description_formatted_correct_for_show_record(): void {
+        Storage::fake('private');
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
 
+        $patientProfile = PatientProfile::factory([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->create();
+
+        $fakePath = 'medical_records/fake.pdf';
+        Storage::fake('private')->put($fakePath, '%PDF-1.4 fake pdf content');
+
+        $record = MedicalRecord::factory()->create([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $fakePath,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        $response = $this->get('/api/showMedicalRecord/' . $record->id);
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('activity_logs', [
+            'description' => 'Dr. ' . $record->doctor->name . ' viewed the record ' . $record->title,
+        ]);
     }
 
+    public function test_download_record_saves_log_to_db(): void {
+        Storage::fake('private');
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+
+        $patientProfile = PatientProfile::factory([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->create();
+
+        $fakePath = 'medical-records/fake.pdf';
+        Storage::fake('private')->put($fakePath, '%PDF-1.4 fake pdf content');
+
+        $record = MedicalRecord::factory([
+            'patient_id' => $patientProfile->id,
+            'file_path' => $fakePath,
+            'doctor_id' => $doctor->id,
+        ])->create();
+
+        $response = $this->get('/api/downloadFile/' . $record->id . '/download');
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('activity_logs', [
+            'action' => 'download_medical_record',
+        ]);
+    }
 
 }
