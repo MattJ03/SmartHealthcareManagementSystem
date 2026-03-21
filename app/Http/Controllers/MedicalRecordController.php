@@ -93,7 +93,7 @@ class MedicalRecordController extends Controller
             Storage::disk('private')->exists($record->file_path), 404
         );
 
-        $prefix = auth()->user()->hasRole('doctor') ? 'Dr. ' : (auth()->user()->hasRole('Admin' ) ? 'Admin' : 'Patient ');
+        $prefix = auth()->user()->hasRole('doctor') ? 'Dr. ' : (auth()->user()->hasRole('admin' ) ? 'Admin' : 'Patient ');
         ActivityLog::create([
             'user_id' => auth()->id(),
             'action' => 'view_medical_record',
@@ -186,11 +186,22 @@ class MedicalRecordController extends Controller
     public function downloadFile(Request $request, MedicalRecord $record) {
         $this->authorize('view', $record);
 
+        $user = auth()->user();
+
         if(!Storage::disk('private')->exists($record->file_path)) {
             abort(404, 'File not found');
         }
 
         Log::info($record->file_path . ' downloaded by: ' . auth()->id());
+        $prefix = $user->hasRole('doctor') ? 'Dr. ' : ($user->hasRole('admin' ) ? 'Admin ' : 'Patient ');
+        ActivityLog::create([
+            'user_id' => $user->id,
+            'action' => 'download_medical_record',
+            'entity_type' => 'medical_record',
+            'entity_id' => $record->id,
+            'description' => $prefix . $user->name .  ' downloaded the medical record ' . $record->title
+        ]);
+
         return Storage::disk('private')->download($record->file_path);
     }
 

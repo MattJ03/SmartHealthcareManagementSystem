@@ -359,4 +359,27 @@ class ActivityLogTest extends TestCase
         ]);
     }
 
+    public function test_no_log_created_when_non_doctor_attempts_to_delete_record(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($patient);
+
+        $patientProfile = PatientProfile::factory([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ])->create();
+
+        $record = MedicalRecord::factory([
+            'patient_id' => $patientProfile->id,
+        ])->create();
+
+        $response = $this->deleteJson('/api/deleteMedicalRecord/' . $record->id);
+        $response->assertStatus(403);
+
+        $this->assertDatabaseMissing('activity_logs', [
+            'entity_id' => $record->id,
+        ]);
+    }
+
+
 }
