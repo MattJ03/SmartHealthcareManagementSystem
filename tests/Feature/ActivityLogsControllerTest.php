@@ -130,4 +130,39 @@ class ActivityLogsControllerTest extends TestCase
         $response2->assertStatus(403);
     }
 
+    public function test_correct_return_upon_no_logs(): void {
+        $admin = User::factory()->create()->assignRole('admin');
+        $this->actingAs($admin);
+
+        $response = $this->getJson('/api/getCompleteLogList');
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'message' => 'No logs found',
+        ]);
+    }
+
+    public function test_correct_action_returned(): void {
+        $admin = User::factory()->create()->assignRole('admin');
+        $this->actingAs($admin);
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+
+        $payload = [
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+            'starts_at' => Carbon::tomorrow(),
+            'ends_at' => Carbon::tomorrow()->addMinutes(30),
+            'status' => 'completed',
+            ];
+
+        $response = $this->postJson('/api/storeAppointment', $payload);
+        $response->assertStatus(201);
+
+        $response2 = $this->getJson('/api/getCompleteLogList');
+        $response2->assertStatus(200);
+        $response2->assertJsonFragment([
+            'action' => 'appointment_booked',
+        ]);
+    }
+
 }
