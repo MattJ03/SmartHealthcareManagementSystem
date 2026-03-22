@@ -633,5 +633,4 @@ class ActivityLogTest extends TestCase
             'description' => 'Dr. ' . $doctor['name'] . ' was registered as a doctor',
         ]);
     }
-
 }
