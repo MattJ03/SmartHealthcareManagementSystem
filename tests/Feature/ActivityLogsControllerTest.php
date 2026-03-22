@@ -91,4 +91,43 @@ class ActivityLogsControllerTest extends TestCase
         ]);
     }
 
+    public function test_cannot_access_complete_log_list_as_patient(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $this->actingAs($patient);
+        $doctor = User::factory()->create()->assignRole('doctor');
+
+        $payload = [
+            'doctor_id' => $doctor->id,
+            'starts_at' => Carbon::tomorrow(),
+            'ends_at' => Carbon::tomorrow()->addMinutes(30),
+            'status' => 'completed',
+        ];
+
+        $response = $this->postJson('/api/storeAppointment', $payload);
+        $response->assertStatus(201);
+
+        $response2 = $this->getJson('/api/getCompleteLogList');
+        $response2->assertStatus(403);
+    }
+
+    public function test_unauthorised_complete_log_list_as_doctor(): void {
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+        $patient = User::factory()->create()->assignRole('patient');
+
+        $payload = [
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+            'starts_at' => Carbon::tomorrow(),
+            'ends_at' => Carbon::tomorrow()->addMinutes(30),
+            'status' => 'completed',
+        ];
+
+        $response1 = $this->postJson('/api/storeAppointment', $payload);
+        $response1->assertStatus(201);
+
+        $response2 = $this->getJson('/api/getCompleteLogList');
+        $response2->assertStatus(403);
+    }
+
 }
