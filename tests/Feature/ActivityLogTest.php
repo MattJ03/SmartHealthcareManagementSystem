@@ -586,4 +586,51 @@ class ActivityLogTest extends TestCase
            'description' => $patientUser['name'] . ' was registered and assigned to Dr. ' . $doctor->name,
         ]);
     }
+
+    public function test_activity_log_when_doctor_registered(): void {
+        $admin = User::factory()->create()->assignRole('admin');
+        $this->actingAs($admin);
+
+        $doctor = [
+            'name' => 'james',
+            'email' => 'james@gmail.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'contact_number' => '123456789',
+            'speciality' => 'goat',
+            'license_number' => '123456789',
+            'clinic_hours' => [
+                'Monday' => ['09:00-18:00'],
+                'Tuesday' => ['09:00-18:00'],
+            ],
+        ];
+        $response = $this->postJson('/api/registerDoctor', $doctor);
+        $response->assertStatus(201);
+        $this->assertDatabaseCount('activity_logs', 1);
+    }
+
+    public function test_format_correct_for_doctor_registered(): void {
+        $admin = User::factory()->create()->assignRole('admin');
+        $this->actingAs($admin);
+
+        $doctor = [
+            'name' => 'james',
+            'email' => 'james@gmail.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'contact_number' => '123456789',
+            'speciality' => 'goat',
+            'license_number' => '123456789',
+            'clinic_hours' => [
+                'Monday' => ['09:00-18:00'],
+                'Tuesday' => ['09:00-18:00'],
+            ],
+        ];
+
+        $response = $this->postJson('/api/registerDoctor', $doctor);
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('activity_logs', [
+            'description' => 'Dr. ' . $doctor['name'] . ' was registered as a doctor',
+        ]);
+    }
 }

@@ -67,7 +67,7 @@ class AuthController extends Controller
             'email' => 'required|email|max:50',
             'password' => 'required|min:8|confirmed|max:50',
             'contact_number' => 'required|string|max:15|min:8',
-            'speciality' => 'nullable|string|max:50',
+            'speciality' => 'string|max:50',
             'license_number' => 'required|string|min:8|max:15',
             'clinic_hours' => 'required|array'
         ]);
