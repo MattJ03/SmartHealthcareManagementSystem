@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use Database\Factories\UserFactory;
 use Database\Factories\AppointmentFactory;
+use App\Http\Controllers\AuthController;
 
 class ActivityLogTest extends TestCase
 {
@@ -166,7 +167,7 @@ class ActivityLogTest extends TestCase
         $response = $this->postJson('/api/storeAppointment', $appointment);
         $response->assertStatus(201);
         $this->assertDatabaseHas('activity_logs', [
-            'action' => 'appointment booked',
+            'action' => 'appointment_booked',
         ]);
     }
 
@@ -183,7 +184,7 @@ class ActivityLogTest extends TestCase
         $response = $this->deleteJson('/api/deleteAppointment/' . $appointment->id);
         $response->assertStatus(200);
         $this->assertDatabaseHas('activity_logs', [
-            'action' => 'appointment deleted',
+            'action' => 'appointment_deleted',
         ]);
     }
 
@@ -542,7 +543,47 @@ class ActivityLogTest extends TestCase
         $this->assertDatabaseHas('activity_logs', [
             'description' => 'Dr. ' . $doctor->name . ' downloaded the medical record ' . $record->title,
         ]);
-
     }
 
+    public function test_activity_log_when_patient_registered(): void {
+        $admin = User::factory()->create()->assignRole('admin');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($admin);
+
+        $patientUser = [
+            'name' => 'james',
+            'email' => 'james@gmail.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'contact_number' => '123456789',
+            'emergency_contact' => '123456789',
+            'doctor_id' => $doctor->id,
+        ];
+
+        $response = $this->postJson('/api/registerPatient', $patientUser);
+        $response->assertStatus(201);
+        $this->assertDatabaseCount('activity_logs', 1);
+    }
+
+    public function test_formatting_correct_when_patient_registered(): void {
+        $admin = User::factory()->create()->assignRole('admin');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($admin);
+
+        $patientUser = [
+            'name' => 'james',
+            'email' => 'james@gmail.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'contact_number' => '123456789',
+            'emergency_contact' => '123456789',
+            'doctor_id' => $doctor->id,
+        ];
+
+        $response = $this->postJson('/api/registerPatient', $patientUser);
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('activity_logs', [
+           'description' => $patientUser['name'] . ' was registered and assigned to Dr. ' . $doctor->name,
+        ]);
+    }
 }

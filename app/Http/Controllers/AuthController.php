@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 use App\Services\AuthService;
 use Illuminate\Support\Facades\DB;
 use App\Models\ActivityLog;
-use Illuminate\Support\Facades\Auth;
+
 class AuthController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -52,7 +52,7 @@ class AuthController extends Controller
             'action' => 'patient_registered',
             'entity' => 'registered',
             'entity_id' => $user->id,
-            'description' => $user->name  . ' was registered and assigned to Dr. ' . $user->profile->doctor,
+            'description' => $user->name  . ' was registered and assigned to Dr. ' . $user->profile->doctor->name,
         ]);
 
         return response()->json(['message' => 'Patient registered successfully'], 201);
@@ -86,6 +86,14 @@ class AuthController extends Controller
             'speciality' => $data['speciality'],
             'license_number' => $data['license_number'],
             'clinic_hours' => $data['clinic_hours'],
+        ]);
+
+        ActivityLog::create([
+            'user_id' => $user->id,
+            'action' => 'doctor_registered',
+            'entity' => 'registered',
+            'entity_id' => $user->id,
+            'description' => 'Dr. ' . $user->name . ' was registered as a doctor',
         ]);
 
         return response()->json(['message' => 'Doctor registered successfully', 'doctor_id' => $user->id], 201);
