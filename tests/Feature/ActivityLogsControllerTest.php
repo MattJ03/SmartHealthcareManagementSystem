@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Http\Controllers\ActivityLogsController;
 use App\Models\User;
+use Carbon\Carbon;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -18,5 +19,76 @@ class ActivityLogsControllerTest extends TestCase
         $this->seed(RolePermissionSeeder::class);
     }
 
+    public function test_admin_index_returns_logs(): void {
+        $admin = User::factory()->create()->assignRole('admin');
+        $this->actingAs($admin);
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+
+        $payload = [
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+            'starts_at' => Carbon::tomorrow(),
+            'ends_at' => Carbon::tomorrow()->addMinutes(30),
+            'status' => 'confirmed',
+        ];
+
+        $response = $this->postJson('/api/storeAppointment', $payload);
+        $response->assertStatus(201);
+
+        $response2 = $this->getJson('/api/getCompleteLogList');
+        $response2->assertStatus(200);
+        $response2->assertJsonStructure([
+            'logs', 'message',
+        ]);
+    }
+
+    public function test_complete_list_returns_correct_message_upon_returning_logs(): void {
+        $admin = User::factory()->create()->assignRole('admin');
+        $this->actingAs($admin);
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+
+        $payload = [
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+            'starts_at' => Carbon::tomorrow(),
+            'ends_at' => Carbon::tomorrow()->addMinutes(30),
+            'status' => 'completed',
+        ];
+
+        $response = $this->postJson('/api/storeAppointment', $payload);
+        $response->assertStatus(201);
+
+        $response2 = $this->get('/api/getCompleteLogList');
+        $response2->assertStatus(200);
+        $response2->assertJsonFragment([
+            'message' => 'Logs retrieved',
+        ]);
+    }
+
+    public function test_log_returned_from_complete_log_list_endpoint(): void {
+        $admin = User::factory()->create()->assignRole('admin');
+        $this->actingAs($admin);
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+
+        $payload = [
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+            'starts_at' => Carbon::tomorrow(),
+            'ends_at' => Carbon::tomorrow()->addMinutes(30),
+            'status' => 'completed',
+        ];
+
+        $response1 = $this->postJson('/api/storeAppointment', $payload);
+        $response1->assertStatus(201);
+
+        $response2 = $this->getJson('/api/getCompleteLogList');
+        $response2->assertStatus(200);
+        $response2->assertJsonFragment([
+            'logs' => $response2->json('logs'),
+        ]);
+    }
 
 }

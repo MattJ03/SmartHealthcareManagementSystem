@@ -16,7 +16,7 @@ class ActivityLogsController extends Controller
         abort_unless($user->hasRole('admin'), 403);
 
         $logs = ActivityLog::query()
-                ->orderBy('timestamp', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->paginate(30);
 
         if($logs->isEmpty()) {
@@ -26,6 +26,7 @@ class ActivityLogsController extends Controller
         }
         return response()->json([
             'logs' => $logs,
-        ]);
+            'message' => 'Logs retrieved',
+        ], 200);
     }
 }
