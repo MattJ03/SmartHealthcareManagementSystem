@@ -29,4 +29,13 @@ class ActivityLogsController extends Controller
             'message' => 'Logs retrieved',
         ], 200);
     }
+
+    public function completeLogDetailsForPatientsOfDcotor() {
+        $user = auth()->user();
+        abort_unless($user->hasRole('doctor'), 403);
+
+        $logs = ActivityLog::query()
+            ->orderBy('created_at', 'desc')
+            ->where('')
+    }
 }
