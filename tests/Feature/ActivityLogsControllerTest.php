@@ -3,12 +3,13 @@
 namespace Tests\Feature;
 
 use App\Http\Controllers\ActivityLogsController;
+use App\Models\ActivityLog;
 use App\Models\User;
 use Carbon\Carbon;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-
+use App\Models\Appointment;
 class ActivityLogsControllerTest extends TestCase
 {
     use RefreshDatabase;
@@ -164,5 +165,27 @@ class ActivityLogsControllerTest extends TestCase
             'action' => 'appointment_booked',
         ]);
     }
+
+    public function test_pagination_works(): void {
+        $admin = User::factory()->create()->assignRole('admin');
+        $this->actingAs($admin);
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+
+        for($i = 0; $i < 35; $i++) {
+            ActivityLog::create([
+                'user_id' => $admin->id,
+                'action' => 'appointment_booked',
+                'entity_type' => 'appointment',
+                'entity_id' => $i,
+                'description' => 'TESTING',
+            ]);
+        }
+        $response = $this->getJson('/api/getCompleteLogList');
+        $response->assertStatus(200);
+        $response->assertJsonCount(30, 'logs.data');
+    }
+
+
 
 }
