@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Http\Controllers\ActivityLogsController;
 use App\Models\ActivityLog;
+use App\Models\PatientProfile;
 use App\Models\User;
 use Carbon\Carbon;
 use Database\Seeders\RolePermissionSeeder;
@@ -186,6 +187,64 @@ class ActivityLogsControllerTest extends TestCase
         $response->assertJsonCount(30, 'logs.data');
     }
 
+    public function test_get_patient_all_logs(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $this->actingAs($patient);
 
+        for($i = 0; $i < 30; $i++) {
+            ActivityLog::create([
+                'user_id' => $patient->id,
+                'action' => 'appointment_booked',
+                'entity_type' => 'appointment',
+                'entity_id' => $i,
+                'description' => 'TESTING',
+            ]);
+        }
 
+            $response = $this->getJson('/api/getPatientsLogList');
+            $response->assertStatus(200);
+            $response->assertJsonFragment([
+                'logs' => $response->json('logs'),
+            ]);
+    }
+
+    public function test_only_patient_can_call_patient_logs(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+
+        for($i = 0; $i < 30; $i++) {
+            ActivityLog::create([
+                'user_id' => $patient->id,
+                'action' => 'appointment_booked',
+                'entity_type' => 'appointment',
+                'entity_id' => $i,
+                'description' => 'TESTING',
+            ]);
+        }
+        $response = $this->getJson('/api/getPatientsLogList');
+        $response->assertStatus(403);
+    }
+
+    public function test_patient_logs_come_with_patient_id_not_just_user_id(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $this->actingAs($patient);
+        $patientProfile = PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+        ]);
+        $admin = User::factory()->create()->assignRole('admin');
+
+        for($i = 0; $i < 30; $i++) {
+            ActivityLog::create([
+                'user_id' => $admin->id,
+                'patient_id' => $patient->id,
+                'action' => 'patient_registered',
+                'entity_type' => 'patient',
+                'entity_id' => $i,
+                'description' => 'TESTING',
+            ]);
+        }
+        $response = $this->getJson('/api/getPatientsLogList');
+        $response->assertStatus(200);
+    }
 }

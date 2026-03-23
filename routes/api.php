@@ -48,5 +48,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/downloadFile/{record}/download', [MedicalRecordController::class, 'downloadFile']);
     Route::get('/me', fn () => auth()->user()->load('profile.doctor'));
     Route::get('/getCompleteLogList', [ActivityLogsController::class, 'completeLogList']);
+    Route::get('/getPatientsLogList', [ActivityLogsController::class, 'patientLogList']);
 });
 

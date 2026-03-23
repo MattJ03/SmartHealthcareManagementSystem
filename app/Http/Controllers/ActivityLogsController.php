@@ -52,7 +52,7 @@ class ActivityLogsController extends Controller
         return response()->json([
             'logs' => $logs,
             'message' => 'Logs retrieved',
-        ], 200)
+        ], 200);
     }
 
 }
