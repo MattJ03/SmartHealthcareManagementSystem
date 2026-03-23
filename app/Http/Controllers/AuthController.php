@@ -23,6 +23,8 @@ class AuthController extends Controller
     public function patientRegister(Request $request) {
         $this->authorize('create patient');
 
+        $activeUser = auth()->user();
+
         $data = $request->validate([
             'name' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email',
@@ -48,9 +50,11 @@ class AuthController extends Controller
         ]);
 
         ActivityLog::create([
-            'user_id' => $user->id,
+            'user_id' => $activeUser->id,
+            'patient_id' => $user->id,
+            'doctor_id' => $data['doctor_id'],
             'action' => 'patient_registered',
-            'entity' => 'registered',
+            'entity_type' => 'user',
             'entity_id' => $user->id,
             'description' => $user->name  . ' was registered and assigned to Dr. ' . $user->profile->doctor->name,
         ]);
@@ -61,6 +65,8 @@ class AuthController extends Controller
 
     public function doctorRegister(Request $request) {
         $this->authorize('create doctor');
+
+        $activeUser = auth()->user();
 
         $data = $request->validate([
             'name' => 'required|string|max:50',
@@ -89,9 +95,10 @@ class AuthController extends Controller
         ]);
 
         ActivityLog::create([
-            'user_id' => $user->id,
+            'user_id' => $activeUser->id,
+            'doctor_id' => $user->id,
             'action' => 'doctor_registered',
-            'entity' => 'registered',
+            'entity_type' => 'user',
             'entity_id' => $user->id,
             'description' => 'Dr. ' . $user->name . ' was registered as a doctor',
         ]);

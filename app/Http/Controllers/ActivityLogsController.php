@@ -9,17 +9,18 @@ use App\Models\ActivityLog;
 
 class ActivityLogsController extends Controller
 {
-    public function completeLogList() {
+    public function completeLogList()
+    {
 
         $user = auth()->user();
 
         abort_unless($user->hasRole('admin'), 403);
 
         $logs = ActivityLog::query()
-                ->orderBy('created_at', 'desc')
-                ->paginate(30);
+            ->orderBy('created_at', 'desc')
+            ->paginate(30);
 
-        if($logs->isEmpty()) {
+        if ($logs->isEmpty()) {
             return response()->json([
                 'message' => 'No logs found'
             ]);
@@ -30,12 +31,30 @@ class ActivityLogsController extends Controller
         ], 200);
     }
 
-    public function completeLogDetailsForPatientsOfDcotor() {
+    public function patientLogList() {
         $user = auth()->user();
-        abort_unless($user->hasRole('doctor'), 403);
+        abort_unless($user->hasRole('patient'), 403);
 
         $logs = ActivityLog::query()
+            ->where(function ($query) use ($user) {
+                $query->where('user_id', $user->id)
+                       ->orWhere('patient_id', $user->id);
+            })
             ->orderBy('created_at', 'desc')
-            ->where('')
+            ->paginate(30);
+
+        if($logs->isEmpty()) {
+            return response()->json([
+                'message' => 'No logs found',
+            ]);
+        }
+
+        return response()->json([
+            'logs' => $logs,
+            'message' => 'Logs retrieved',
+        ], 200)
     }
+
 }
+
+

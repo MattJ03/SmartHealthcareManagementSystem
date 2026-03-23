@@ -45,6 +45,8 @@ class MedicalRecordController extends Controller
         Log::info('record created by: ' . auth()->id());
         ActivityLog::create([
             'user_id' => $record->doctor->id,
+            'patient_id' => $validatedData['patient_id'],
+            'doctor_id' => $record->doctor->id,
             'action' => 'store_medical_record',
             'entity_type' => 'medical_record',
             'entity_id' => $record->id,
@@ -70,6 +72,8 @@ class MedicalRecordController extends Controller
         Log::info('record deleted by: ' . auth()->id() . ' from storage');
         ActivityLog::create([
             'user_id' => auth()->id(),
+            'patient_id' => $record->patient->id,
+            'doctor_id' => $record->doctor->id,
             'action' => 'delete_medical_record',
             'entity_type' => 'medical_record',
             'entity_id' => $record->id,
@@ -96,6 +100,8 @@ class MedicalRecordController extends Controller
         $prefix = auth()->user()->hasRole('doctor') ? 'Dr. ' : (auth()->user()->hasRole('admin' ) ? 'Admin ' : 'Patient ');
         ActivityLog::create([
             'user_id' => auth()->id(),
+            'patient_id' => $record->patient->id,
+            'doctor_id' => $record->doctor->id,
             'action' => 'view_medical_record',
             'entity_type' => 'medical_record',
             'entity_id' => $record->id,
@@ -196,6 +202,8 @@ class MedicalRecordController extends Controller
         $prefix = $user->hasRole('doctor') ? 'Dr. ' : ($user->hasRole('admin' ) ? 'Admin ' : 'Patient ');
         ActivityLog::create([
             'user_id' => $user->id,
+            'patient_id' => $record->patient->id,
+            'doctor_id' => $record->doctor->id,
             'action' => 'download_medical_record',
             'entity_type' => 'medical_record',
             'entity_id' => $record->id,
