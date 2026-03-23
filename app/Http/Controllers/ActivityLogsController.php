@@ -55,6 +55,31 @@ class ActivityLogsController extends Controller
         ], 200);
     }
 
+    public function doctorLogList() {
+        $user = auth()->user();
+        abort_unless($user->hasRole('doctor'), 403);
+
+        $logs = ActivityLog::query()
+                ->where(function ($query) use ($user) {
+                    $query->where('user_id', $user->id)
+                           ->orWhere('doctor_id', $user->id)
+                           ->orderBy('created_at', 'desc')
+                            ->paginate(30);
+                });
+
+        if($logs->isEmpty()) {
+            return response()->json([
+                'message' => 'No logs found',
+            ]);
+        }
+
+        return response()->json([
+            'logs' => $logs,
+            'message' => 'Logs retrieved',
+        ]);
+    }
 }
+
+
 
 

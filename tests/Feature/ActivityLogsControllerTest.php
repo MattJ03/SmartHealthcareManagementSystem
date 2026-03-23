@@ -266,4 +266,26 @@ class ActivityLogsControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonCount(10, 'logs.data');
     }
+
+    public function test_only_returns_specific_patients_logs(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $this->actingAs($patient);
+        $wrongPatient = User::factory()->create()->assignRole('patient');
+
+        for($i = 0; $i < 30; $i++) {
+            ActivityLog::create([
+                'user_id' => $wrongPatient->id,
+                'action' => 'appointment_booked',
+                'entity_type' => 'appointment',
+                'entity_id' => $i,
+                'description' => 'TESTING',
+            ]);
+        }
+
+        $response = $this->getJson('/api/getPatientsLogList');
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'message' => 'No logs found',
+        ]);
+    }
 }
