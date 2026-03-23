@@ -247,4 +247,23 @@ class ActivityLogsControllerTest extends TestCase
         $response = $this->getJson('/api/getPatientsLogList');
         $response->assertStatus(200);
     }
+
+    public function test_correct_amount_of_logs_returned(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $this->actingAs($patient);
+
+        for($i = 0; $i < 10; $i++) {
+            ActivityLog::create([
+                'user_id' => $patient->id,
+                'action' => 'appointment_booked',
+                'entity_type' => 'appointment',
+                'entity_id' => $i,
+                'description' => 'TESTING',
+            ]);
+        }
+
+        $response = $this->getJson('/api/getPatientsLogList');
+        $response->assertStatus(200);
+        $response->assertJsonCount(10, 'logs.data');
+    }
 }
