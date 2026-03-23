@@ -57,6 +57,8 @@ class AppointmentController extends Controller
         $prefix = $user->hasRole('doctor') ? 'Dr. ' : ($user->hasRole('admin') ? 'Admin ' : ' patient ');
         ActivityLog::create([
             'user_id' => $user->id,
+            'patient_id' => $patientId,
+            'doctor_id' => $validatedData['doctor_id'],
             'action' => 'appointment_booked',
             'entity_type' => 'appointment',
             'entity_id' => $appointment->id,
@@ -93,6 +95,8 @@ class AppointmentController extends Controller
         $prefix = $user->hasRole('doctor') ? 'Dr. ' : ($user->hasRole('admin') ? 'Admin ' : '');
         ActivityLog::create([
            'user_id' => $user->id,
+            'patient_id' => $appointment->patient_id,
+            'doctor_id' => $validatedData['doctor_id'],
             'action' => 'appointment_updated',
             'entity_type' => 'appointment',
             'entity_id' => $appointment->id,
@@ -139,6 +143,8 @@ class AppointmentController extends Controller
         $prefix = $user->hasRole('doctor') ? 'Dr. ' : ($user->hasRole('admin') ? 'Admin ' : 'Patient ');
         ActivityLog::create([
             'user_id' => $user->id,
+            'patient_id' => $appointment->patient_id,
+            'doctor_id' => $appointment->doctor_id,
             'action' => 'appointment_deleted',
             'entity_type' => 'appointment',
             'entity_id' => $appointment->id,
