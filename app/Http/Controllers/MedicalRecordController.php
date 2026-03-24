@@ -73,7 +73,7 @@ class MedicalRecordController extends Controller
         Log::info('record deleted by: ' . auth()->id() . ' from storage');
         ActivityLog::create([
             'user_id' => auth()->id(),
-            'patient_id' => $record->patient->id,
+            'patient_id' => $record->patient->user->id,
             'doctor_id' => auth()->id(),
             'action' => 'delete_medical_record',
             'entity_type' => 'medical_record',
@@ -203,7 +203,7 @@ class MedicalRecordController extends Controller
         $prefix = $user->hasRole('doctor') ? 'Dr. ' : ($user->hasRole('admin' ) ? 'Admin ' : 'Patient ');
         ActivityLog::create([
             'user_id' => $user->id,
-            'patient_id' => $record->patient->id,
+            'patient_id' => $record->patient->user->id,
             'doctor_id' => $record->doctor->id,
             'action' => 'download_medical_record',
             'entity_type' => 'medical_record',
