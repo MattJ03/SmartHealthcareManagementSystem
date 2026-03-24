@@ -297,14 +297,17 @@ class ActivityLogsControllerTest extends TestCase
         for($i = 0; $i < 30; $i++) {
             ActivityLog::create([
                 'user_id' => $patient->id,
-                 'doctor_id' => $doctor->id,
+                'doctor_id' => $doctor->id,
                 'action' => 'appointment_booked',
                 'entity_type' => 'appointment',
                 'entity_id' => $i,
                 'description' => 'TESTING',
             ]);
 
-
         }
+            $response = $this->getJson('/api/getDoctorsLogList');
+            $response->assertStatus(200);
+            $response->assertJsonCount(30, 'logs.data');
+
     }
 }

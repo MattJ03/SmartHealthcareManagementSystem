@@ -20,7 +20,7 @@ class ActivityLogsController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(30);
 
-        if ($logs->isEmpty()) {
+        if ($logs->total() === 0) {
             return response()->json([
                 'message' => 'No logs found'
             ]);
@@ -43,7 +43,7 @@ class ActivityLogsController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(30);
 
-        if($logs->isEmpty()) {
+        if($logs->total() === 0) {
             return response()->json([
                 'message' => 'No logs found',
             ]);
@@ -62,12 +62,12 @@ class ActivityLogsController extends Controller
         $logs = ActivityLog::query()
                 ->where(function ($query) use ($user) {
                     $query->where('user_id', $user->id)
-                           ->orWhere('doctor_id', $user->id)
+                           ->orWhere('doctor_id', $user->id);
                 })
             ->orderBy('created_at', 'desc')
             ->paginate(30);
 
-        if($logs->isEmpty()) {
+        if($logs->total() === 0) {
             return response()->json([
                 'message' => 'No logs found',
             ]);
