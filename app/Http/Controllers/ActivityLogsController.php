@@ -63,9 +63,9 @@ class ActivityLogsController extends Controller
                 ->where(function ($query) use ($user) {
                     $query->where('user_id', $user->id)
                            ->orWhere('doctor_id', $user->id)
-                           ->orderBy('created_at', 'desc')
-                            ->paginate(30);
-                });
+                })
+            ->orderBy('created_at', 'desc')
+            ->paginate(30);
 
         if($logs->isEmpty()) {
             return response()->json([

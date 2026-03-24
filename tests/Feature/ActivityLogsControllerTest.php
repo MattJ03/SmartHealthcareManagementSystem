@@ -288,4 +288,23 @@ class ActivityLogsControllerTest extends TestCase
             'message' => 'No logs found',
         ]);
     }
+
+    public function test_doctor_can_get_their_logs(): void {
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+        $patient = User::factory()->create()->assignRole('patient');
+
+        for($i = 0; $i < 30; $i++) {
+            ActivityLog::create([
+                'user_id' => $patient->id,
+                 'doctor_id' => $doctor->id,
+                'action' => 'appointment_booked',
+                'entity_type' => 'appointment',
+                'entity_id' => $i,
+                'description' => 'TESTING',
+            ]);
+
+
+        }
+    }
 }

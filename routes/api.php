@@ -49,5 +49,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', fn () => auth()->user()->load('profile.doctor'));
     Route::get('/getCompleteLogList', [ActivityLogsController::class, 'completeLogList']);
     Route::get('/getPatientsLogList', [ActivityLogsController::class, 'patientLogList']);
+    Route::get('/getDoctorsLogList', [ActivityLogsController::class, 'doctorLogList']);
 });
 
