@@ -306,6 +306,7 @@ class ActivityLogsControllerTest extends TestCase
 
         }
             $response = $this->getJson('/api/getDoctorsLogList');
+            $response->dump();
             $response->assertStatus(200);
             $response->assertJsonCount(30, 'logs.data');
 
