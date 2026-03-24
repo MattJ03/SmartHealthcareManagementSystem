@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Policies\MedicalRecordPolicy;
 use App\Models\MedicalRecord;
 use Illuminate\Support\Facades\Log;
-
+use App\Models\User;
 
 class MedicalRecordController extends Controller
 {
@@ -45,8 +45,8 @@ class MedicalRecordController extends Controller
         Log::info('record created by: ' . auth()->id());
         ActivityLog::create([
             'user_id' => $record->doctor->id,
-            'patient_id' => $validatedData['patient_id'],
-            'doctor_id' => $record->doctor->id,
+            'patient_id' => $patientProfile->user->id,
+            'doctor_id' => $patientProfile->doctor->id,
             'action' => 'store_medical_record',
             'entity_type' => 'medical_record',
             'entity_id' => $record->id,
@@ -63,6 +63,7 @@ class MedicalRecordController extends Controller
     public function deleteRecord(Request $request, $id) {
         $record = MedicalRecord::findOrFail($id);
         $this->authorize('delete', $record);
+        $user = auth()->user();
         $record->delete();
 
         Log::info('record deleted by: ' . auth()->id() . ' from database');
@@ -73,7 +74,7 @@ class MedicalRecordController extends Controller
         ActivityLog::create([
             'user_id' => auth()->id(),
             'patient_id' => $record->patient->id,
-            'doctor_id' => $record->doctor->id,
+            'doctor_id' => auth()->id(),
             'action' => 'delete_medical_record',
             'entity_type' => 'medical_record',
             'entity_id' => $record->id,
@@ -100,7 +101,7 @@ class MedicalRecordController extends Controller
         $prefix = auth()->user()->hasRole('doctor') ? 'Dr. ' : (auth()->user()->hasRole('admin' ) ? 'Admin ' : 'Patient ');
         ActivityLog::create([
             'user_id' => auth()->id(),
-            'patient_id' => $record->patient->id,
+            'patient_id' => $record->patient->user->id,
             'doctor_id' => $record->doctor->id,
             'action' => 'view_medical_record',
             'entity_type' => 'medical_record',

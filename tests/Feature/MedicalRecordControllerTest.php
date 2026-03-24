@@ -41,7 +41,7 @@ class MedicalRecordControllerTest extends TestCase
         $doctor = User::factory()->create();
         $doctor->assignRole('doctor');
         $doctor->refresh();
-        Sanctum::actingAs($doctor);
+        $this->actingAs($doctor);
 
         $patient = User::factory()->create();
         $patient->assignRole('patient');
@@ -67,7 +67,7 @@ class MedicalRecordControllerTest extends TestCase
 
         $doctor = User::factory()->create();
         $doctor->assignRole('doctor');
-        Sanctum::actingAs($doctor);
+        $this->actingAs($doctor);
         $patient = User::factory()->create();
         $patient->assignRole('patient');
 
@@ -94,7 +94,7 @@ class MedicalRecordControllerTest extends TestCase
         Storage::fake('private');
         $doctor = User::factory()->create();
         $doctor->assignRole('doctor');
-        Sanctum::actingAs($doctor);
+        $this->actingAs($doctor);
         $patient = User::factory()->create();
         $patient->assignRole('patient');
 
@@ -153,8 +153,7 @@ class MedicalRecordControllerTest extends TestCase
 
         $patient = User::factory()->create();
         $patient->assignRole('patient');
-        Sanctum::actingAs($doctor);
-
+        $this->actingAs($doctor);
         $patientProfile = PatientProfile::factory()->create([
             'user_id' => $patient->id,
             'doctor_id' => $doctor->id,
@@ -178,7 +177,7 @@ class MedicalRecordControllerTest extends TestCase
         Storage::fake('private');
         $doctor = User::factory()->create();
         $doctor->assignRole('doctor');
-        Sanctum::actingAs($doctor);
+        $this->actingAs($doctor);
 
         $patient = User::factory()->create();
         $patient->assignRole('patient');

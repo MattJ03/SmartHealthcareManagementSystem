@@ -309,6 +309,7 @@ class ActivityLogsControllerTest extends TestCase
             $response->dump();
             $response->assertStatus(200);
             $response->assertJsonCount(30, 'logs.data');
-
     }
+
+
 }
