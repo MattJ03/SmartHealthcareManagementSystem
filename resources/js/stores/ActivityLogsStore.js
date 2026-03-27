@@ -26,12 +26,24 @@ export const useActivityLogsStore = defineStore('activity_logs', () => {
     const getPatientLogs = async () => {
         loading.value = true;
         try {
-            const res = await api.get('getPatientsLogList');
+            const res = await api.get('/getPatientsLogList');
             patientLogs.value = res.data.data;
         } catch(error) {
             error.value = error.response?.data?.message ?? 'Failed to fetch patient logs';
         }
         finally {
+            loading.value = false;
+        }
+    }
+
+    const getDoctorLogs = async () => {
+        loading.value = true;
+        try {
+            const res = await api.get('/getDoctorsLogList');
+            doctorLogs.value = res.data.data;
+        } catch(error) {
+            error.value = error.response?.data?.message ?? 'Failed to fetch doctor logs';
+        } finally {
             loading.value = false;
         }
     }
