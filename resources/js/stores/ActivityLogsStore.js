@@ -14,7 +14,7 @@ export const useActivityLogsStore = defineStore('activity_logs', () => {
         loading.value = true;
         try {
             const res = await api.get('/getCompleteLogList');
-            allLogs.value = res.data.data;
+            allLogs.value = res.data.logs.data;
         } catch (error) {
             error.value = error.response?.data?.message ?? 'Failed to fetch all logs';
         }
@@ -27,7 +27,7 @@ export const useActivityLogsStore = defineStore('activity_logs', () => {
         loading.value = true;
         try {
             const res = await api.get('/getPatientsLogList');
-            patientLogs.value = res.data.data;
+            patientLogs.value = res.data.logs.data;
         } catch(error) {
             error.value = error.response?.data?.message ?? 'Failed to fetch patient logs';
         }
@@ -40,12 +40,23 @@ export const useActivityLogsStore = defineStore('activity_logs', () => {
         loading.value = true;
         try {
             const res = await api.get('/getDoctorsLogList');
-            doctorLogs.value = res.data.data;
+            doctorLogs.value = res.data.logs.data;
         } catch(error) {
             error.value = error.response?.data?.message ?? 'Failed to fetch doctor logs';
         } finally {
             loading.value = false;
         }
     }
+
+    return {
+        role,
+        allLogs,
+        patientLogs,
+        doctorLogs,
+        error,
+        getAllLogs,
+        getPatientLogs,
+        getDoctorLogs,
+    };
 
 });
