@@ -3,7 +3,7 @@ import { ref, reactive, computed } from 'vue';
 import api from "../axios.js";
 
 export const useActivityLogsStore = defineStore('activity_logs', () => {
-    const role = localStorage.getItem('role');
+    const role = ref(localStorage.getItem('role'));
     const allLogs = ref([]);
     const patientLogs = ref([]);
     const doctorLogs = ref([]);
@@ -15,7 +15,7 @@ export const useActivityLogsStore = defineStore('activity_logs', () => {
         try {
             const res = await api.get('/getCompleteLogList');
             allLogs.value = res.data.logs.data;
-        } catch (error) {
+        } catch (err) {
             error.value = error.response?.data?.message ?? 'Failed to fetch all logs';
         }
         finally {
@@ -28,7 +28,7 @@ export const useActivityLogsStore = defineStore('activity_logs', () => {
         try {
             const res = await api.get('/getPatientsLogList');
             patientLogs.value = res.data.logs.data;
-        } catch(error) {
+        } catch(err) {
             error.value = error.response?.data?.message ?? 'Failed to fetch patient logs';
         }
         finally {
@@ -41,7 +41,7 @@ export const useActivityLogsStore = defineStore('activity_logs', () => {
         try {
             const res = await api.get('/getDoctorsLogList');
             doctorLogs.value = res.data.logs.data;
-        } catch(error) {
+        } catch(err) {
             error.value = error.response?.data?.message ?? 'Failed to fetch doctor logs';
         } finally {
             loading.value = false;
@@ -54,6 +54,7 @@ export const useActivityLogsStore = defineStore('activity_logs', () => {
         patientLogs,
         doctorLogs,
         error,
+        loading,
         getAllLogs,
         getPatientLogs,
         getDoctorLogs,
