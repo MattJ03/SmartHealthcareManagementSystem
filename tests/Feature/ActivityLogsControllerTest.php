@@ -306,7 +306,6 @@ class ActivityLogsControllerTest extends TestCase
 
         }
             $response = $this->getJson('/api/getDoctorsLogList');
-            $response->dump();
             $response->assertStatus(200);
             $response->assertJsonCount(30, 'logs.data');
     }
@@ -323,10 +322,31 @@ class ActivityLogsControllerTest extends TestCase
                 'entity_id' => $i,
                 'description' => 'TESTING',
             ]);
+        }
             $response = $this->getJson('/api/getDoctorsLogList');
             $response->assertStatus(403);
-        }
     }
 
+    public function test_doctor_logs_come_with_patient_id_not_just_user_id(): void {
+        $patient = User::factory()->create()->assignRole('patient');
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
 
+        for($i = 0; $i < 35; $i++) {
+            ActivityLog::create([
+                'user_id' => $patient->id,
+                'patient_id' => $patient->id,
+                'action' => 'appointment_booked',
+                'entity_type' => 'appointment',
+                'entity_id' => $i,
+                'description' => 'TESTING',
+            ]);
+        }
+        $response = $this->getJson('/api/getDoctorsLogList');
+        $response->assertStatus(200);
+        $response->dump();
+        $response->assertJsonFragment([
+            'patient_id' => $patient->id,
+        ]);
+    }
 }
