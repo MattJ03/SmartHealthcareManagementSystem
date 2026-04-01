@@ -13,6 +13,12 @@
     :key="log.id"
     :logs="log"
     />
+    <LogGrid
+    v-if="role === 'admin'"
+    v-for="log in allLogs"
+    :key="log.id"
+    :logs="log"
+        />
 </template>
 <script setup>
 import { ref, reactive, computed } from 'vue';
