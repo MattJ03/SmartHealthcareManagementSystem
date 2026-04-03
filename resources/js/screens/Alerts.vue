@@ -1,6 +1,6 @@
 <template>
     <NavBar></NavBar>
-<h1>Make this a log thing for bookings, postings, doctor moves, patient cancel or new patient</h1>
+    <div class="container">
     <LogGrid
      v-if="role === 'patient'"
      v-for="log in patientLogs"
@@ -19,6 +19,7 @@
     :key="log.id"
     :logs="log"
         />
+    </div>
 </template>
 <script setup>
 import { ref, reactive, computed } from 'vue';
@@ -46,9 +47,11 @@ onMounted (() => {
         logsStore.getAllLogs();
     }
 
-})
-
-
+});
 </script>
 <style scoped>
+.container {
+    display: flex;
+    flex-direction: column;
+}
 </style>

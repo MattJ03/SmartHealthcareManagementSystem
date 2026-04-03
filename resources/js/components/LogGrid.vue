@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="log-rec">
-            <p class="log-details"> {{ logs.data.logs.data.description }}</p>
+            <p class="log-details"> {{ logs.description }}</p>
         </div>
     </div>
 </template>
@@ -19,11 +19,14 @@ const props = defineProps({
 .container {
     background-color: #FFFFFF;
     width: 100%;
+    padding-left: 40px;
 }
 .log-rec {
     display: flex;
     justify-content: left;
     border: 1px solid #FFFFFF;
+    background-color: #0a53be;
+    padding-left: 20px;
     border-radius: 14px;
 }
 .log-details {
