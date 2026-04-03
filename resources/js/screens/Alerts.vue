@@ -1,24 +1,13 @@
 <template>
     <NavBar></NavBar>
     <div class="container">
-    <LogGrid
-     v-if="role === 'patient'"
-     v-for="log in patientLogs"
-     :key="log.id"
-     :logs="log"
-    />
-    <LogGrid
-    v-if="role === 'doctor'"
-    v-for="log in doctorLogs"
-    :key="log.id"
-    :logs="log"
-    />
-    <LogGrid
-    v-if="role === 'admin'"
-    v-for="log in allLogs"
-    :key="log.id"
-    :logs="log"
-        />
+        <div class="log-container">
+        <div class="log-headings">
+            <h2>hello</h2>
+            <h2>goodbye</h2>
+            <h2>question</h2>
+        </div>
+        </div>
     </div>
 </template>
 <script setup>
@@ -52,6 +41,19 @@ onMounted (() => {
 <style scoped>
 .container {
     display: flex;
-    flex-direction: column;
+    justify-content: left;
+    width: 100%;
+}
+.log-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
+    flex-direction: row;
+    background-color: #0a53be;
+    border-radius: 14px;
+    width: 50%;
+}
+.log-headings {
+
 }
 </style>

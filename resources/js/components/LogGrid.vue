@@ -18,7 +18,7 @@ const props = defineProps({
 <style scoped>
 .container {
     background-color: #FFFFFF;
-    width: 100%;
+    width: 75%;
     padding-left: 40px;
 }
 .log-rec {
