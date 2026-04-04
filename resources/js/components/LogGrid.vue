@@ -33,8 +33,9 @@ const formattedTime = computed(() => {
 <style scoped>
 .container {
     background-color: #FFFFFF;
-    width: 60%;
-    padding-left: 40px;
+    width: 100%;
+    padding-left: 20px;
+    box-sizing: border-box;
 }
 .log-rec {
     display: grid;
@@ -49,12 +50,6 @@ const formattedTime = computed(() => {
     padding-right: 10px;
 }
 .horizontal-line {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    border: none;
-
-    margin: 10px 0;
-    padding-left: 0;
+   grid-column: span 3;
 }
 </style>

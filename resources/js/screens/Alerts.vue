@@ -1,6 +1,12 @@
 <template>
     <NavBar></NavBar>
     <div class="container">
+        <div class="log-wrapper">
+            <div class="pagination-container">
+               <button @click="prevLogs"><</button>
+                <button @click="nextLogs">></button>
+            </div>
+
         <div class="log-container">
         <div class="log-headings">
             <h3>Timestamp</h3>
@@ -24,7 +30,7 @@
                     :logs="log"
                     />
             </div>
-
+        </div>
         </div>
     </div>
 </template>
@@ -62,16 +68,14 @@ onMounted (() => {
     justify-content: left;
     width: 100%;
     padding-left: 30px;
+    padding-top: 20px;
+
 }
 .log-container {
-
-    gap: 50px;
-    padding-left: 0;
     background-color: #FFFFFF;
     border: #E9DCC9 solid 1px;
     border-radius: 14px;
-    width: 75%;
-    height: 400px;
+
 }
 .log-headings {
     display: grid;
@@ -89,6 +93,20 @@ onMounted (() => {
 }
 
 .log-results {
+
+}
+.log-wrapper {
+    width: 75%;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+
+}
+
+.next-prev {
 
 }
 </style>
