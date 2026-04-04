@@ -39,6 +39,7 @@ import { ref, reactive, computed } from 'vue';
 import { useActivityLogsStore } from "../stores/ActivityLogsStore.js";
 import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
+import api from "../axios.js";
 import LogGrid from "../components/LogGrid.vue";
 import NavBar from "../components/NavBar.vue";
 import {useAuthStore} from "../stores/AuthStore.js";
@@ -48,6 +49,9 @@ const authStore = useAuthStore();
 
 const { role } = storeToRefs(authStore);
 const { patientLogs, doctorLogs, allLogs } = storeToRefs(logsStore);
+const loading = ref(false);
+const error = ref(null);
+const pageNum = ref(1);
 
 onMounted (() => {
     if(role.value === 'patient') {
@@ -61,6 +65,30 @@ onMounted (() => {
     }
 
 });
+
+const nextLogs = async () => {
+    loading.value = true;
+    try {
+        pageNum.value++
+        if(role.value === 'doctor') {
+            console.log('fetching next logs' + pageNum.value);
+            const res = await api.get(`doctorLogList?page=${pageNum.value}`);
+            doctorLogs.value = res.data.logs.data;
+        }
+        if(role.value === 'patient') {
+            const res = await api.get(`patientLogList?page=${pageNum.value}`);
+            patientLogs.value = res.data.logs.data;
+        }
+        if(role.value === 'admin') {
+            const res = await api.get(`getAllLogs?page=${pageNum.value}`);
+            allLogs.value = res.data.logs.data;
+        }
+    } catch (err) {
+        error.value = error.response?.data?.message;
+    } finally {
+        loading.value = false;
+    }
+}
 </script>
 <style scoped>
 .container {
