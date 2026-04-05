@@ -4,9 +4,9 @@
         <div class="log-wrapper">
             <div class="pagination-container">
                 <div class="filtering-container">
-                    <select v-if="role === 'doctor' || role === 'admin'">
-                        <option value="">--Select Patient--</option>
-                        <option v-for="patient in patients" :key="patient.id" :value="patient.id">
+                    <select class="dropdown-value" v-if="role === 'doctor' || role === 'admin'" v-model="filter.patient_id">
+                        <option class="dropdown-value" value="">--Select Patient--</option>
+                        <option class="dropdown-value" v-for="patient in patients" :key="patient.id" :value="patient.id">
                             {{ patient.user.name }}
                         </option>
                     </select>
@@ -138,6 +138,37 @@ const prevLogs = async () => {
     }
 }
 
+const filterThroughLogs = async () => {
+  loading.value = true;
+  try {
+      const params = {};
+      if(filter.patient_id !== '') {
+          params.patient_id = filter.patient_id;
+      }
+      if(filter.doctor_id !== '') {
+          params.doctor_id = filter.doctor_id;
+      }
+      if(filter.action !== '') {
+          params.action = filter.action;
+      }
+      const res = await api.get('getFilteredLogList', { params });
+
+      if(role.value === 'patient') {
+          patientLogs.value = res.data.logs.data;
+      }
+      if(role.value === 'doctor') {
+          doctorLogs.value = res.data.logs.data;
+      }
+      if(role.value === 'admin') {
+          allLogs.value = res.data.logs.data;
+      }
+  } catch (err) {
+      error.value = error.response?.data?.message;
+  } finally {
+      loading.value = false;
+  }
+}
+
 </script>
 <style scoped>
 .container {
@@ -205,11 +236,24 @@ const prevLogs = async () => {
 }
 .filtering-container {
     display: flex;
-     justify-content: center;
+
      background-color: #305cde;
     margin-right: 40px;
-    width: 400px;
+    width: 600px;
+    height: 65px;
     border: #FFFFFF solid 1px;
     border-radius: 14px;
+}
+
+.dropdown-value {
+    justify-content: left;
+    background-color: #FFFFFF;
+    border: none;
+    border-radius: 14px;
+    font-size: 14px;
+    margin-left: 20px;
+    height: 45px;
+    margin-top: 10px;
+
 }
 </style>
