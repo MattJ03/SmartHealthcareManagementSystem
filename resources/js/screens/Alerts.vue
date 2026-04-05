@@ -3,8 +3,11 @@
     <div class="container">
         <div class="log-wrapper">
             <div class="pagination-container">
-               <button @click="prevLogs"><</button>
-                <button @click="nextLogs">></button>
+                <div class="nav-area">
+               <button class="next-prev" @click="prevLogs">Prev</button>
+                Page {{ pageNum }}
+                <button class=next-prev @click="nextLogs">Next</button>
+                </div>
             </div>
 
         <div class="log-container">
@@ -72,15 +75,15 @@ const nextLogs = async () => {
         pageNum.value++
         if(role.value === 'doctor') {
             console.log('fetching next logs' + pageNum.value);
-            const res = await api.get(`doctorLogList?page=${pageNum.value}`);
+            const res = await api.get(`getDoctorsLogList?page=${pageNum.value}`);
             doctorLogs.value = res.data.logs.data;
         }
         if(role.value === 'patient') {
-            const res = await api.get(`patientLogList?page=${pageNum.value}`);
+            const res = await api.get(`getPatientsLogList?page=${pageNum.value}`);
             patientLogs.value = res.data.logs.data;
         }
         if(role.value === 'admin') {
-            const res = await api.get(`getAllLogs?page=${pageNum.value}`);
+            const res = await api.get(`getCompleteLogList?page=${pageNum.value}`);
             allLogs.value = res.data.logs.data;
         }
     } catch (err) {
@@ -130,11 +133,28 @@ const nextLogs = async () => {
 .pagination-container {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 10px;
+
+   margin-bottom: 2px;
 
 }
 
 .next-prev {
+    padding-bottom: 15px;
+    padding-top: 15px;
+    padding-left: 25px;
+    padding-right: 25px;
+    border: 1px solid #FFFFFF;
+    border-radius: 14px;
+    color: #FFFFFF;
+    background-color: #305cde;
+    font-size: 16px;
+}
+.next-prev:hover {
+    background-color: #0a53be;
+    cursor: pointer;
+}
+
+.nav-area {
 
 }
 </style>
