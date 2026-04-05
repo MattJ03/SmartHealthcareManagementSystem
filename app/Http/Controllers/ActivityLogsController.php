@@ -79,17 +79,43 @@ class ActivityLogsController extends Controller
         ]);
     }
 
-    public function filterLogs(Request $request) {
+    public function filterLog(Request $request) {
         $user = auth()->user();
-
         $query = ActivityLog::query();
 
+        if($user->hasRole('patient')) {
+            $query->where(function ($query) use ($user) {
+                $query->where('user_id', $user->id)
+                    ->orWhere('patient_id', $user->id);
+            });
+        }
+        else if($user->hasRole('doctor')) {
+            $query->where(function ($query) use ($user) {
+                $query->where('user_id', $user->id)
+                    ->orWhere('doctor_id', $user->id);
+            });
+        } else if($user->hasRole('admin')) {
+
+        }
+
+        if($request->filled('action')) {
+            $query->where('action', $request->action);
+        }
+
         if($request->filled('patient_id')) {
-            $query->where('patient_id', $request->patient_id);
+            $query->where('patient_id', $requst->patient_id);
         }
+
         if($request->filled('doctor_id')) {
-            $query->where('doctor_id', $request->doctor_id);
+            $query->where('doctor_id', $requst->doctor_id);
         }
+
+        $logs = $query->orderBy('created_at', 'desc')->paginate(30);
+
+        return response()->json([
+            'logs' => $logs,
+            'message' => 'Logs retrieved',
+        ]);
     }
 }
 
