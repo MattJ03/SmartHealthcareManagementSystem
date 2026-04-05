@@ -79,7 +79,7 @@ class ActivityLogsController extends Controller
         ]);
     }
 
-    public function filterLog(Request $request) {
+    public function filterLogList(Request $request) {
         $user = auth()->user();
         $query = ActivityLog::query();
 
@@ -103,11 +103,11 @@ class ActivityLogsController extends Controller
         }
 
         if($request->filled('patient_id')) {
-            $query->where('patient_id', $requst->patient_id);
+            $query->where('patient_id', $request->patient_id);
         }
 
         if($request->filled('doctor_id')) {
-            $query->where('doctor_id', $requst->doctor_id);
+            $query->where('doctor_id', $request->doctor_id);
         }
 
         $logs = $query->orderBy('created_at', 'desc')->paginate(30);

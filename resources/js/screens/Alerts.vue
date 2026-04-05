@@ -4,7 +4,7 @@
         <div class="log-wrapper">
             <div class="pagination-container">
                 <div class="filtering-container">
-                    <select class="dropdown-value" v-if="role === 'doctor' || role === 'admin'" v-model="filter.patient_id">
+                    <select class="dropdown-value" v-if="role === 'doctor' || role === 'admin'" v-model="filter.patient_id" @change="filterThroughLogs">
                         <option class="dropdown-value" value="">--Select Patient--</option>
                         <option class="dropdown-value" v-for="patient in patients" :key="patient.id" :value="patient.id">
                             {{ patient.user.name }}
