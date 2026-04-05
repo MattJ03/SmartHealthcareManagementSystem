@@ -2,7 +2,9 @@
     <div class="container">
         <div class="log-rec">
             <p class="log-details"> {{ formattedTime }}</p>
-            <p class="log-details"> {{ logs.action }}</p>
+
+            <p class="log-action" :class="actionClass"> {{ logs.action }}</p>
+
             <p class="log-details"> {{ logs.description }}</p>
             <div class="horizontal-line">
                 <hr>
@@ -29,6 +31,21 @@ const formattedTime = computed(() => {
         minute: '2-digit',
     });
 });
+
+const actionClass = computed(() => {
+    switch (props.logs.action) {
+        case 'appointment_booked':
+            return 'action-booked';
+        case 'appointment_cancelled':
+            return 'action-cancelled';
+        case 'appointment_updated':
+            return 'action-updated';
+        case 'store_medical_record':
+            return 'action-record';
+        default:
+            return 'action-default';
+    }
+});
 </script>
 <style scoped>
 .container {
@@ -49,7 +66,40 @@ const formattedTime = computed(() => {
     padding-left: 10px;
     padding-right: 10px;
 }
+.log-details-action {
+    height: 60px;
+   width: 90px;
+    background-color: #4e9a06;
+    border-radius: 18px;
+}
 .horizontal-line {
    grid-column: span 3;
+}
+.log-action {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 14px;
+    display: inline-block;
+    width: fit-content;
+}
+
+.action-booked {
+    background-color: #4e9a06;
+    color: white;
+}
+
+.action-cancelled {
+    background-color: #cc0000;
+    color: white;
+}
+
+.action-record {
+    background-color: #3465a4;
+    color: white;
+}
+
+.action-default {
+    background-color: #888;
+    color: white;
 }
 </style>

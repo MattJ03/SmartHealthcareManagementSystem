@@ -4,7 +4,7 @@
         <div class="log-wrapper">
             <div class="pagination-container">
                 <div class="nav-area">
-               <button class="next-prev" @click="prevLogs">Prev</button>
+               <button class="next-prev" @click="prevLogs" v-if="pageNum > 1">Prev</button>
                 Page {{ pageNum }}
                 <button class=next-prev @click="nextLogs">Next</button>
                 </div>
@@ -72,7 +72,7 @@ onMounted (() => {
 const nextLogs = async () => {
     loading.value = true;
     try {
-        pageNum.value++
+        pageNum.value++;
         if(role.value === 'doctor') {
             console.log('fetching next logs' + pageNum.value);
             const res = await api.get(`getDoctorsLogList?page=${pageNum.value}`);
@@ -87,6 +87,32 @@ const nextLogs = async () => {
             allLogs.value = res.data.logs.data;
         }
     } catch (err) {
+        error.value = error.response?.data?.message;
+    } finally {
+        loading.value = false;
+    }
+}
+
+const prevLogs = async () => {
+    loading.value = true;
+    if(pageNum.value <= 1) {
+        return;
+    }
+    try {
+        pageNum.value--;
+        if(role.value === 'doctor') {
+            const res = await api.get(`getDoctorsLogList?page=${pageNum.value}`);
+            doctorLogs.value = res.data.logs.data;
+        }
+        if(role.value === 'patient') {
+            const res = await api.get(`getPatientsLogList?page=${pageNum.value}`);
+            patientLogs.value = res.data.logs.data;
+        }
+        if(role.value === 'admin') {
+            const res = await api.get(`getCompleteLogList?page=${pageNum.value}`);
+            allLogs.value = res.data.logs.data;
+        }
+    } catch(err) {
         error.value = error.response?.data?.message;
     } finally {
         loading.value = false;
@@ -134,7 +160,7 @@ const nextLogs = async () => {
     display: flex;
     justify-content: flex-end;
 
-   margin-bottom: 2px;
+   margin-bottom: 5px;
 
 }
 
@@ -148,6 +174,7 @@ const nextLogs = async () => {
     color: #FFFFFF;
     background-color: #305cde;
     font-size: 16px;
+
 }
 .next-prev:hover {
     background-color: #0a53be;

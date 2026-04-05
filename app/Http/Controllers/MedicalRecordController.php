@@ -108,6 +108,7 @@ class MedicalRecordController extends Controller
             'entity_id' => $record->id,
             'description' => $prefix . $user->name . ' viewed the record ' . $record->title,
         ]);
+        Log::info('medical record viewed by ' . auth()->id());
         return response()->file(
             Storage::disk('private')->path($record->file_path),
           ['Content-Type' => mime_content_type(
