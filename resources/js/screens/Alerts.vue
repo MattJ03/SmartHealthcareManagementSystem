@@ -3,6 +3,14 @@
     <div class="container">
         <div class="log-wrapper">
             <div class="pagination-container">
+                <div class="filtering-container">
+                    <select v-if="role === 'doctor' || role === 'admin'">
+                        <option value="">--Select Patient--</option>
+                        <option v-for="patient in patients" :key="patient.id" :value="patient.id">
+                            {{ patient.user.name }}
+                        </option>
+                    </select>
+                </div>
                 <div class="nav-area">
                <button class="next-prev" @click="prevLogs" v-if="pageNum > 1">Prev</button>
                 Page {{ pageNum }}
@@ -46,15 +54,24 @@ import api from "../axios.js";
 import LogGrid from "../components/LogGrid.vue";
 import NavBar from "../components/NavBar.vue";
 import {useAuthStore} from "../stores/AuthStore.js";
+import { useUserDirectoryStore } from "../stores/UserDirectoryStore.js";
 
 const logsStore = useActivityLogsStore();
 const authStore = useAuthStore();
+const userStore = useUserDirectoryStore();
 
 const { role } = storeToRefs(authStore);
 const { patientLogs, doctorLogs, allLogs } = storeToRefs(logsStore);
+const { patients } = storeToRefs(userStore);
 const loading = ref(false);
 const error = ref(null);
 const pageNum = ref(1);
+
+const filter = reactive({
+    patient_id: '',
+    doctor_id: '',
+    action: '',
+})
 
 onMounted (() => {
     if(role.value === 'patient') {
@@ -62,10 +79,12 @@ onMounted (() => {
     }
     if(role.value === 'doctor') {
         logsStore.getDoctorLogs();
+        userStore.fetchPatientsOfDoctor();
     }
     if(role.value === 'admin') {
         logsStore.getAllLogs();
     }
+
 
 });
 
@@ -118,6 +137,7 @@ const prevLogs = async () => {
         loading.value = false;
     }
 }
+
 </script>
 <style scoped>
 .container {
@@ -158,13 +178,12 @@ const prevLogs = async () => {
 
 .pagination-container {
     display: flex;
-    justify-content: flex-end;
-
+    justify-content: space-between;
    margin-bottom: 5px;
-
 }
 
 .next-prev {
+
     padding-bottom: 15px;
     padding-top: 15px;
     padding-left: 25px;
@@ -183,5 +202,14 @@ const prevLogs = async () => {
 
 .nav-area {
 
+}
+.filtering-container {
+    display: flex;
+     justify-content: center;
+     background-color: #305cde;
+    margin-right: 40px;
+    width: 400px;
+    border: #FFFFFF solid 1px;
+    border-radius: 14px;
 }
 </style>
