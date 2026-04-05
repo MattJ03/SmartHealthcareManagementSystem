@@ -78,6 +78,19 @@ class ActivityLogsController extends Controller
             'message' => 'Logs retrieved',
         ]);
     }
+
+    public function filterLogs(Request $request) {
+        $user = auth()->user();
+
+        $query = ActivityLog::query();
+
+        if($request->filled('patient_id')) {
+            $query->where('patient_id', $request->patient_id);
+        }
+        if($request->filled('doctor_id')) {
+            $query->where('doctor_id', $request->doctor_id);
+        }
+    }
 }
 
 

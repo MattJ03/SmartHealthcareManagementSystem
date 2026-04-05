@@ -36,12 +36,14 @@ const actionClass = computed(() => {
     switch (props.logs.action) {
         case 'appointment_booked':
             return 'action-booked';
-        case 'appointment_cancelled':
+        case 'appointment_deleted':
             return 'action-cancelled';
         case 'appointment_updated':
             return 'action-updated';
         case 'store_medical_record':
             return 'action-record';
+        case 'download_medical_record':
+            return 'action-download';
         default:
             return 'action-default';
     }
@@ -78,7 +80,7 @@ const actionClass = computed(() => {
 .log-action {
     padding: 6px 12px;
     border-radius: 999px;
-    font-size: 14px;
+    font-size: 16px;
     display: inline-block;
     width: fit-content;
 }
@@ -100,6 +102,11 @@ const actionClass = computed(() => {
 
 .action-default {
     background-color: #888;
+    color: white;
+}
+
+.action-download {
+    background-color: #0f5132;
     color: white;
 }
 </style>
