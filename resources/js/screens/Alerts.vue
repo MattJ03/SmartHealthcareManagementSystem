@@ -10,8 +10,11 @@
                             {{ patient.user.name }}
                         </option>
                     </select>
-                    <select class="dropdown-value" v-if="role === 'patient' || role === 'admin" v-model="filter.doctor_id" @change="filterThroughLogs">
+                    <select class="dropdown-value" v-if="role === 'admin'" v-model="filter.doctor_id" @change="filterThroughLogs">
                         <option class="dropdown-value" value="">--Select Doctor--</option>
+                        <option class="dropdown-value" v-for="doctor in doctors" :key="doctor.id" :value="doctor.id">
+                            {{ doctor.name}}
+                        </option>
                     </select>
                 </div>
                 <div class="nav-area">
@@ -65,7 +68,7 @@ const userStore = useUserDirectoryStore();
 
 const { role } = storeToRefs(authStore);
 const { patientLogs, doctorLogs, allLogs } = storeToRefs(logsStore);
-const { patients } = storeToRefs(userStore);
+const { patients, doctors } = storeToRefs(userStore);
 const loading = ref(false);
 const error = ref(null);
 const pageNum = ref(1);
@@ -86,6 +89,7 @@ onMounted (() => {
     }
     if(role.value === 'admin') {
         logsStore.getAllLogs();
+        userStore.fetchDoctors();
     }
 
 
