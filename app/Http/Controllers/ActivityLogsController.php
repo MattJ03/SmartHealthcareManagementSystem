@@ -121,7 +121,7 @@ class ActivityLogsController extends Controller
     public function getAllActionsCategories() {
        $user = auth()->user();
 
-       $actions = ActivityLog::query()->select('action')->distinct()->get();
+       $actions = ActivityLog::query()->distinct()->pluck('action');
 
        if($actions->count() === 0) {
            return response()->json([
@@ -131,8 +131,6 @@ class ActivityLogsController extends Controller
            return response()->json([
                'actions' => $actions,
            ]);
-
-
     }
 }
 

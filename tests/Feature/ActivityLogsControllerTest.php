@@ -351,4 +351,28 @@ class ActivityLogsControllerTest extends TestCase
             'patient_id' => $patient->id,
         ]);
     }
+
+    public function test_return_actions_works(): void {
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $this->actingAs($doctor);
+        $patient = User::factory()->create()->assignRole('patient');
+
+        $payload = [
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+            'starts_at' => Carbon::now(),
+            'ends_at' => Carbon::now()->addMinutes(30),
+            'status' => 'confirmed',
+            'notes' => 'trash site',
+        ];
+
+        $response = $this->postJson('/api/storeAppointment', $payload);
+        $response->assertStatus(201);
+
+        $response2 = $this->getJson('/api/allActionsCategories');
+        $response2->assertStatus(200);
+        $response2->assertJsonFragment([
+            'actions' => ['appointment_booked'],
+        ]);
+    }
 }
