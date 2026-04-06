@@ -10,6 +10,9 @@
                             {{ patient.user.name }}
                         </option>
                     </select>
+                    <select class="dropdown-value" v-if="role === 'patient' || role === 'admin" v-model="filter.doctor_id" @change="filterThroughLogs">
+                        <option class="dropdown-value" value="">--Select Doctor--</option>
+                    </select>
                 </div>
                 <div class="nav-area">
                <button class="next-prev" @click="prevLogs" v-if="pageNum > 1">Prev</button>
@@ -240,7 +243,7 @@ const filterThroughLogs = async () => {
      background-color: #305cde;
     margin-right: 40px;
     width: 600px;
-    height: 65px;
+    height: 68px;
     border: #FFFFFF solid 1px;
     border-radius: 14px;
 }
@@ -253,7 +256,7 @@ const filterThroughLogs = async () => {
     font-size: 14px;
     margin-left: 20px;
     height: 45px;
-    margin-top: 10px;
+    margin-top: 12px;
 
 }
 </style>

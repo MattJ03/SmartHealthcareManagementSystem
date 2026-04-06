@@ -117,6 +117,13 @@ class ActivityLogsController extends Controller
             'message' => 'Logs retrieved',
         ]);
     }
+
+    public function getAlActionsCategories() {
+       $user = auth()->user();
+
+       $actions = ActivityLog::query()->select('action');
+
+    }
 }
 
 
