@@ -49,18 +49,31 @@ export const useActivityLogsStore = defineStore('activity_logs', () => {
         }
     }
 
-
+    const getAllActions = async () => {
+        loading.value = true;
+        try {
+            const res = await api.get('/allActionsCategories');
+            allActions.value = res.data.actions;
+        } catch(err) {
+            error.value = error.response?.data?.message ?? 'Failed to fetch actions';
+        }
+        finally {
+            loading.value = false;
+        }
+    }
 
     return {
         role,
         allLogs,
         patientLogs,
         doctorLogs,
+        allActions,
         error,
         loading,
         getAllLogs,
         getPatientLogs,
         getDoctorLogs,
+        getAllActions,
     };
 
 });

@@ -18,7 +18,9 @@
                     </select>
                     <select class="dropdown-value" v-model="filter.action" @change="filterThroughLogs">
                         <option class="dropdown-value" value="">--Select Action--</option>
-                        <option class="dropdown-value"></option>
+                        <option class="dropdown-value" v-for="action in allActions" >
+                            {{ action }}
+                        </option>
                     </select>
                 </div>
                 <div class="nav-area">
@@ -71,7 +73,7 @@ const authStore = useAuthStore();
 const userStore = useUserDirectoryStore();
 
 const { role } = storeToRefs(authStore);
-const { patientLogs, doctorLogs, allLogs } = storeToRefs(logsStore);
+const { patientLogs, doctorLogs, allLogs, allActions } = storeToRefs(logsStore);
 const { patients, doctors } = storeToRefs(userStore);
 const loading = ref(false);
 const error = ref(null);
@@ -95,7 +97,7 @@ onMounted (() => {
         logsStore.getAllLogs();
         userStore.fetchDoctors();
     }
-
+    logsStore.getAllActions();
 
 });
 

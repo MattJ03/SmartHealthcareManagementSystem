@@ -130,6 +130,7 @@ class ActivityLogsController extends Controller
        }
            return response()->json([
                'actions' => $actions,
+               'message' => 'actions retrieved',
            ]);
     }
 }
