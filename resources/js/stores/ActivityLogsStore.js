@@ -7,6 +7,7 @@ export const useActivityLogsStore = defineStore('activity_logs', () => {
     const allLogs = ref([]);
     const patientLogs = ref([]);
     const doctorLogs = ref([]);
+    const allActions = ref([]);
     const loading = ref(false);
     const error = ref(null);
 
@@ -47,6 +48,8 @@ export const useActivityLogsStore = defineStore('activity_logs', () => {
             loading.value = false;
         }
     }
+
+
 
     return {
         role,

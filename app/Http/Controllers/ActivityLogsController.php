@@ -118,10 +118,20 @@ class ActivityLogsController extends Controller
         ]);
     }
 
-    public function getAlActionsCategories() {
+    public function getAllActionsCategories() {
        $user = auth()->user();
 
-       $actions = ActivityLog::query()->select('action');
+       $actions = ActivityLog::query()->select('action')->distinct()->get();
+
+       if($actions->count() === 0) {
+           return response()->json([
+               'message' => 'No actions found',
+           ]);
+       }
+           return response()->json([
+               'actions' => $actions,
+           ]);
+
 
     }
 }

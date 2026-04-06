@@ -16,6 +16,10 @@
                             {{ doctor.name}}
                         </option>
                     </select>
+                    <select class="dropdown-value" v-model="filter.action" @change="filterThroughLogs">
+                        <option class="dropdown-value" value="">--Select Action--</option>
+                        <option class="dropdown-value"></option>
+                    </select>
                 </div>
                 <div class="nav-area">
                <button class="next-prev" @click="prevLogs" v-if="pageNum > 1">Prev</button>
