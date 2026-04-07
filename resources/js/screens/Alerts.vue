@@ -103,11 +103,12 @@ onMounted (() => {
 
 const nextLogs = async () => {
     loading.value = true;
+   const params = {};
     try {
         pageNum.value++;
         if(role.value === 'doctor') {
             console.log('fetching next logs' + pageNum.value);
-            const res = await api.get(`getDoctorsLogList?page=${pageNum.value}`);
+            const res = await api.get(`getDoctorsLogList?page=${pageNum.value}`, { params });
             doctorLogs.value = res.data.logs.data;
         }
         if(role.value === 'patient') {
@@ -180,6 +181,22 @@ const filterThroughLogs = async () => {
   } finally {
       loading.value = false;
   }
+}
+
+const buildParam = () => {
+    const params = {
+        page: pageNum.value,
+    };
+    if(filter.patient_id) params.patient_id = filter.patient_id;
+    if(filter.doctor_id) params.patient_id = filter.doctor_id;
+    if(filter.action) params.action = filter.action;
+    return;
+}
+
+const setLogs = (data) => {
+    if(role.value === 'patient') patientLogs.value = data;
+    if(role.value === 'doctor') doctorLogs.value = data;
+    else allLogs.valye = data;
 }
 
 </script>
@@ -267,6 +284,7 @@ const filterThroughLogs = async () => {
     margin-left: 20px;
     height: 45px;
     margin-top: 12px;
+    padding-left: 25px;
 
 }
 </style>
