@@ -103,49 +103,28 @@ onMounted (() => {
 
 const nextLogs = async () => {
     loading.value = true;
-   const params = {};
     try {
         pageNum.value++;
-        if(role.value === 'doctor') {
-            console.log('fetching next logs' + pageNum.value);
-            const res = await api.get(`getDoctorsLogList?page=${pageNum.value}`, { params });
-            doctorLogs.value = res.data.logs.data;
-        }
-        if(role.value === 'patient') {
-            const res = await api.get(`getPatientsLogList?page=${pageNum.value}`);
-            patientLogs.value = res.data.logs.data;
-        }
-        if(role.value === 'admin') {
-            const res = await api.get(`getCompleteLogList?page=${pageNum.value}`);
-            allLogs.value = res.data.logs.data;
-        }
+        const res =  await api.get(`/getFilteredLogList`, {
+            params: buildParam(),
+        });
+        setLogs(res.data.logs.data)
     } catch (err) {
         error.value = error.response?.data?.message;
     } finally {
         loading.value = false;
+        console.log('worked');
     }
 }
-
 const prevLogs = async () => {
     loading.value = true;
-    if(pageNum.value <= 1) {
-        return;
-    }
     try {
         pageNum.value--;
-        if(role.value === 'doctor') {
-            const res = await api.get(`getDoctorsLogList?page=${pageNum.value}`);
-            doctorLogs.value = res.data.logs.data;
-        }
-        if(role.value === 'patient') {
-            const res = await api.get(`getPatientsLogList?page=${pageNum.value}`);
-            patientLogs.value = res.data.logs.data;
-        }
-        if(role.value === 'admin') {
-            const res = await api.get(`getCompleteLogList?page=${pageNum.value}`);
-            allLogs.value = res.data.logs.data;
-        }
-    } catch(err) {
+        const res = await api.get(`/getFilteredLogList`, {
+            params: buildParam()
+        });
+        setLogs(res.data.logs.data);
+    } catch (err) {
         error.value = error.response?.data?.message;
     } finally {
         loading.value = false;
@@ -190,7 +169,7 @@ const buildParam = () => {
     if(filter.patient_id) params.patient_id = filter.patient_id;
     if(filter.doctor_id) params.patient_id = filter.doctor_id;
     if(filter.action) params.action = filter.action;
-    return;
+    return params;
 }
 
 const setLogs = (data) => {
@@ -205,6 +184,7 @@ const setLogs = (data) => {
     display: flex;
     justify-content: left;
     width: 100%;
+    margin-top: 20px;
     padding-left: 30px;
     padding-top: 20px;
 
@@ -240,7 +220,8 @@ const setLogs = (data) => {
 .pagination-container {
     display: flex;
     justify-content: space-between;
-   margin-bottom: 5px;
+    align-items: end;
+
 }
 
 .next-prev {
