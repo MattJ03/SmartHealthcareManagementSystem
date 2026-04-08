@@ -79,13 +79,13 @@ async function submit() {
     width: 60%;
     align-self: center;
     height: 45px;
-    background: #C0392B;
+    background: #305cde;
     font-size: 20px;
     border-radius: 14px;
     color: #FFFFFF;
 }
 .btn-reg:hover {
-    background: #8B0000;
+    background: #0a58ca;
     cursor: pointer;
 }
 </style>

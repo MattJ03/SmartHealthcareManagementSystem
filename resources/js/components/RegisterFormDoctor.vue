@@ -152,9 +152,12 @@ async function submit() {
     height: 50px;
     width: 40%;
     border-radius: 14px;
-    background-color: #C0392B;
+    background-color: #305cde;
     font-size: 20px;
     color: #FFFFFF;
+}
+.btn-reg:hover {
+    background-color: #0a58ca;
 }
 .clinic-hours {
     flex-direction: column;
