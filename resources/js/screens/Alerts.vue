@@ -24,13 +24,15 @@
                     </select>
                 </div>
                 <div class="cancel-container">
-                    <button class="cancel-filters">X</button>
+                    <button class="cancel-filters" @click="cancelFilter">X</button>
                 </div>
 
                 <div class="nav-container">
                 <div class="nav-area">
                <button class="next-prev" @click="prevLogs" v-if="pageNum > 1">Prev</button>
+
                 Page {{ pageNum }}
+
                 <button class=next-prev @click="nextLogs">Next</button>
                 </div>
                     </div>
@@ -189,6 +191,21 @@ const cancelFilter = async () => {
     filter.patient_id = '';
     filter.doctor_id = '';
     filter.action = '';
+    pageNum.value = 1;
+    try {
+        const res = await api.get('getFilteredLogList');
+        if(role.value === 'patient') {
+            patientLogs.value = res.data.logs.data;
+        }
+        if(role.value === 'doctor') {
+            doctorLogs.value = res.data.logs.data;
+        }
+        else {
+            allLogs.value = res.data.logs.data;
+        }
+    } catch (err) {
+        error.value = error.response?.data?.message;
+    } loading.value = false;
 }
 
 </script>
@@ -262,7 +279,10 @@ const cancelFilter = async () => {
 }
 
 .nav-area {
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
 
 }
 .filtering-container {
@@ -302,4 +322,5 @@ const cancelFilter = async () => {
     background-color: #8B0000;
     cursor: pointer;
 }
+
 </style>
