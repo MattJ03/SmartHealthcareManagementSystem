@@ -10,7 +10,10 @@ class Appointment extends Model
     use HasFactory;
     protected $fillable = ['patient_id', 'doctor_id', 'starts_at', 'ends_at', 'status', 'notes', 'reminder_sent'];
 
-    protected $dates = ['starts_at', 'ends_at'];
+    protected $casts = [
+        'starts_at' => 'datetime:Y-m-d H:i:s',
+        'ends_at' => 'datetime:Y-m-d H:i:s',
+    ];
 
     public function patient() {
         return $this->belongsTo(User::class, 'patient_id');

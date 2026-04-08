@@ -3,25 +3,24 @@
 
     <div class="calendar-container">
         <div class="top-of-calender">
-        <h1 class="book-appointment">
-            {{ isEditMode ? "Edit Appointment" : "Book Appointment" }}
-        </h1>
+            <h1 class="book-appointment">
+                {{ isEditMode ? "Edit Appointment" : "Book Appointment" }}
+            </h1>
             <div class="dropdown-container">
-            <select v-if="role === 'doctor'" class="patient-list-book" v-model="patientId">
-                <option disabled value="" >Book for Patient</option>
-                <option v-for="patient in userDirectoryStore.patients"
-                        class="dropdown-text"
-                        :key="patient.id"
-                        :value="patient.id"
-                        >
-                    {{ patient.user.name }}
-                </option>
-            </select>
-                </div>
-    </div>
+                <select v-if="role === 'doctor'" class="patient-list-book" v-model="patientId">
+                    <option disabled value="">Book for Patient</option>
+                    <option v-for="patient in userDirectoryStore.patients"
+                            class="dropdown-text"
+                            :key="patient.id"
+                            :value="patient.id">
+                        {{ patient.user.name }}
+                    </option>
+                </select>
+            </div>
+        </div>
+
         <div class="month-nav">
             <button @click="prevMonth">&lt;</button>
-            <img :src="calender" class="calender-image" />
             <span class="month-name">{{ monthName }} {{ currentYear }}</span>
             <button @click="nextMonth">&gt;</button>
         </div>
@@ -36,8 +35,7 @@
                 :key="index"
                 class="day-cell"
                 :class="{ empty: !date }"
-                @click="date && selectDate(date)"
-            >
+                @click="date && selectDate(date)">
                 {{ date ? date.getDate() : '' }}
             </div>
         </div>
@@ -63,8 +61,7 @@
                                 :class="{
                                     'unavailable-slot': !availabilityStore.slots.includes(slot),
                                     selected: bookingTime === slot
-                                }"
-                            >
+                                }">
                                 {{ slot }}
                             </button>
                         </li>
@@ -88,20 +85,14 @@ import NavBar from './NavBar.vue';
 import { useAvailabilityStore } from '../stores/AvailabilityStore';
 import { useAppointmentStore } from '../stores/AppointmentStore';
 import { useUserDirectoryStore } from "../stores/UserDirectoryStore.js";
+import { useAuthStore } from "../stores/AuthStore.js";
+import { storeToRefs } from "pinia";
 import api from '../axios';
-import {useAuthStore} from "../stores/AuthStore.js";
-import {storeToRefs} from "pinia";
-import calender from '../assets/calendar(2).png';
 
 const props = defineProps({
-    appointmentId: {
-        type: Number,
-        default: null
-    }
+    appointmentId: { type: Number, default: null }
 });
-
 const emit = defineEmits(['submit']);
-
 
 const today = new Date();
 const currentMonth = ref(today.getMonth());
@@ -110,8 +101,8 @@ const availabilityStore = useAvailabilityStore();
 const appointmentStore = useAppointmentStore();
 const authStore = useAuthStore();
 const userDirectoryStore = useUserDirectoryStore();
-const patientId = ref('');
 
+const patientId = ref('');
 const selectedDate = ref(null);
 const bookingTime = ref('');
 const doctorId = ref(null);
@@ -120,20 +111,23 @@ const { role } = storeToRefs(authStore);
 
 const isEditMode = computed(() => !!props.appointmentId);
 
-
 watch(
     () => props.appointmentId,
     async (id) => {
         if (!id) return;
 
         const appt = await appointmentStore.getAppointment(id);
-        if(!appt) return;
+        if (!appt) return;
 
-        patientId.value = appt.patient_id
+        patientId.value = appt.patient_id;
 
         const start = new Date(appt.starts_at);
         selectedDate.value = start;
-        bookingTime.value = start.toTimeString().slice(0, 5);
+
+        const hours = start.getHours().toString().padStart(2,'0');
+        const minutes = start.getMinutes().toString().padStart(2,'0');
+        bookingTime.value = `${hours}:${minutes}`;
+
         showBookingForm.value = true;
 
         const dateParam = start.toISOString().split('T')[0];
@@ -146,22 +140,14 @@ const weekdays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
 const allPossibleSlots = computed(() => {
     if (!selectedDate.value) return [];
-
     const slots = [];
-    let start = new Date(selectedDate.value);
-    start.setHours(9, 0, 0, 0);
 
-    const end = new Date(selectedDate.value);
-    end.setHours(17, 0, 0, 0);
-
-    while (start < end) {
-        slots.push(
-            `${start.getHours().toString().padStart(2,'0')}:${start
-                .getMinutes()
-                .toString()
-                .padStart(2,'0')}`
-        );
-        start = new Date(start.getTime() + 30 * 60 * 1000);
+    for (let hour = 9; hour < 17; hour++) {
+        for (let min = 0; min < 60; min += 30) {
+            const slotHour = hour.toString().padStart(2,'0');
+            const slotMin = min.toString().padStart(2,'0');
+            slots.push(`${slotHour}:${slotMin}`);
+        }
     }
 
     return slots;
@@ -181,14 +167,13 @@ const daysInMonth = computed(() => {
 });
 
 const monthName = computed(() =>
-    new Date(currentYear.value, currentMonth.value).toLocaleString('default', {
-        month: 'long'
-    })
+    new Date(currentYear.value, currentMonth.value).toLocaleString('default', { month: 'long' })
 );
 
 const selectedDateString = computed(() =>
     selectedDate.value ? selectedDate.value.toLocaleDateString() : ''
 );
+
 function prevMonth() {
     currentMonth.value--;
     if (currentMonth.value < 0) {
@@ -209,7 +194,6 @@ function selectDate(date) {
     selectedDate.value = date;
     showBookingForm.value = true;
 
-
     if (doctorId.value) {
         const dateParam = date.toISOString().split('T')[0];
         availabilityStore.getAvailableSlots(doctorId.value, dateParam);
@@ -225,52 +209,33 @@ function closeModal() {
     bookingTime.value = '';
 }
 
-
 onMounted(async () => {
     if(role.value === 'patient') {
         const res = await api.get('/patient/doctor');
         doctorId.value = res.data.doctorId;
-    }
-    if(role.value === 'doctor') {
-        // Make sure the user object is loaded
-        if(!authStore.user) {
-            await authStore.fetchUser();
-        }
-
-
+    } else if(role.value === 'doctor') {
+        if(!authStore.user) await authStore.fetchUser();
         doctorId.value = authStore.user?.id ?? null;
-
         await userDirectoryStore.fetchPatientsOfDoctor();
-
-        console.log('Logged-in doctor ID:', doctorId.value);
-        console.log('Patients:', userDirectoryStore.patients);
     }
-
 });
-
 
 async function confirmBooking() {
     if (!bookingTime.value) {
         alert('Select a slot');
         return;
     }
-    if(role.value === 'doctor' || role.value === 'admin') {
-        if (!patientId.value) {
-            alert('Select a patient to book for');
-            closeModal();
-            return;
-        }
-    }
-
-    const startsAt = new Date(selectedDate.value);
 
     const [h, m] = bookingTime.value.split(':').map(Number);
-    startsAt.setHours(h, m);
+    const year = selectedDate.value.getFullYear();
+    const month = selectedDate.value.getMonth();
+    const day = selectedDate.value.getDate();
 
-    const endsAt = new Date(startsAt.getTime() + 30 * 60 * 1000);
+    const startsAt = new Date(Date.UTC(year, month, day, h, m, 0));
+    const endsAt = new Date(Date.UTC(year, month, day, h, m + 30, 0));
 
     const payload = {
-        patient_id: Number(patientId.value),
+        patient_id: role.value === 'doctor' || role.value === 'admin' ? Number(patientId.value) : undefined,
         doctor_id: Number(doctorId.value),
         starts_at: startsAt.toISOString(),
         ends_at: endsAt.toISOString(),
@@ -279,12 +244,6 @@ async function confirmBooking() {
 
     if (isEditMode.value) {
         await appointmentStore.updateAppointment(props.appointmentId, payload);
-        if(role.value === 'patient') {
-            await appointmentStore.fetchAllMyAppointments();
-        }
-        if(role.value === 'doctor') {
-            await appointmentStore.getUpcomingDoctorAppointments();
-        }
         alert('Appointment updated!');
     } else {
         await appointmentStore.createAppointment(payload);
@@ -295,7 +254,6 @@ async function confirmBooking() {
     emit('submit');
 }
 </script>
-
 
 <style scoped>
 .calendar-container {
