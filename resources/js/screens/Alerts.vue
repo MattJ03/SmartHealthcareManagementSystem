@@ -24,7 +24,7 @@
                     </select>
                 </div>
                 <div class="cancel-container">
-                    <button class="cancel-filters">Checker</button>
+                    <button class="cancel-filters">X</button>
                 </div>
 
                 <div class="nav-container">
@@ -184,6 +184,13 @@ const setLogs = (data) => {
     else allLogs.valye = data;
 }
 
+const cancelFilter = async () => {
+    loading.value = true;
+    filter.patient_id = '';
+    filter.doctor_id = '';
+    filter.action = '';
+}
+
 </script>
 <style scoped>
 .container {
@@ -247,6 +254,7 @@ const setLogs = (data) => {
     font-size: 16px;
     justify-content: flex-end;
 
+
 }
 .next-prev:hover {
     background-color: #0a53be;
@@ -263,7 +271,7 @@ const setLogs = (data) => {
     width: 600px;
     height: 68px;
     border: #FFFFFF solid 1px;
-    border-radius: 14px;
+    border-radius: 14px 0 0 14px;
 }
 
 .dropdown-value {
@@ -279,9 +287,19 @@ const setLogs = (data) => {
 }
 .cancel-container {
     display: flex;
+
+
 }
 .cancel-filters {
-
-
+   height: 68px;
+    width: 65px;
+   border-radius: 0 14px 14px 0;
+    background-color: #C0392B;
+    color: #FFFFFF;
+    font-size: 20px;
+}
+.cancel-filters:hover {
+    background-color: #8B0000;
+    cursor: pointer;
 }
 </style>
