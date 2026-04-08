@@ -23,11 +23,17 @@
                         </option>
                     </select>
                 </div>
+                <div class="cancel-container">
+                    <button class="cancel-filters">Checker</button>
+                </div>
+
+                <div class="nav-container">
                 <div class="nav-area">
                <button class="next-prev" @click="prevLogs" v-if="pageNum > 1">Prev</button>
                 Page {{ pageNum }}
                 <button class=next-prev @click="nextLogs">Next</button>
                 </div>
+                    </div>
             </div>
 
         <div class="log-container">
@@ -219,9 +225,13 @@ const setLogs = (data) => {
 
 .pagination-container {
     display: flex;
-    justify-content: space-between;
-    align-items: end;
+    align-items: center;
 
+}
+
+.nav-container {
+    display: flex;
+    margin-left: auto;
 }
 
 .next-prev {
@@ -235,6 +245,7 @@ const setLogs = (data) => {
     color: #FFFFFF;
     background-color: #305cde;
     font-size: 16px;
+    justify-content: flex-end;
 
 }
 .next-prev:hover {
@@ -244,12 +255,11 @@ const setLogs = (data) => {
 
 .nav-area {
 
+
 }
 .filtering-container {
     display: flex;
-
      background-color: #305cde;
-    margin-right: 40px;
     width: 600px;
     height: 68px;
     border: #FFFFFF solid 1px;
@@ -266,6 +276,12 @@ const setLogs = (data) => {
     height: 45px;
     margin-top: 12px;
     padding-left: 25px;
+}
+.cancel-container {
+    display: flex;
+}
+.cancel-filters {
+
 
 }
 </style>
