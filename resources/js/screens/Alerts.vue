@@ -16,9 +16,9 @@
                             {{ doctor.name}}
                         </option>
                     </select>
-                    <select class="dropdown-value" v-model="filter.action" @change="filterThroughLogs">
-                        <option class="dropdown-value" value="">--Select Action--</option>
-                        <option class="dropdown-value" v-for="action in allActions" >
+                    <select class="dropdown-value-action" v-model="filter.action" @change="filterThroughLogs">
+                        <option class="dropdown-value-action" value="">--Select Action--</option>
+                        <option class="dropdown-value-action" v-for="action in allActions" >
                             {{ action }}
                         </option>
                     </select>
@@ -250,6 +250,7 @@ const cancelFilter = async () => {
 .pagination-container {
     display: flex;
     align-items: center;
+    margin-bottom: 10px;
 
 }
 
@@ -300,7 +301,18 @@ const cancelFilter = async () => {
     border: none;
     border-radius: 14px;
     font-size: 14px;
-    margin-left: 20px;
+    margin-left: 30px;
+    height: 45px;
+    margin-top: 12px;
+    padding-left: 25px;
+}
+
+.dropdown-value-action {
+    background-color: #FFFFFF;
+    border: none;
+    border-radius: 14px;
+    font-size: 14px;
+    margin-left: 30px;
     height: 45px;
     margin-top: 12px;
     padding-left: 25px;
