@@ -44,7 +44,7 @@ const actionClass = computed(() => {
             return 'action-record';
         case 'download_medical_record':
             return 'action-download';
-        default:
+            default:
             return 'action-default';
     }
 });
@@ -108,5 +108,9 @@ const actionClass = computed(() => {
 .action-download {
     background-color: #0f5132;
     color: white;
+}
+.action-updated {
+    background-color: #e6af05;
+    color: #FFFFFF;
 }
 </style>
