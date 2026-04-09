@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DoctorProfile;
+use App\Models\PatientProfile;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Appointment;
@@ -11,6 +12,7 @@ use Database\Seeders\RolePermissionSeeder;
 use App\Policies\AppointmentPolicy;
 use Illuminate\Support\Facades\Log;
 use App\Models\ActivityLog;
+use Carbon\Carbon;
 class AppointmentController extends Controller
 {
     public function storeAppointment(Request $request, AppointmentService $appointmentService)
@@ -187,20 +189,22 @@ class AppointmentController extends Controller
         ]);
     }
 
-    public function getPatientLastVisit(Request $request) {
-        $user = auth()->user();
+    public function getPatientLastVisit(User $patient)
+    {
+        $doctorId = auth()->id();
 
-        $patient = $request->patient_id;
+        $appointment = Appointment::where('patient_id', $patient->id)
+            ->where('doctor_id', $doctorId)
+            ->where('starts_at', '<=', now())
+            ->latest('starts_at')
+            ->first();
 
-        $doctor = $patient->doctor;
 
-        $query = Appointment::query();
 
-        $query->where(function ($query) use ($patient, $doctor) {
-            $query->where('patient_id', $patient)
-                ->where('doctor_id', $doctor->id)
-                ->where('starts_at', '<=', now());
-        })->first();
+        return response()->json([
+            'last_visit' => $appointment->starts_at->format('Y-m-d', 'H-i-s'),
+            'message' => 'appointment details',
+        ]);
     }
 
 }

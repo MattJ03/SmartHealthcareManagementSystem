@@ -16,6 +16,7 @@ use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 use Nette\Utils\Json;
 use Nette\Schema\ValidationException;
+use App\Models\PatientProfile;
 
 class AppointmentControllerTest extends TestCase
 {
@@ -798,7 +799,8 @@ class AppointmentControllerTest extends TestCase
         $this->assertDatabaseCount('appointments', 1);
     }
 
-    public function test_correct_json_response_delete(): void {
+    public function test_correct_json_response_delete(): void
+    {
         $patient = User::factory()->create();
         $patient->assignRole('patient');
         $doctor = User::factory()->create();
@@ -816,10 +818,43 @@ class AppointmentControllerTest extends TestCase
         $response->assertJsonFragment([
             'message' => 'Appointment deleted',
         ]);
+
     }
 
-    public function test_get_latest_appointments(): void {
-        
+    public function test_get_patient_last_visit_returns_latest_appointment(): void
+    {
+        $doctor = User::factory()->create()->assignRole('doctor');
+        $patient = User::factory()->create()->assignRole('patient');
+
+        $this->actingAs($doctor);
+
+        PatientProfile::factory()->create([
+            'user_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+        ]);
+
+        Appointment::factory()->create([
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+            'starts_at' => now()->subHours(1000),
+        ]);
+
+        $latest = Appointment::factory()->create([
+            'patient_id' => $patient->id,
+            'doctor_id' => $doctor->id,
+            'starts_at' => now()->subDay(),
+        ]);
+
+        $response = $this->getJson("/api/getLastVisit/{$patient->id}");
+
+        $response->assertStatus(200);
+
+        $response->assertJson([
+            'message' => 'appointment details',
+            'last_visit' => $latest->starts_at->format('Y-m-d', 'H-i-s'),
+        ]);
     }
+
+
 
 }
