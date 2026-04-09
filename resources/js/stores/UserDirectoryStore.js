@@ -25,6 +25,7 @@ export const useUserDirectoryStore = defineStore('user', () => {
         error.value = '';
         try {
             const res = await api.get('/doctorPatients');
+
             patients.value = res.data.patients;
             console.log(res.data);
         } catch(error) {
