@@ -187,5 +187,20 @@ class AppointmentController extends Controller
         ]);
     }
 
+    public function getPatientLastVisit(Request $request) {
+        $user = auth()->user();
+
+        $patient = $request->patient_id;
+
+        $doctor = $patient->doctor;
+
+        $query = Appointment::query();
+
+        $query->where(function ($query) use ($patient, $doctor) {
+            $query->where('patient_id', $patient)
+                ->where('doctor_id', $doctor->id)
+                ->where('starts_at', '<=', now());
+        })->first();
+    }
 
 }

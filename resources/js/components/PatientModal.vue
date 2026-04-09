@@ -14,6 +14,9 @@
             <div class="row">
                 <span class="field">Emergency Contact: {{ props.patient.emergency_contact }}</span>
             </div>
+            <div class="row">
+                <span class="field">Last Appointment: {{}}</span>
+            </div>
         </div>
     </div>
 

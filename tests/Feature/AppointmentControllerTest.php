@@ -818,4 +818,8 @@ class AppointmentControllerTest extends TestCase
         ]);
     }
 
+    public function test_get_latest_appointments(): void {
+        
+    }
+
 }
