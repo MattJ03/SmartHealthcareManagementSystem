@@ -2,7 +2,7 @@
     <div class="container">
         <div class="patient-info-container">
             <p class="patient-name"> {{ props.patient.user.name }}</p>
-            <button class="view-details">WAGWAN</button>
+            <button class="view-details" @click="$emit('open', patient)">Info</button>
         </div>
     </div>
 </template>
@@ -16,6 +16,11 @@ const props = defineProps({
     },
 });
 
+const emit = (['open']);
+
+
+
+const showModal = false;
 
 </script>
 <style scoped>
@@ -48,8 +53,13 @@ const props = defineProps({
     background-color: #C0392B;
     border-radius: 14px;
     font-size: 16px;
-    background-color: #FFBF00;
+    background-color: #305cde;
     color: #FFFFFF;
     border: 0;
+}
+.view-details:hover {
+    background-color: #0a58ca;
+    cursor: pointer;
+    transition: 0.2s;
 }
 </style>
