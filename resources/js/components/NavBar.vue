@@ -5,7 +5,7 @@
        </div>
        <div class="nav-links">
            <button v-if="role === 'admin'" class="btn-create-account" type="button" @click="moveToRegister"> Create New User</button>
-           <button v-if="role === 'doctor'" class="btn-create-account" type="button" @click="moveToMyPatients"> My Patients</button>
+           <router-link v-if="role === 'doctor'" to="doctors-patients" class="my-patients">My Patients</router-link>
            <button class="btn-logout" type="button" @click="logoutUser">Logout</button>
        </div>
    </nav>
@@ -15,10 +15,11 @@ import whitePill from "../assets/whitePill.png"
 import {useAuthStore} from "../stores/AuthStore.js";
 import router from "../router/index.js";
 import {storeToRefs} from "pinia";
+import { RouterLink } from 'vue-router';
 
 const authStore = useAuthStore();
 
-const { role } = storeToRefs(useAuthStore);
+const { role } = storeToRefs(authStore);
 async function moveToRegister() {
     await router.push('/register-select');
 }
@@ -47,6 +48,11 @@ async function moveToMyPatients() {
     padding-right: 30px;
     height: 90px;
     background-color: #305cde;
+}
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
 }
 .btn-create-account {
   height: 50px;
@@ -80,6 +86,10 @@ async function moveToMyPatients() {
 
 .btn-logout:hover {
     background-color: #E9DCC9;
+}
+.my-patients {
+    font-size: 16px;
+    color: #FFFFFF;
 }
 .logo {
     height: 70px;
