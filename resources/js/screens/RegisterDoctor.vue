@@ -32,7 +32,7 @@ async function registerDoctor(payload) {
     left: 0;
     height: 100%;
     width: 50%;
-    background-color: #C0392B;
+    background-color: #305cde;
 }
 .right-half {
     position: absolute;
