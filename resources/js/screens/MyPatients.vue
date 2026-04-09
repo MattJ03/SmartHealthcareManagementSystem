@@ -10,10 +10,14 @@
            />
         </div>
         </div>
-    <div v-if="showModal === true"
-         class="modal-overlay"
+    <PatientModal
+           v-if="showModal"
+           :patient="selectedPatient"
+           @click.self="showModal = false"
+
     >
-    </div>
+    </PatientModal>
+
 
 </template>
 <script setup>
@@ -24,6 +28,7 @@ import { useAuthStore } from "../stores/AuthStore.js";
 import {useUserDirectoryStore} from "../stores/UserDirectoryStore.js";
 import { storeToRefs } from 'pinia';
 import PatientList from "../components/PatientList.vue";
+import PatientModal from "../components/PatientModal.vue";
 
 const authStore = useAuthStore();
 const userStore = useUserDirectoryStore();
@@ -31,13 +36,16 @@ const userStore = useUserDirectoryStore();
 const { role } = storeToRefs(authStore);
 const { doctors, patients } = storeToRefs(userStore);
 const showModal = ref(false);
+const selectedPatient = ref(null);
 
 onMounted(() => {
     userStore.fetchPatientsOfDoctor();
 });
-const openModal = () => {
+const openModal = (patient) => {
+    selectedPatient.value = patient;
     showModal.value = true;
 }
+
 
 </script>
 <style scoped>
@@ -60,16 +68,5 @@ const openModal = () => {
 .header-title {
     margin-left: 20px;
 }
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0,0,0,0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-}
+
 </style>

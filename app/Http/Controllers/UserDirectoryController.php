@@ -30,7 +30,7 @@ class UserDirectoryController extends Controller
         abort_unless($user->hasRole('doctor'), 403);
 
         $patients = PatientProfile::where('doctor_id', $user->id)
-                                    ->with('user:id,name')
+                                    ->with('user:id,name,email')
                                     ->get();
         if($patients->isEmpty()) {
             return response()->json([
