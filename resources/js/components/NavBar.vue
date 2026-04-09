@@ -88,7 +88,8 @@ async function moveToMyPatients() {
     background-color: #E9DCC9;
 }
 .my-patients {
-    font-size: 16px;
+    font-size: 18px;
+
     color: #FFFFFF;
 }
 .logo {
