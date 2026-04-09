@@ -32,7 +32,7 @@ async function logoutUser() {
     await router.push('/login')
 }
 
-async function moveToMypatients() {
+async function moveToMyPatients() {
     await router.push('/');
 }
 </script>

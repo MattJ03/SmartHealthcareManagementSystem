@@ -9,6 +9,7 @@ import BookAppointment from "../screens/BookAppointment.vue";
 import PatientMedicalRecords from "../screens/PatientMedicalRecords.vue";
 import DoctorMedicalRecords from "../screens/DoctorMedicalRecords.vue";
 import Alerts from "../screens/Alerts.vue";
+import MyPatients from "../screens/MyPatients.vue";
 
 const routes = [
     { path: '/login', component: Login },
@@ -16,6 +17,7 @@ const routes = [
     { path: '/register-patient', component: RegisterPatient, meta: {role: 'admin'}},
     { path: '/register-admin', component:RegisterAdmin, meta: {role: 'admin'}},
     { path: '/register-select', component: RegisterSelect, meta: {role: 'admin'}},
+    { path: '/doctors-patients', component: MyPatients, meta: {role: 'doctor'}},
     { path: '/register-doctor', component: RegisterDoctor, meta: {role: 'admin'}},
     { path: '/book-appointment/:id?', name: 'BookAppointment', component: BookAppointment },
     { path: '/patient/medical-records', name: 'patient-medical-records', component: PatientMedicalRecords, meta: {role: 'patient'} },
