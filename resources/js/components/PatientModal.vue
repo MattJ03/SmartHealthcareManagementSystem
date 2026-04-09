@@ -8,7 +8,12 @@
             <div class="row">
                 <span class="field">Email: {{ props.patient.user.email }}</span>
             </div>
-
+            <div class="row">
+                <span class="field">Contact Number: {{ props.patient.user.contact_number }}</span>
+            </div>
+            <div class="row">
+                <span class="field">Emergency Contact: {{ props.patient.emergency_contact }}</span>
+            </div>
         </div>
     </div>
 
@@ -55,7 +60,7 @@ const emit = defineEmits(['close'])
 .row {
     display: flex;
     justify-content: left;
-    margin-top: 15px;
+    margin-top: 35px;
 }
 .field {
     font-size: 20px;

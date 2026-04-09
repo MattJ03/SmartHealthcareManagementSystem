@@ -30,7 +30,7 @@ class UserDirectoryController extends Controller
         abort_unless($user->hasRole('doctor'), 403);
 
         $patients = PatientProfile::where('doctor_id', $user->id)
-                                    ->with('user:id,name,email')
+                                    ->with('user:id,name,email,contact_number')
                                     ->get();
         if($patients->isEmpty()) {
             return response()->json([
@@ -44,4 +44,6 @@ class UserDirectoryController extends Controller
             'message' => 'Patients retrieved successfully',
         ], 200);
     }
+
+
 }

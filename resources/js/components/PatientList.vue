@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="patient-info-container">
-            <p class="patient-name"> {{ props.patient.user.name }}</p>
+            <p class="patient-name">{{ props.patient.user.name }}</p>
             <button class="view-details" @click="$emit('open', patient)">Info</button>
         </div>
     </div>
@@ -15,6 +15,7 @@ const props = defineProps({
         required: true,
     },
 });
+const increment = ref(1);
 
 const emit = (['open']);
 
