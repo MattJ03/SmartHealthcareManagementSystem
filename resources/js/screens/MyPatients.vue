@@ -74,7 +74,7 @@ const openModal =  async (patient) => {
 
 }
 .header-title {
-    margin-left: 20px;
+    margin-left: 50px;
 }
 
 </style>
