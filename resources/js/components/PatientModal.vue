@@ -15,7 +15,7 @@
                 <span class="field">Emergency Contact: {{ props.patient.emergency_contact }}</span>
             </div>
             <div class="row">
-                <span class="field">Last Appointment: {{}}</span>
+                <span class="field">Last Appointment: {{ props.last_appointment ?? 'Loading...' }}</span>
             </div>
         </div>
     </div>
@@ -28,7 +28,13 @@ const props = defineProps({
     patient: {
         type: Object,
     },
+    last_appointment: {
+        type: String,
+    },
 });
+
+
+
 
 const emit = defineEmits(['close'])
 </script>

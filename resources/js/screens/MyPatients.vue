@@ -14,7 +14,7 @@
            v-if="showModal"
            :patient="selectedPatient"
            @click.self="showModal = false"
-
+           :last_appointment="lastAppointment"
     >
     </PatientModal>
 
@@ -29,6 +29,7 @@ import {useUserDirectoryStore} from "../stores/UserDirectoryStore.js";
 import { storeToRefs } from 'pinia';
 import PatientList from "../components/PatientList.vue";
 import PatientModal from "../components/PatientModal.vue";
+import api from "../axios.js";
 
 const authStore = useAuthStore();
 const userStore = useUserDirectoryStore();
@@ -37,13 +38,20 @@ const { role } = storeToRefs(authStore);
 const { doctors, patients } = storeToRefs(userStore);
 const showModal = ref(false);
 const selectedPatient = ref(null);
+const lastAppointment = ref(null);
+const cleanDate = ref(null);
+const loading = ref(false);
 
 onMounted(() => {
     userStore.fetchPatientsOfDoctor();
+
 });
-const openModal = (patient) => {
+const openModal =  async (patient) => {
     selectedPatient.value = patient;
     showModal.value = true;
+   const res = await api.get(`getLastVisit/${patient.id}`);
+    lastAppointment.value = res.data.last_visit;
+   console.log(res.data.last_visit);
 }
 
 
