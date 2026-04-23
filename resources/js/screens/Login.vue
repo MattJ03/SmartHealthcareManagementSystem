@@ -44,7 +44,7 @@ async function handleLogin({email, password}) {
     left: 0;
     width: 50%;
     height: 100%;
-    background: red;
+    background: #305cde;
 }
 
 

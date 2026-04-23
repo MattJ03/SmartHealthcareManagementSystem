@@ -1,6 +1,7 @@
 <template>
     <NavBar></NavBar>
     <div class="container">
+        <grid-records-container>
      <MedicalHistoryGrid
      v-for="record in recordStore.patientRecords"
      :key="record.id"
@@ -8,6 +9,7 @@
      @open="recordStore.openRecord"
      @download="downloadRecord"
      ></MedicalHistoryGrid>
+        </grid-records-container>
     </div>
 
     <div v-if="recordStore.selectedRecord" class="modal-overlay"  @click.self="recordStore.closeRecord()">
@@ -101,9 +103,7 @@ const downloadRecord = async (record) => {
     overflow: hidden;
 }
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
     background-color: #FFFFFF;
     width: 85%;
     height: 400px;
@@ -113,6 +113,14 @@ const downloadRecord = async (record) => {
     margin-top: 30px;
     gap: 40px;
 }
+
+grid-records-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    width: 100%;
+}
+
 
 .close-btn {
     padding-bottom: 15px;
