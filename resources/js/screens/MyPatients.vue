@@ -1,7 +1,13 @@
 <template>
 <NavBar></NavBar>
+    <div class="top-of-file">
     <h2 class="header-title">My Patients</h2>
-    <div class="container">
+        <div class="search-wrapper">
+            <input v-model="search" type=text placeholder="patient" class="search-bar" />
+            <button class="cancel-button"  type="button" @click="cancelSearch">X</button>
+        </div>
+    </div>
+        <div class="container">
         <div class="patients-info">
        <PatientList
            v-if="role === 'doctor'"
@@ -41,6 +47,7 @@ const selectedPatient = ref(null);
 const lastAppointment = ref(null);
 const cleanDate = ref(null);
 const loading = ref(false);
+const search = ref('');
 
 onMounted(() => {
     userStore.fetchPatientsOfDoctor();
@@ -76,5 +83,40 @@ const openModal =  async (patient) => {
 .header-title {
     margin-left: 50px;
 }
+.top-of-file {
+    display: flex;
+    margin-top: 40px;
+
+}
+.search-wrapper {
+    display: flex;
+    padding-top: 10px;
+
+}
+.search-bar {
+    height: 48px;
+    border-radius: 12px 0 0 12px;
+    font-size: 20px;
+
+    margin-left: 240px;
+}
+
+.cancel-button {
+        color: #FFFFFF;
+        background-color: #C0392B;
+        width: 70px;
+        height: 48px;
+        border: #C0392B;
+        border-radius: 0 12px 12px 0;
+        font-size: 20px;
+        padding-left: 25px;
+        padding-right: 25px;
+        cursor: pointer;
+    }
+.cancel-button:hover {
+    background-color: #8B0000;
+    transition: 50ms;
+}
+
 
 </style>
