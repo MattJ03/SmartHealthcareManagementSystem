@@ -106,7 +106,7 @@ const downloadRecord = async (record) => {
 
     background-color: #FFFFFF;
     width: 85%;
-    height: 400px;
+    min-height: 400px;
     margin: auto;
     border-radius: 14px;
     border: 1px solid #E9DCC9;
