@@ -29,15 +29,17 @@ class UserDirectoryController extends Controller
 
         abort_unless($user->hasRole('doctor'), 403);
 
-        $patients = PatientProfile::where('doctor_id', $user->id)
-                                    ->with('user:id,name,email,contact_number')
-                                    ->get();
-        if($patients->isEmpty()) {
-            return response()->json([
-                'patients' => [],
-                'message' => 'No patients found',
-            ]);
+        $query = PatientProfile::where('doctor_id', $user->id)
+                                    ->with('user:id,name,email,contact_number');
+        if($request->filled('search')) {
+            $search = $request->query('search');
+
+            $query->whereHas('user', function($q) use ($search) {
+                $q->where('name', 'like', '%'.$search.'%');
+            });
         }
+
+        $patients = $query->get();
 
         return response()->json([
             'patients' => $patients,

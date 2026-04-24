@@ -27,7 +27,7 @@
 
 </template>
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import {ref, reactive, computed, watch} from 'vue';
 import { onMounted } from 'vue';
 import NavBar from "../components/NavBar.vue";
 import { useAuthStore } from "../stores/AuthStore.js";
@@ -49,9 +49,13 @@ const cleanDate = ref(null);
 const loading = ref(false);
 const search = ref('');
 
+watch(search, (newValue) => {
+    userStore.fetchPatientsOfDoctor(newValue);
+    console.log('new value');
+});
+
 onMounted(() => {
     userStore.fetchPatientsOfDoctor();
-
 });
 const openModal =  async (patient) => {
     selectedPatient.value = patient;
@@ -97,7 +101,7 @@ const openModal =  async (patient) => {
     height: 48px;
     border-radius: 12px 0 0 12px;
     font-size: 20px;
-
+    padding-left: 20px;
     margin-left: 240px;
 }
 

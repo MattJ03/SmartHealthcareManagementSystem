@@ -20,11 +20,15 @@ export const useUserDirectoryStore = defineStore('user', () => {
         }
     }
 
-    const fetchPatientsOfDoctor = async () => {
+    const fetchPatientsOfDoctor = async (search = '') => {
         loading.value = true;
         error.value = '';
         try {
-            const res = await api.get('/doctorPatients');
+            const res = await api.get(`/doctorPatients`, {
+                params: {
+                    search: search,
+                }
+            });
 
             patients.value = res.data.patients;
             console.log(res.data);
