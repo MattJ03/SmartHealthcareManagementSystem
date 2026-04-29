@@ -42,12 +42,16 @@
                 v-for="(date, index) in daysInMonth"
                 :key="index"
                 class="day-cell"
-                :class="{ empty: !date }"
-                disabled="!canSelectDate"
-                @click="date && selectDate(date)">
+                :class="{ empty: !date,
+                         disabled: !canSelectDate
+                         }"
+                @click="date && canSelectDate && selectDate(date)">
                 {{ date ? date.getDate() : '' }}
             </div>
         </div>
+        <p v-if="role === 'admin' && !canSelectDate" class="admin-hint">
+            Select a doctor and patient to enable date selection.
+        </p>
 
         <div v-if="showBookingForm" class="modal-overlay">
             <div class="modal-content">
@@ -117,6 +121,11 @@ const bookingTime = ref('');
 const doctorId = ref(null);
 const showBookingForm = ref(false);
 const { role } = storeToRefs(authStore);
+
+const canSelectDate = computed(() => {
+    if (role.value === 'admin') return !!doctorId.value && !!patientId.value;
+    return true; // patient + doctor always pass
+});
 
 const isEditMode = computed(() => !!props.appointmentId);
 
@@ -226,9 +235,19 @@ onMounted(async () => {
         if(!authStore.user) await authStore.fetchUser();
         doctorId.value = authStore.user?.id ?? null;
         await userDirectoryStore.fetchPatientsOfDoctor();
+    } else if(role.value === 'admin') {
+        await userDirectoryStore.fetchDoctors();
     }
 });
 
+async function onAdminDoctorChange() {
+    patientId.value = '';
+    selectedDate.value = null;
+    showBookingForm.value = false;
+    if (doctorId.value) {
+        await userDirectoryStore.fetchPatientsForDoctor(doctorId.value);
+    }
+}
 async function confirmBooking() {
     if (!bookingTime.value) {
         alert('Select a slot');
