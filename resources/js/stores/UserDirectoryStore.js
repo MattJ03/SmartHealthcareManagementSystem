@@ -27,7 +27,7 @@ export const useUserDirectoryStore = defineStore('user', () => {
             const res = await api.get(`/admin/doctors/${doctorId}/patients`);
             patients.value = res.data.patients;
         } catch(err) {
-            error.value = err.response?.message?;
+            error.value = err.response?.message;
         } finally {
             loading.value = false;
         }
@@ -60,6 +60,7 @@ export const useUserDirectoryStore = defineStore('user', () => {
         loading,
         error,
         fetchDoctors,
+        fetchPatientsForDoctor,
         fetchPatientsOfDoctor,
     }
 });

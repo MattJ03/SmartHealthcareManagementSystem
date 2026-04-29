@@ -207,4 +207,17 @@ class AppointmentController extends Controller
         ]);
     }
 
+    public function getPatientsOfDoctor(User $doctor) {
+        abort_unless(auth()->user()->hasRole('doctor'), 403);
+        abort_unless($doctor->hasRole('doctor'), 404);
+
+        $patients = User::whereHas('appointments', function($q) use ($doctor) {
+            $q->where('doctor_id', $doctor->id);
+        })->get();
+
+        return response()->json([
+            'patients' => $patients,
+        ]);
+    }
+
 }
