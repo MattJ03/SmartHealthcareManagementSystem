@@ -20,6 +20,19 @@ export const useUserDirectoryStore = defineStore('user', () => {
         }
     }
 
+    const fetchPatientsForDoctor = async (doctorId) => {
+        loading.value = true;
+        error.value = '';
+        try {
+            const res = await api.get(`/admin/doctors/${doctorId}/patients`);
+            patients.value = res.data.patients;
+        } catch(err) {
+            error.value = err.response?.message?;
+        } finally {
+            loading.value = false;
+        }
+    }
+
     const fetchPatientsOfDoctor = async (search = '') => {
         loading.value = true;
         error.value = '';
@@ -38,6 +51,8 @@ export const useUserDirectoryStore = defineStore('user', () => {
             loading.value = false;
         }
     }
+
+
 
     return {
         doctors,

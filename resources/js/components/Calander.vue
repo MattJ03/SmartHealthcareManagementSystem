@@ -375,6 +375,8 @@ async function confirmBooking() {
     transition: background 0.4s;
     color: #F2F0EF;
 }
+.day-cell.disabled { opacity: 0.4; cursor: not-allowed; }
+.admin-hint { color: #ffffffcc; text-align: center; margin-top: 10px; font-size: 14px; }
 
 .modal-overlay {
     position: fixed;
