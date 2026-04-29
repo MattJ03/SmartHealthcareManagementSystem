@@ -13,13 +13,15 @@
                     class="dropdown-text" :key="doctor.id" :value="doctor.id"
                     > Dr. {{ doctor.name }}</option>
                 </select>
-                <select v-if="role === 'doctor'" class="patient-list-book" v-model="patientId">
+                <select v-if="role === 'doctor' || (role === 'admin' && doctorId)" class="patient-list-book" v-model="patientId"
+                >
                     <option disabled value="">Book for Patient</option>
+                    {{ userDirectoryStore.loading ? 'Loading...' : 'Select Patient' }}
                     <option v-for="patient in userDirectoryStore.patients"
                             class="dropdown-text"
                             :key="patient.id"
                             :value="patient.id">
-                        {{ patient.user.name }}
+                        {{ patient.user.name ? patient.user.name : patient.name }}
                     </option>
                 </select>
             </div>
@@ -41,6 +43,7 @@
                 :key="index"
                 class="day-cell"
                 :class="{ empty: !date }"
+                disabled="!canSelectDate"
                 @click="date && selectDate(date)">
                 {{ date ? date.getDate() : '' }}
             </div>
