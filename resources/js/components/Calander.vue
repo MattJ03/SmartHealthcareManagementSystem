@@ -7,6 +7,12 @@
                 {{ isEditMode ? "Edit Appointment" : "Book Appointment" }}
             </h1>
             <div class="dropdown-container">
+                <select v-if="role === 'admin'" class="patient-list-book" v-model="doctorId" @change="onAdminDoctorChange">
+                    <option disabled value="">Select Doctor</option>
+                    <option v-for="doctor in userDirectoryStore.doctors"
+                    class="dropdown-text" :key="doctor.id" :value="doctor.id"
+                    > Dr. {{ doctor.name }}</option>
+                </select>
                 <select v-if="role === 'doctor'" class="patient-list-book" v-model="patientId">
                     <option disabled value="">Book for Patient</option>
                     <option v-for="patient in userDirectoryStore.patients"
