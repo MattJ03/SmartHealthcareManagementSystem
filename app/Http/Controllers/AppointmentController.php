@@ -225,7 +225,7 @@ class AppointmentController extends Controller
         abort_unless($user->hasRole('admin'), 403);
 
         $appointments = Appointment::with('doctor', 'patient')
-                                     ->where('starts_at' >= now())
+                                     ->where('starts_at', '>=', now())
                                       ->orderBy('starts_at')
                                        ->paginate(15);
 
