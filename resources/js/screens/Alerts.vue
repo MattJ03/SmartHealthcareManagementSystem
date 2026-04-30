@@ -299,6 +299,7 @@ const cancelFilter = async () => {
     height: 68px;
     border: #FFFFFF solid 1px;
     border-radius: 14px 0 0 14px;
+    padding-right: 50px;
 }
 
 .dropdown-value {
@@ -323,6 +324,8 @@ const cancelFilter = async () => {
     margin-top: 12px;
     padding-left: 25px;
 }
+
+
 .cancel-container {
     display: flex;
 
