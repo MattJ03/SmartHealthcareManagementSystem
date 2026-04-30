@@ -50,13 +50,15 @@ export const useAppointmentStore = defineStore('appointment', () => {
         error.value = '';
         try {
             const res = await api.put(`/updateAppointment/${id}`, payload);
-            const updated = res.data.appointment;
 
-            const index = patientAppointments.value.findIndex(a => a.id === id);
-            if(index !== -1) {
-                patientAppointments.value[index] = updated;
+            if(role.value === 'patient') {
+                await fetchAllMyAppointments();
+            } else if(role.value === 'doctor') {
+                await getUpcomingDoctorAppointments();
+            } else if(role.value === 'admin') {
+                await getAllUpcomingAppointments();
             }
-            return updated;
+            return res.data.appointment;
         } catch (error) {
             error.value = error.response?.data?.message ?? 'Failed to Update';
         } finally {

@@ -119,7 +119,7 @@
 <script setup>
 import NavBar from "../components/NavBar.vue";
 import UpcomingAppointmentsGrid from "../components/UpcomingAppointmentsGrid.vue";
-import { ref, reactive, computed, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted, watch } from 'vue';
 import { useAuthStore } from "../stores/AuthStore.js";
 import { useAppointmentStore } from "../stores/AppointmentStore.js";
 import { storeToRefs } from "pinia";
@@ -130,7 +130,7 @@ import book from '../assets/book.png';
 import history from '../assets/history.png'
 import {useFormattedAppointment} from "../composobles/useFormattedAppointment.js";
 import DoctorUpcomingAppointmentsGrid from "../components/DoctorUpcomingAppointmentsGrid.vue";
-import {useRouter} from "vue-router";
+import {useRouter, useRoute } from "vue-router";
 import AdminUpcomingAppointments from "../components/AdminUpcomingAppointments.vue";
 
 
@@ -173,9 +173,11 @@ console.log('role ref =', role.value);
 const isPatient = computed(() => role.value === 'patient');
 const isDoctor = computed(() => role.value === 'doctor');
 
+const route = useRoute();
 
 const formattedAppointment = useFormattedAppointment(nextAppointment);
 const doctorFormattedAppointment = useFormattedAppointment(doctorAppointments);
+
 
 
 async function moveToBook() {
