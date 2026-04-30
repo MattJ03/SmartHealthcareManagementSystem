@@ -104,6 +104,7 @@
             @delete="handleDeleteAppointment"
             @update="goToUpdate"
         />
+
     </div>
 
 </template>

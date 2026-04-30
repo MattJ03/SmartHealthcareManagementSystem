@@ -228,6 +228,7 @@ class AppointmentController extends Controller
                                      ->where('starts_at', '>=', now())
                                       ->orderBy('starts_at')
                                        ->paginate(15);
+        Log::info('number of upcoming appointments returned' . $appointments->count());
 
         if($appointments->isEmpty()) {
             return response()->json([
