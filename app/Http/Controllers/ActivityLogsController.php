@@ -96,6 +96,7 @@ class ActivityLogsController extends Controller
             });
         } else if($user->hasRole('admin')) {
 
+
         }
 
         if($request->filled('action')) {
