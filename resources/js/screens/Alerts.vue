@@ -188,7 +188,7 @@ const buildParam = () => {
 
 const setLogs = (data) => {
     if(role.value === 'patient') patientLogs.value = data;
-    if(role.value === 'doctor') doctorLogs.value = data;
+    else if(role.value === 'doctor') doctorLogs.value = data;
     else allLogs.value = data;
 }
 
