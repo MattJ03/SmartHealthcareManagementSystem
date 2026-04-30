@@ -52,6 +52,19 @@ export const useUserDirectoryStore = defineStore('user', () => {
         }
     }
 
+    const fetchAllPatients = async () => {
+        loading.value = true;
+        error.value = '';
+        try {
+            const res = await api.get('getAllPatients');
+            patients.value = res.data.patient
+        } catch(error) {
+            error.value = error.response?.message;
+        } finally {
+            loading.value = false;
+        }
+    }
+
 
 
     return {

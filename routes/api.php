@@ -38,6 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getLastVisit/{patient}', [AppointmentController::class, 'getPatientLastVisit']);
   Route::get('getDoctors', [UserDirectoryController::class, 'getDoctors']);
   Route::get('/doctorPatients', [UserDirectoryController::class, 'getDoctorsPatients']);
+  Route::get('/getAllPatients', [UserDirectoryController::class, 'getPatientIndex']);
   Route::get('/admin/doctors/{doctor}/patients', [AppointmentController::class, 'getPatientsOfDoctor']);
   Route::get('/doctors/{doctor}/availability', DoctorAvailabilityController::class);
 
