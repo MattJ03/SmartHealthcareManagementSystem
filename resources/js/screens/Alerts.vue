@@ -181,7 +181,7 @@ const buildParam = () => {
         page: pageNum.value,
     };
     if(filter.patient_id) params.patient_id = filter.patient_id;
-    if(filter.doctor_id) params.patient_id = filter.doctor_id;
+    if(filter.doctor_id) params.doctor_id = filter.doctor_id;
     if(filter.action) params.action = filter.action;
     return params;
 }
