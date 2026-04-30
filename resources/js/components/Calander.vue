@@ -21,7 +21,7 @@
                             class="dropdown-text"
                             :key="patient.id"
                             :value="patient.id">
-                        {{ patient.user.name ? patient.user.name : patient.name }}
+                        {{ patient.name }}
                     </option>
                 </select>
             </div>
