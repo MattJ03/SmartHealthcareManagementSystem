@@ -109,6 +109,7 @@
             v-for="appointment in adminAppointments"
             :key="appointment.id"
             :appointment="appointment"
+            @delete="handleDeleteAppointment"
         />
 
     </div>
@@ -201,6 +202,8 @@ const handleDeleteAppointment = async (appointmentId) => {
             patientAppointments.value = patientAppointments.value.filter((a) => a.id !== appointmentId);
         } else if (role.value === "doctor") {
             doctorAppointments.value = doctorAppointments.value.filter((a) => a.id !== appointmentId);
+        } else if (role.value === 'admin') {
+            adminAppointments.value = adminAppointments.value.filter((a) => a.id !== appointmentId);
         }
 
         if (nextAppointment.value?.id === appointmentId) {
