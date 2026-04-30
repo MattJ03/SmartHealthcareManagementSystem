@@ -875,7 +875,7 @@ class AppointmentControllerTest extends TestCase
 
     }
 
-    public function test_getAllUpcomingAppoingmnets_returns_empty_message(): void {
+    public function test_getAllUpcomingAppointments_returns_empty_message(): void {
         $admin = User::factory()->create()->assignRole('admin');
         $this->actingAs($admin);
 
