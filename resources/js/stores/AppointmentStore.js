@@ -137,7 +137,8 @@ export const useAppointmentStore = defineStore('appointment', () => {
         error.value = '';
         try {
             const res = await api.get(`/getAllUpcomingAppointments`);
-            adminAppointments.value = res.data.appointments;
+            adminAppointments.value = res.data.appointments.data;
+            console.log(adminAppointments.value.length);
         } catch(error) {
             error.value = error.response?.data?.message ?? 'Failed to fetch appointments';
         } finally {
@@ -157,6 +158,7 @@ export const useAppointmentStore = defineStore('appointment', () => {
          doctorAppointments,
          nextAppointment,
          hasAppointments,
+         adminAppointments,
          fetchAllMyAppointments,
          createAppointment,
          getAppointment,
@@ -164,6 +166,7 @@ export const useAppointmentStore = defineStore('appointment', () => {
          deleteAppointment,
          fetchUpcomingAppointment,
          getUpcomingDoctorAppointments,
+         getAllUpcomingAppointments,
      };
 
 });

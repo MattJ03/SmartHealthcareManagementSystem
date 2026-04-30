@@ -104,6 +104,12 @@
             @delete="handleDeleteAppointment"
             @update="goToUpdate"
         />
+        <AdminUpcomingAppointments
+            v-if="role === 'admin'"
+            v-for="appointment in adminAppointments"
+            :key="appointment.id"
+            :appointment="appointment"
+        />
 
     </div>
 
@@ -123,6 +129,7 @@ import history from '../assets/history.png'
 import {useFormattedAppointment} from "../composobles/useFormattedAppointment.js";
 import DoctorUpcomingAppointmentsGrid from "../components/DoctorUpcomingAppointmentsGrid.vue";
 import {useRouter} from "vue-router";
+import AdminUpcomingAppointments from "../components/AdminUpcomingAppointments.vue";
 
 
 const store = useAuthStore();
@@ -131,7 +138,7 @@ const appointmentStore = useAppointmentStore();
 const router = useRouter();
 
 const { name, role } = storeToRefs(store);
-const { nextAppointment, patientAppointments, doctorAppointments } = storeToRefs(appointmentStore)
+const { nextAppointment, patientAppointments, doctorAppointments, adminAppointments } = storeToRefs(appointmentStore)
 
 onMounted(() => {
 
@@ -141,6 +148,9 @@ onMounted(() => {
     }
     if(role.value === 'doctor') {
         appointmentStore.getUpcomingDoctorAppointments();
+    }
+    else if(role.value === 'admin') {
+        appointmentStore.getAllUpcomingAppointments();
     }
 })
 
