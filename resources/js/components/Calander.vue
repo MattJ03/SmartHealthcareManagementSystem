@@ -21,7 +21,7 @@
                             class="dropdown-text"
                             :key="patient.id"
                             :value="patient.id">
-                        {{ patient.name }}
+                        {{ role === 'admin' ? patient.name : patient.user.name }}
                     </option>
                 </select>
             </div>
