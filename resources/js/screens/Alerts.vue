@@ -7,7 +7,7 @@
                     <select class="dropdown-value" v-if="role === 'doctor' || role === 'admin'" v-model="filter.patient_id" @change="filterThroughLogs">
                         <option class="dropdown-value" value="">--Select Patient--</option>
                         <option class="dropdown-value" v-for="patient in patients" :key="patient.id" :value="patient.id">
-                            {{ patient.user.name }}
+                            {{ patient.name }}
                         </option>
                     </select>
                     <select class="dropdown-value" v-if="role === 'admin'" v-model="filter.doctor_id" @change="filterThroughLogs">
@@ -110,6 +110,7 @@ onMounted (() => {
     if(role.value === 'admin') {
         logsStore.getAllLogs();
         userStore.fetchDoctors();
+        userStore.fetchAllPatients();
     }
     logsStore.getAllActions();
 

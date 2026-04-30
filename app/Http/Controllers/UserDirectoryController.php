@@ -26,9 +26,11 @@ class UserDirectoryController extends Controller
 
     public function getPatientIndex() {
         $user = auth()->user();
+        abort_unless($user->hasRole('admin'), 403);
 
         $patients = User::role('patient')->select('id', 'name')->get();
-        if(!$patients->isEmpty()) {
+
+        if($patients->isEmpty()) {
             return response()->json([
                 'patients' => [],
                 'message' => 'No patients found',

@@ -55,9 +55,10 @@ export const useUserDirectoryStore = defineStore('user', () => {
     const fetchAllPatients = async () => {
         loading.value = true;
         error.value = '';
+        console.log('pre fetch pat');
         try {
             const res = await api.get('getAllPatients');
-            patients.value = res.data.patient
+            patients.value = res.data.patients;
         } catch(error) {
             error.value = error.response?.message;
         } finally {
@@ -75,5 +76,6 @@ export const useUserDirectoryStore = defineStore('user', () => {
         fetchDoctors,
         fetchPatientsForDoctor,
         fetchPatientsOfDoctor,
+        fetchAllPatients,
     }
 });
