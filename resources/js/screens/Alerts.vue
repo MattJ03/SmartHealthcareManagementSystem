@@ -60,6 +60,12 @@
                     :id="log.id"
                     :logs="log"
                     />
+                <LogGrid
+                    v-if="role === 'admin'"
+                    v-for="log in allLogs"
+                    :id="log.id"
+                    :logs="log"
+                    />
             </div>
         </div>
         </div>
