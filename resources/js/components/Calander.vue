@@ -302,7 +302,9 @@ async function confirmBooking() {
 }
 
 .dropdown-container {
+    display: flex;
     padding-top: 20px;
+    gap: 20px;
 }
 
 .patient-list-book {
@@ -317,6 +319,7 @@ async function confirmBooking() {
 }
 .patient-list-book:hover {
     background-color: #E9DCC9;
+
 
 }
 

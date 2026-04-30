@@ -7,7 +7,7 @@
                     <select class="dropdown-value" v-if="role === 'doctor' || role === 'admin'" v-model="filter.patient_id" @change="filterThroughLogs">
                         <option class="dropdown-value" value="">--Select Patient--</option>
                         <option class="dropdown-value" v-for="patient in patients" :key="patient.id" :value="patient.id">
-                            {{ patient.name }}
+                            {{ role === 'admin' ? patient.name : patient.user.name }}
                         </option>
                     </select>
                     <select class="dropdown-value" v-if="role === 'admin'" v-model="filter.doctor_id" @change="filterThroughLogs">
@@ -300,7 +300,7 @@ const cancelFilter = async () => {
     height: 68px;
     border: #FFFFFF solid 1px;
     border-radius: 14px 0 0 14px;
-    padding-right: 50px;
+    padding-right: 106px;
 }
 
 .dropdown-value {
