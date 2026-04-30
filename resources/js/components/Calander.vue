@@ -319,8 +319,6 @@ async function confirmBooking() {
 }
 .patient-list-book:hover {
     background-color: #E9DCC9;
-
-
 }
 
 .dropdown-text {
@@ -337,7 +335,16 @@ async function confirmBooking() {
     padding: 5px 12px;
     cursor: pointer;
     font-size: 18px;
+    border-radius: 14px;
+    background-color: #FFFFFF;
+    border: 0 solid #E9DCC9;
 }
+.month-nav button:hover {
+    transition: 0.5ms;
+    background-color: #0a58ca;
+    color: #FFFFFF;
+}
+
 
 .month-name {
     font-weight: bold;
@@ -448,12 +455,14 @@ async function confirmBooking() {
     background-color: #C0392B;
     cursor: pointer;
     font-size: 16px;
+
 }
 .modal-actions button:hover {
     background-color: #8B0000;
 }
 .modal-actions button:disabled {
     background-color: #EBEBE4;
+
 }
 .book-appointment {
     color: #FFFFFF;

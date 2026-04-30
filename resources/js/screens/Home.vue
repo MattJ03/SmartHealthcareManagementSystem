@@ -110,6 +110,7 @@
             :key="appointment.id"
             :appointment="appointment"
             @delete="handleDeleteAppointment"
+            @update="goToUpdate"
         />
 
     </div>
@@ -187,6 +188,9 @@ async function moveToRecords() {
     }
     if(role.value === 'doctor') {
         await router.push({name: 'doctor-medical-records'});
+    }
+    if(role.value === 'admin') {
+
     }
 }
 
