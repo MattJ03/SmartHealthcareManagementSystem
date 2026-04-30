@@ -855,6 +855,24 @@ class AppointmentControllerTest extends TestCase
         ]);
     }
 
+    public function test_getAllUpcomingAppointments_returns_upcoming_appointments(): void {
+        $admin = User::factory()->create()->assignRole('admin');
+        $this->actingAs($admin);
 
+        $patients = User::factory()->count(5)->create()->each->assignRole('patient');
+        $doctors = User::factory()->count(5)->create()->each->assignRole('doctor');
+
+
+        for($i = 0; $i < 5; $i++) {
+            Appointment::factory()->create([
+                'patient_id' => $patients[$i]->id,
+                'doctor_id' => $doctors[$i]->id,
+            ]);
+        }
+
+        $response = $this->getJson('/api/getAllUpcomingAppointments');
+        $response->assertStatus(200);
+
+    }
 
 }

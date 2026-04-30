@@ -27,6 +27,7 @@ Route::middleware('auth:sanctum')->group(function () {
    Route::get('/getMyAppointment/{id}', [AppointmentController::class, 'getAppointment']);
    Route::get('/upcomingAppointments', [AppointmentController::class, 'upcomingAppointments']);
    Route::get('/getUpcomingAppointmentsDoctor', [AppointmentController::class, 'getAllDoctorAppointments']);
+   Route::get('/getAllUpcomingAppointments', [AppointmentController::class, 'getAllUpcomingAppointments']);
    Route::get('patient/doctor', function () {
        $user = auth()->user();
       if(!$user) {
