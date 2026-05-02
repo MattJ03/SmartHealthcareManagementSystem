@@ -88,7 +88,12 @@
                 <p class="quick-actions-text">Alerts</p>
             </div>
         </div>
+        <div class="pagination-container">
         <h2>Upcoming Appointments</h2>
+            <div class="next-and-prev-wrapper">
+                <button class="next-prev"></button>
+            </div>
+        </div>
         <UpcomingAppointmentsGrid
             v-if="role === 'patient'"
             v-for="appointment in patientAppointments"
@@ -382,8 +387,29 @@ function goToUpdate(appointmentId) {
     margin: 0;
     font-size: 18px;
 }
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+}
+.next-and-prev-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+.next-prev {
 
-
+    padding-bottom: 15px;
+    padding-top: 15px;
+    padding-left: 25px;
+    padding-right: 25px;
+    border: 1px solid #FFFFFF;
+    border-radius: 14px;
+    color: #FFFFFF;
+    background-color: #305cde;
+    font-size: 16px;
+    justify-content: flex-end;
+}
 
 
 </style>

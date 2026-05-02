@@ -278,8 +278,6 @@ const cancelFilter = async () => {
     background-color: #305cde;
     font-size: 16px;
     justify-content: flex-end;
-
-
 }
 .next-prev:hover {
     background-color: #0a53be;
