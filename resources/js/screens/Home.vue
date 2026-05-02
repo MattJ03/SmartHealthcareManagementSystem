@@ -91,7 +91,7 @@
         <div class="pagination-container">
         <h2>Upcoming Appointments</h2>
             <div class="next-and-prev-wrapper">
-                <button class="next-prev" :disabled="pageNum <= 1">Prev</button>
+                <button class="next-prev" @click="prevAppointments" :disabled="pageNum <= 1">Prev</button>
                 {{ pageNum }}
                 <button class="next-prev" @click="nextAppointments">Next</button>
             </div>
