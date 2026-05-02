@@ -91,9 +91,9 @@
         <div class="pagination-container">
         <h2>Upcoming Appointments</h2>
             <div class="next-and-prev-wrapper">
-                <button class="next-prev" @click="nextAppointments()" :disabled="pageNum === 1">Prev</button>
-                <span>Hello</span>
-                <button class="next-prev">Next</button>
+                <button class="next-prev" :disabled="pageNum <= 1">Prev</button>
+                {{ pageNum }}
+                <button class="next-prev" @click="nextAppointments">Next</button>
             </div>
         </div>
         <UpcomingAppointmentsGrid
@@ -239,16 +239,31 @@ function goToUpdate(appointmentId) {
 }
 
 const nextAppointments = async () => {
+    console.log('run');
     loading.value = true;
     error.value = '';
-    pageNum++;
+    pageNum.value++;
     try {
             const res = await api.get(`/getAllUpcomingAppointments?page=${pageNum.value}`);
-            adminAppointments.value = res.data.appointment.data;
+            adminAppointments.value = res.data.appointments.data;
     } catch (error) {
         error.value = error.response?.data.message;
     }
     finally {
+        loading.value = false;
+    }
+}
+
+const prevAppointments = async () => {
+    loading.value = true;
+    error.value = '';
+    pageNum.value--;
+    try {
+        const res = await api.get(`getAllUpcomingAppointments?page=${pageNum.value}`);
+        adminAppointments.value = res.data.appointments.data;
+    } catch(error) {
+        error.value = error.response?.data.message;
+    } finally {
         loading.value = false;
     }
 }
