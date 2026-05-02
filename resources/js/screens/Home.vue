@@ -91,7 +91,9 @@
         <div class="pagination-container">
         <h2>Upcoming Appointments</h2>
             <div class="next-and-prev-wrapper">
-                <button class="next-prev"></button>
+                <button class="next-prev" @click="nextAppointments()" :disabled="pageNum === 1">Prev</button>
+                <span>Hello</span>
+                <button class="next-prev">Next</button>
             </div>
         </div>
         <UpcomingAppointmentsGrid
@@ -136,6 +138,7 @@ import history from '../assets/history.png'
 import {useFormattedAppointment} from "../composobles/useFormattedAppointment.js";
 import DoctorUpcomingAppointmentsGrid from "../components/DoctorUpcomingAppointmentsGrid.vue";
 import {useRouter, useRoute } from "vue-router";
+import api from "../axios.js";
 import AdminUpcomingAppointments from "../components/AdminUpcomingAppointments.vue";
 
 
@@ -146,6 +149,7 @@ const router = useRouter();
 
 const { name, role } = storeToRefs(store);
 const { nextAppointment, patientAppointments, doctorAppointments, adminAppointments } = storeToRefs(appointmentStore)
+const pageNum = ref(1);
 
 onMounted(() => {
 
@@ -174,6 +178,8 @@ const formattedDoctorAppointment = useFormattedAppointment(nextDoctorAppointment
 
 console.log('store.role =', store.role);
 console.log('role ref =', role.value);
+const loading = ref(false);
+const error = ref('');
 
 const isPatient = computed(() => role.value === 'patient');
 const isDoctor = computed(() => role.value === 'doctor');
@@ -230,6 +236,21 @@ function goToUpdate(appointmentId) {
         name: 'BookAppointment',
         params: { id: appointmentId },
     });
+}
+
+const nextAppointments = async () => {
+    loading.value = true;
+    error.value = '';
+    pageNum++;
+    try {
+            const res = await api.get(`/getAllUpcomingAppointments?page=${pageNum.value}`);
+            adminAppointments.value = res.data.appointment.data;
+    } catch (error) {
+        error.value = error.response?.data.message;
+    }
+    finally {
+        loading.value = false;
+    }
 }
 
 
@@ -409,6 +430,13 @@ function goToUpdate(appointmentId) {
     background-color: #305cde;
     font-size: 16px;
     justify-content: flex-end;
+}
+.next-prev:hover {
+    background-color: #0a58ca;
+    cursor: pointer;
+}
+.next-prev:disabled {
+    background-color: #7D7D7D;
 }
 
 
