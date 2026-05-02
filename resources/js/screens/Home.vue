@@ -452,6 +452,7 @@ const prevAppointments = async () => {
 }
 .next-prev:disabled {
     background-color: #7D7D7D;
+    cursor: auto;
 }
 
 
