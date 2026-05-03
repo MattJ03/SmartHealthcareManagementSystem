@@ -79,12 +79,15 @@ async function moveAdminCreate() {
 }
 .patient-img:hover {
     filter: grayscale(100%);
+    transition: 0.5s;
 }
 .doctor-img:hover {
     filter: grayscale(100%);
+    transition: 0.5s;
 }
 .admin-img:hover {
     filter: grayscale(100%);
+    transition: 0.5s;
 }
 
 </style>
