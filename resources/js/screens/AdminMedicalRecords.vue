@@ -11,16 +11,34 @@
            <img :src="info" alt="info" class="info-img">
            <span class="false-blocking-text">If you should have access, please contact support. </span>
        </div>
-       <button class="go-home-btn">Go Home</button>
+       <button class="go-home-btn" @click="backHome">Go Home</button>
    </div>
 
 </div>
 
 </template>
 <script setup>
+import { ref, reactive, computed } from 'vue';
+import router from "../router/index.js";
+import {useRouter} from "vue-router";
 import NavBar from "../components/NavBar.vue";
 import lock from '../assets/lock.svg';
 import info from '../assets/info.svg';
+
+const loading = ref(false);
+const error = ref('');
+
+const backHome = async () => {
+    loading.value = true;
+    error.value = '';
+    try {
+        await router.replace('/home');
+    } catch (error) {
+        error.value = error.response?.data || 'failed to go back to home screen';
+    } finally {
+        loading.value = false;
+    }
+}
 </script>
 <style scoped>
 .container {
