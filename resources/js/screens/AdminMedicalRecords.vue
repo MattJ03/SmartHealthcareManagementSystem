@@ -6,11 +6,12 @@
           <img :src="lock" alt="lock" class="lock-img">
       </div>
        <span class="access-restricted">Access Restricted</span>
-       <span class="med-records-confidential">Medical records are confidential and can only be accessed by the patient and their assigned doctor.</span>
+       <span class="med-records-confidential">Medical records are confidential and can only be accessed by the patient or their assigned doctor.</span>
        <div class="false-blocking-wrapper">
            <img :src="info" alt="info" class="info-img">
-           <span class="false-blocking-text">jjjjjjjjjjjjjjjjjjjjjjjjjjjjj</span>
+           <span class="false-blocking-text">If you should have access, please contact support. </span>
        </div>
+       <button class="go-home-btn">Go Home</button>
    </div>
 
 </div>
@@ -56,12 +57,45 @@ import info from '../assets/info.svg';
     font-size: 18px;
 }
 .false-blocking-wrapper {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
      height: fit-content;
     width: fit-content;
-    margin-top: 25px;
+    margin-top: 35px;
     background-color: #e6f1fb;
+    padding-left: 16px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-right: 16px;
+    border-radius: 16px;
+    border: 1px solid #0a58ca;
 }
 .false-blocking-text {
     font-size: 16px;
+    color: #4a5568;
+
+}
+.info-img {
+    height: 20px;
+    margin-right: 10px;
+}
+.go-home-btn {
+    margin-top: 30px;
+    border-radius: 14px;
+    padding-right: 16px;
+    padding-left: 16px;
+    padding-bottom: 12px;
+    padding-top: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #FFFFFF;
+    background-color: #305cde;
+    border: none;
+}
+.go-home-btn:hover {
+    background-color: #0a58ca;
+    transition: 0.5ms;
 }
 </style>
