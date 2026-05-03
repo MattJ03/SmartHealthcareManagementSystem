@@ -5,8 +5,8 @@
       <div class="lock-img-wrapper">
           <img :src="lock" alt="lock" class="lock-img">
       </div>
-       <span class="access-restricted">Access Restricted</span>
-       <span class="med-records-confidential">Medical records are confidential and can only be accessed by the patient or their assigned doctor.</span>
+       <span class="access-restricted">Access restricted</span>
+       <span class="med-records-confidential">Medical records are strictly confidential and private, and can <br> only be accessed by the patient and their assigned doctor.</span>
        <div class="false-blocking-wrapper">
            <img :src="info" alt="info" class="info-img">
            <span class="false-blocking-text">If you should have access, please contact support. </span>
@@ -33,7 +33,7 @@ import info from '../assets/info.svg';
 
     align-items: center;
      margin: auto;
-    margin-top: 80px;
+    margin-top: 200px;
 }
 .lock-img-wrapper {
       height: fit-content;
