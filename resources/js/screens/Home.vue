@@ -203,7 +203,7 @@ async function moveToRecords() {
         await router.push({name: 'doctor-medical-records'});
     }
     if(role.value === 'admin') {
-
+        await router.push({ name: 'admin-medical-records'});
     }
 }
 
