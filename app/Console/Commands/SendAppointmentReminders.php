@@ -10,6 +10,7 @@ use App\Mail\ReminderMail;
 use Illuminate\Support\Facades\Log;
 class SendAppointmentReminders extends Command
 {
+
     /**
      * The name and signature of the console command.
      *
@@ -31,6 +32,7 @@ class SendAppointmentReminders extends Command
     {
         $now = Carbon::now();
         $oneWeekFromNow = $now->copy()->addWeek();
+
 
         $appointments = Appointment::where('reminder_sent', false)
         ->whereBetween('starts_at', [now(), now()->addWeek()])->get();
