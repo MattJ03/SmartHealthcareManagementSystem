@@ -211,7 +211,7 @@ class AppointmentController extends Controller
         abort_unless(auth()->user()->hasRole('admin'), 403);
         abort_unless($doctor->hasRole('doctor'), 404);
 
-        $patients = User::whereHas('appointments', function($q) use ($doctor) {
+        $patients = User::whereHas('profile', function($q) use ($doctor) {
             $q->where('doctor_id', $doctor->id);
         })->get();
 
