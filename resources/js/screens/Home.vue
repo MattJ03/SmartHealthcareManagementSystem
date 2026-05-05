@@ -17,7 +17,7 @@
         <h2 class="scheduled-appointment"><strong>Scheduled Appointment</strong></h2>
 
         <p v-if="nextDoctorAppointment" class="doctor-text">
-            With {{ nextDoctorAppointment.patient_profile?.user?.name ?? 'Loading...' }}
+            With {{ nextDoctorAppointment.patient?.name ?? 'Loading...' }}
         </p>
 
         <div class="three-squares" v-if="nextDoctorAppointment">

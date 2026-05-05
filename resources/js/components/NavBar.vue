@@ -6,6 +6,7 @@
        <div class="nav-links">
            <button v-if="role === 'admin'" class="btn-create-account" type="button" @click="moveToRegister"> Create New User</button>
            <router-link v-if="role === 'doctor'" to="doctors-patients" class="my-patients">My Patients</router-link>
+
            <button class="btn-logout" type="button" @click="logoutUser">Logout</button>
        </div>
    </nav>

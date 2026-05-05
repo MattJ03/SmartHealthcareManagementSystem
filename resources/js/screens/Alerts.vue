@@ -4,7 +4,7 @@
         <div class="log-wrapper">
             <div class="pagination-container">
                 <div class="filtering-container">
-                    <select class="dropdown-value" v-if="role === 'doctor' || role === 'admin'" v-model="filter.patient_id" @change="filterThroughLogs">
+                    <select class="dropdown-value-patient" v-if="role === 'doctor' || role === 'admin'" v-model="filter.patient_id" @change="filterThroughLogs">
                         <option class="dropdown-value" value="">--Select Patient--</option>
                         <option class="dropdown-value" v-for="patient in patients" :key="patient.id" :value="patient.id">
                             {{ role === 'admin' ? patient.name : patient.user.name }}
@@ -302,6 +302,18 @@ const cancelFilter = async () => {
 }
 
 .dropdown-value {
+    justify-content: left;
+    background-color: #FFFFFF;
+    border: none;
+    border-radius: 14px;
+    font-size: 14px;
+    margin-left: 30px;
+    height: 45px;
+    margin-top: 12px;
+    padding-left: 25px;
+}
+
+.dropdown-value-patient {
     justify-content: left;
     background-color: #FFFFFF;
     border: none;
