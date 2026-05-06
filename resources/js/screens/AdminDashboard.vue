@@ -19,7 +19,7 @@
             <div class="container-square">
                 <div class="top-content">
                     <img :src="sevenDays" alt="7days" class="week-img">
-                    <p class="appointments-next-7days">Appointments in next week</p>
+                    <p class="appointments-next-7days">Appointments next 7 days</p>
                 </div>
                 <p class="appointments-next-7days-result"></p>
             </div>
@@ -77,6 +77,8 @@ onMounted(() => {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    gap: 5px;
+    margin-left: 3px;
 }
 .number-patients-text {
     font-size: 18px;

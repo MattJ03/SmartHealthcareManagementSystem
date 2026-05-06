@@ -243,4 +243,16 @@ class AppointmentController extends Controller
         ]);
     }
 
+    public function totalNumberAppointmentsNext7Days() {
+        $user = auth()->user();
+        abort_unless($user->hasRole('admin'), 403);
+
+        $appointments = Appointment::where('starts_at', '>=', now())
+                                     ->where('ends_at', '<=', now()->addDays(7))
+                                      ->count();
+        return response()->json([
+            'numberAppointmentsSevenDays' => $appointments,
+        ]);
+    }
+
 }
