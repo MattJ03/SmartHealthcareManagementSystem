@@ -28,7 +28,7 @@
                     <img :src="calendar" alt="calendarsmall" class="calendar-small-img">
                     <p class="total-appointments-text">Total appointments booked</p>
                 </div>
-                <p class="total-appointments-result"></p>
+                <p class="total-appointments-result"> {{ appointmentStore.totalAppointments }}</p>
 
             </div>
         </div>
@@ -37,7 +37,7 @@
 </template>
 <script setup>
 import NavBar from "../components/NavBar.vue";
-import { ref, reactive, computed, onMounted } from "vue";
+import { ref, reactive, computed, onMounted } from 'vue';
 import { useUserDirectoryStore } from "../stores/UserDirectoryStore.js";
 import patient from '../assets/patient.png';
 import doctor from '../assets/doctor.png';
@@ -53,6 +53,7 @@ onMounted(() => {
     userStore.fetchAllPatients();
     userStore.fetchDoctors();
     appointmentStore.getNextSevenAppointments();
+    appointmentStore.getTotalNumberAppointments();
 });
 
 </script>
@@ -63,6 +64,7 @@ onMounted(() => {
     border-radius: 14px;
     margin: auto;
     margin: 40px;
+
     background-color: #FFFFFF;
     min-height: 800px;
 }
@@ -71,7 +73,7 @@ onMounted(() => {
     flex-direction: row;
     margin-left: 40px;
     margin-right: 40px;
-    margin-top: 20px;
+    margin-top: 40px;
     gap: 60px;
 }
 .container-square {
@@ -81,7 +83,7 @@ onMounted(() => {
     flex-direction: column;
     background-color: #FFFFFF;
     height: 200px;
-    width: 220px;
+    width: 240px;
     border: 1px solid #305cde;
     border-radius: 16px;
 }
@@ -146,7 +148,7 @@ onMounted(() => {
 }
 
 .calendar-small-img {
-    height: 35px;
+    height: 20px;
 }
 .total-appointments-text {
     color: #4a5568;
@@ -154,5 +156,9 @@ onMounted(() => {
 }
 .total-appointments-result {
    font-size: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
 }
 </style>
