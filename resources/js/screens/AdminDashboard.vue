@@ -21,7 +21,15 @@
                     <img :src="sevenDays" alt="7days" class="week-img">
                     <p class="appointments-next-7days">Appointments next 7 days</p>
                 </div>
-                <p class="appointments-next-7days-result"></p>
+                <p class="appointments-next-7days-result"> {{appointmentStore.nextSevenAppointments }}</p>
+            </div>
+            <div class="container-square">
+                <div class="top-content">
+                    <img :src="calendar" alt="calendarsmall" class="calendar-small-img">
+                    <p class="total-appointments-text">Total appointments booked</p>
+                </div>
+                <p class="total-appointments-result"></p>
+
             </div>
         </div>
 
@@ -34,12 +42,17 @@ import { useUserDirectoryStore } from "../stores/UserDirectoryStore.js";
 import patient from '../assets/patient.png';
 import doctor from '../assets/doctor.png';
 import sevenDays from '../assets/7-days.png';
+import { useAppointmentStore } from "../stores/AppointmentStore.js";
+import calendar from '../assets/calendar.png';
+
 
 const userStore = useUserDirectoryStore();
+const appointmentStore = useAppointmentStore();
 
 onMounted(() => {
     userStore.fetchAllPatients();
     userStore.fetchDoctors();
+    appointmentStore.getNextSevenAppointments();
 });
 
 </script>
@@ -132,4 +145,14 @@ onMounted(() => {
     margin: auto;
 }
 
+.calendar-small-img {
+    height: 35px;
+}
+.total-appointments-text {
+    color: #4a5568;
+    font-size: 18px;
+}
+.total-appointments-result {
+   font-size: 75px;
+}
 </style>

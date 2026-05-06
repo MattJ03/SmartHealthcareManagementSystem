@@ -255,4 +255,15 @@ class AppointmentController extends Controller
         ]);
     }
 
+    public function totalNumberOfAppointments() {
+        $user = auth()->user();
+        abort_unless($user->hasRole('admin'), 403);
+
+        $appointments = Appointment::all()->count();
+
+        return response()->json([
+            'numberAppointments' => $appointments,
+        ]);
+    }
+
 }
