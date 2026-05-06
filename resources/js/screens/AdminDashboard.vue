@@ -3,8 +3,13 @@
     <div class="container">
         <div class="top-row-squares">
             <div class="container-square">
+                <div class="top-content">
+                    <img :src="patient" alt="patient" class="patient-img">
                 <p class="number-patients-text">Number of patients</p>
+                </div>
                 <p class="patients-num-result">{{ userStore.numberPatients }}</p>
+            </div>
+            <div class="container-square">
 
             </div>
         </div>
@@ -15,6 +20,8 @@
 import NavBar from "../components/NavBar.vue";
 import { ref, reactive, computed, onMounted } from "vue";
 import { useUserDirectoryStore } from "../stores/UserDirectoryStore.js";
+import patient from '../assets/patient.png';
+
 
 const userStore = useUserDirectoryStore();
 
@@ -39,9 +46,12 @@ onMounted(() => {
     margin-left: 40px;
     margin-right: 40px;
     margin-top: 20px;
+    gap: 40px;
 }
 .container-square {
     display: flex;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
     background-color: #FFFFFF;
     height: 200px;
@@ -49,9 +59,15 @@ onMounted(() => {
     border: 1px solid #305cde;
     border-radius: 16px;
 }
+.top-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
 .number-patients-text {
-    font-size: 16px;
-    padding-left: 15px;
+    font-size: 18px;
+
     color: #4a5568;
 
 }
@@ -60,5 +76,15 @@ onMounted(() => {
     align-items: center;
     justify-content: center;
     font-size: 70px;
+    margin: auto;
+}
+.img-wrapper {
+    display: flex;
+    flex-direction: column;
+
+}
+.patient-img {
+    height: 35px;
+    margin-right: 5px;
 }
 </style>
