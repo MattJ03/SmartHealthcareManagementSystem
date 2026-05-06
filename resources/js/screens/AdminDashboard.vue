@@ -29,7 +29,12 @@
                     <p class="total-appointments-text">Total appointments booked</p>
                 </div>
                 <p class="total-appointments-result"> {{ appointmentStore.totalAppointments }}</p>
-
+            </div>
+            <div class="container-square">
+                <div class="top-content">
+                    <img :src="cancel" alt="cancel" class="cancel-img">
+                    <p class="cancel-text">Total cancelled appointments</p>
+                </div>
             </div>
         </div>
 
@@ -44,6 +49,7 @@ import doctor from '../assets/doctor.png';
 import sevenDays from '../assets/7-days.png';
 import { useAppointmentStore } from "../stores/AppointmentStore.js";
 import calendar from '../assets/calendar.png';
+import cancel from '../assets/cancel.png';
 
 
 const userStore = useUserDirectoryStore();
@@ -71,7 +77,7 @@ onMounted(() => {
 .top-row-squares {
     display: flex;
     flex-direction: row;
-    margin-left: 40px;
+    margin-left: 60px;
     margin-right: 40px;
     margin-top: 40px;
     gap: 60px;
@@ -161,4 +167,12 @@ onMounted(() => {
     align-items: center;
     margin: auto;
 }
+.cancel-img {
+    height: 30px;
+}
+.cancel-text {
+    font-size: 18px;
+    color: #4a5568;
+}
+
 </style>

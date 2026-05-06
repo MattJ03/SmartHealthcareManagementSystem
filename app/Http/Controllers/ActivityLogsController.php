@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointment;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\ActivityLog;
@@ -133,6 +134,17 @@ class ActivityLogsController extends Controller
                'actions' => $actions,
                'message' => 'actions retrieved',
            ]);
+    }
+
+    public function totalCancelledAppointments() {
+        $user = auth()->user();
+        abort_unless($user->hasRole('admin'), 403);
+        $cancelledAppointments = Appointment::query()
+                                 ->where('action', 'appointment_deleted')->count();
+
+        return response()->json([
+            'cancelledAppointments' => $cancelledAppointments,
+        ]);
     }
 }
 
