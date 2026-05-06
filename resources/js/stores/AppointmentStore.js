@@ -14,6 +14,7 @@ export const useAppointmentStore = defineStore('appointment', () => {
     const adminAppointments = ref([]);
     const nextAppointment = ref(null);
     const hasAppointments = computed(() => patientAppointments.value.length > 0);
+    const nextSevenAppointments = ref(0);
 
     const fetchAllMyAppointments = async () => {
       loading.value = true;
@@ -148,6 +149,20 @@ export const useAppointmentStore = defineStore('appointment', () => {
         }
     }
 
+    const getNextSevenAppointments = async () => {
+        loading.value = true;
+        error.value = '';
+        try {
+            const res = await api.get('/lastSevenAppointmentsCount');
+            nextSevenAppointments.value = res.data.numberAppointmentsSevenDays;
+        } catch(error) {
+            error.value = error.response?.data?.message ?? 'Failed to fetch num appointments 7 days';
+        }
+        finally {
+            loading.value = false;
+        }
+    }
+
 
     //go back at some point and fix error handling
 
@@ -161,6 +176,7 @@ export const useAppointmentStore = defineStore('appointment', () => {
          nextAppointment,
          hasAppointments,
          adminAppointments,
+         nextSevenAppointments,
          fetchAllMyAppointments,
          createAppointment,
          getAppointment,
@@ -169,6 +185,7 @@ export const useAppointmentStore = defineStore('appointment', () => {
          fetchUpcomingAppointment,
          getUpcomingDoctorAppointments,
          getAllUpcomingAppointments,
+         getNextSevenAppointments,
      };
 
 });
