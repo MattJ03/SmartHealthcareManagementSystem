@@ -10,6 +10,7 @@ export const useActivityLogsStore = defineStore('activity_logs', () => {
     const allActions = ref([]);
     const loading = ref(false);
     const error = ref(null);
+    const numCancelledAppointments = ref(0);
 
     const getAllLogs = async () => {
         loading.value = true;
@@ -56,6 +57,20 @@ export const useActivityLogsStore = defineStore('activity_logs', () => {
             allActions.value = res.data.actions;
         } catch(err) {
             error.value = error.response?.data?.message ?? 'Failed to fetch actions';
+        }
+        finally {
+            loading.value = false;
+        }
+    }
+
+    const getNumberCancelledAppointments = async () => {
+        loading.value = true;
+        error.value = '';
+        try {
+            const res = await api.get('/numberCancelledAppointments');
+            numCancelledAppointments.value = res.data.cancelledAppointments;
+        } catch (error) {
+            error.value = error.response?.data?.message ?? 'Failed to fetch cancelled appointments';
         }
         finally {
             loading.value = false;

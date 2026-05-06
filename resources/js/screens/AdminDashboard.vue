@@ -50,7 +50,7 @@ import sevenDays from '../assets/7-days.png';
 import { useAppointmentStore } from "../stores/AppointmentStore.js";
 import calendar from '../assets/calendar.png';
 import cancel from '../assets/cancel.png';
-
+import { useActivityLogsStore } from "../stores/ActivityLogsStore.js";
 
 const userStore = useUserDirectoryStore();
 const appointmentStore = useAppointmentStore();
