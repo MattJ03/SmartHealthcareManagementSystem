@@ -14,7 +14,7 @@
                     <img :src="doctor" alt="doctor" class="doctor-img">
                     <p class="number-doctors-text">Number of doctors</p>
                 </div>
-                <p class="doctors-num-result">45</p>
+                <p class="doctors-num-result"> {{ userStore.numberDoctors }}</p>
             </div>
         </div>
 
@@ -30,8 +30,9 @@ import doctor from '../assets/doctor.png';
 const userStore = useUserDirectoryStore();
 
 onMounted(() => {
-    userStore.fetchAllPatients()
-})
+    userStore.fetchAllPatients();
+    userStore.fetchDoctors();
+});
 
 </script>
 <style scoped>
