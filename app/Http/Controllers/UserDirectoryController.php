@@ -29,6 +29,7 @@ class UserDirectoryController extends Controller
         abort_unless($user->hasRole('admin'), 403);
 
         $patients = User::role('patient')->select('id', 'name')->get();
+        $numberPatients = $patients->count();
 
         if($patients->isEmpty()) {
             return response()->json([
@@ -40,6 +41,7 @@ class UserDirectoryController extends Controller
         return response()->json([
             'patients' => $patients,
             'message' => 'Patients retrieved successfully',
+            'numberPatients' => $numberPatients,
         ]);
     }
 

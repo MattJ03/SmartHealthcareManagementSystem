@@ -4,9 +4,9 @@
            <img :src="whitePill" class="logo" alt="logo" @click="returnHome"/>
        </div>
        <div class="nav-links">
+           <router-link v-if="role === 'admin'" to="admin-dashboard" class="admin-dashboard-link">Dashboard</router-link>
            <button v-if="role === 'admin'" class="btn-create-account" type="button" @click="moveToRegister"> Create New User</button>
            <router-link v-if="role === 'doctor'" to="doctors-patients" class="my-patients">My Patients</router-link>
-           <router-link v-if="role === 'admin" to=""
            <button class="btn-logout" type="button" @click="logoutUser">Logout</button>
        </div>
    </nav>
@@ -91,6 +91,11 @@ async function moveToMyPatients() {
 .my-patients {
     font-size: 18px;
 
+    color: #FFFFFF;
+}
+.admin-dashboard-link {
+     font-size: 18px;
+    cursor: pointer;
     color: #FFFFFF;
 }
 .logo {

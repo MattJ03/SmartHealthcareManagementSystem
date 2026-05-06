@@ -4,6 +4,7 @@ import api from "../axios.js";
 export const useUserDirectoryStore = defineStore('user', () => {
     const doctors = ref([]);
     const patients = ref([]);
+    const numberPatients = ref(0);
     const loading = ref(null);
     const error = ref(null);
 
@@ -59,6 +60,7 @@ export const useUserDirectoryStore = defineStore('user', () => {
         try {
             const res = await api.get('getAllPatients');
             patients.value = res.data.patients;
+            numberPatients.value = res.data.numberPatients;
         } catch(error) {
             error.value = error.response?.message;
         } finally {
@@ -71,6 +73,7 @@ export const useUserDirectoryStore = defineStore('user', () => {
     return {
         doctors,
         patients,
+        numberPatients,
         loading,
         error,
         fetchDoctors,
