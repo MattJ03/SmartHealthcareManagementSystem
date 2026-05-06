@@ -83,12 +83,14 @@ export const useActivityLogsStore = defineStore('activity_logs', () => {
         patientLogs,
         doctorLogs,
         allActions,
+        numCancelledAppointments,
         error,
         loading,
         getAllLogs,
         getPatientLogs,
         getDoctorLogs,
         getAllActions,
+        getNumberCancelledAppointments,
     };
 
 });

@@ -139,7 +139,7 @@ class ActivityLogsController extends Controller
     public function totalCancelledAppointments() {
         $user = auth()->user();
         abort_unless($user->hasRole('admin'), 403);
-        $cancelledAppointments = Appointment::query()
+        $cancelledAppointments = ActivityLog::query()
                                  ->where('action', 'appointment_deleted')->count();
 
         return response()->json([

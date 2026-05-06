@@ -35,6 +35,7 @@
                     <img :src="cancel" alt="cancel" class="cancel-img">
                     <p class="cancel-text">Total cancelled appointments</p>
                 </div>
+                <p class="total-cancelled-appointments-result"> {{ logsStore.numCancelledAppointments }}</p>
             </div>
         </div>
 
@@ -54,12 +55,15 @@ import { useActivityLogsStore } from "../stores/ActivityLogsStore.js";
 
 const userStore = useUserDirectoryStore();
 const appointmentStore = useAppointmentStore();
+const logsStore = useActivityLogsStore();
 
 onMounted(() => {
     userStore.fetchAllPatients();
     userStore.fetchDoctors();
     appointmentStore.getNextSevenAppointments();
     appointmentStore.getTotalNumberAppointments();
+    logsStore.getNumberCancelledAppointments();
+
 });
 
 </script>
@@ -173,6 +177,13 @@ onMounted(() => {
 .cancel-text {
     font-size: 18px;
     color: #4a5568;
+}
+.total-cancelled-appointments-result {
+    font-size: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
 }
 
 </style>
