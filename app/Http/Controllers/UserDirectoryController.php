@@ -11,6 +11,7 @@ class UserDirectoryController extends Controller
 
     public function getDoctors() {
         $doctors = User::role('doctor')->select('id', 'name')->get();
+        $numDoctors = count($doctors);
         if($doctors->isEmpty()) {
             return response()->json([
                 'doctors' => [],
@@ -21,6 +22,7 @@ class UserDirectoryController extends Controller
         return response()->json([
             'doctors' => $doctors,
             'message' => 'Doctors retrieved successfully',
+            'numDoctors' => $numDoctors,
         ]);
     }
 

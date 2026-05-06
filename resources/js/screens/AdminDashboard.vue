@@ -10,7 +10,11 @@
                 <p class="patients-num-result">{{ userStore.numberPatients }}</p>
             </div>
             <div class="container-square">
-
+                <div class="top-content">
+                    <img :src="doctor" alt="doctor" class="doctor-img">
+                    <p class="number-doctors-text">Number of doctors</p>
+                </div>
+                <p class="doctors-num-result">45</p>
             </div>
         </div>
 
@@ -21,7 +25,7 @@ import NavBar from "../components/NavBar.vue";
 import { ref, reactive, computed, onMounted } from "vue";
 import { useUserDirectoryStore } from "../stores/UserDirectoryStore.js";
 import patient from '../assets/patient.png';
-
+import doctor from '../assets/doctor.png';
 
 const userStore = useUserDirectoryStore();
 
@@ -86,5 +90,20 @@ onMounted(() => {
 .patient-img {
     height: 35px;
     margin-right: 5px;
+}
+.doctor-img {
+    height: 35px;
+}
+.doctors-num-result {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 70px;
+    margin: auto;
+}
+.number-doctors-text {
+      font-size: 18px;
+      color: #4a5568;
+    padding-top: 20px;
 }
 </style>

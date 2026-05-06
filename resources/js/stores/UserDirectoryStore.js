@@ -5,6 +5,7 @@ export const useUserDirectoryStore = defineStore('user', () => {
     const doctors = ref([]);
     const patients = ref([]);
     const numberPatients = ref(0);
+    const numberDoctors = ref(0);
     const loading = ref(null);
     const error = ref(null);
 
@@ -14,6 +15,7 @@ export const useUserDirectoryStore = defineStore('user', () => {
         try {
             const res = await api.get('/getDoctors');
             doctors.value = res.data.doctors
+            numberDoctors.value = res.data.numDoctors;
         } catch (error) {
             error.value = error.response?.message;
         } finally {
@@ -74,6 +76,7 @@ export const useUserDirectoryStore = defineStore('user', () => {
         doctors,
         patients,
         numberPatients,
+        numberDoctors,
         loading,
         error,
         fetchDoctors,
