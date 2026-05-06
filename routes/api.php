@@ -36,7 +36,8 @@ Route::middleware('auth:sanctum')->group(function () {
        $doctorId = $user->profile?->doctor_id ?? null;
       return response()->json(['doctorId' => $doctorId], 200);
    });
-    Route::get('/getLastVisit/{patient}', [AppointmentController::class, 'getPatientLastVisit']);
+   Route::get('/getLastVisit/{patient}', [AppointmentController::class, 'getPatientLastVisit']);
+   Route::get('/lastSevenAppointmentsCount', [AppointmentController::class, 'totalNumberAppointmentsNext7Days']);
   Route::get('getDoctors', [UserDirectoryController::class, 'getDoctors']);
   Route::get('/doctorPatients', [UserDirectoryController::class, 'getDoctorsPatients']);
   Route::get('/getAllPatients', [UserDirectoryController::class, 'getPatientIndex']);
