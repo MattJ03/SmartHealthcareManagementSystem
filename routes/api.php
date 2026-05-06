@@ -38,6 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
    });
    Route::get('/getLastVisit/{patient}', [AppointmentController::class, 'getPatientLastVisit']);
    Route::get('/lastSevenAppointmentsCount', [AppointmentController::class, 'totalNumberAppointmentsNext7Days']);
+   Route::get('/totalNumberAppointments', [AppointmentController::class, 'totalNumberOfAppointments']);
   Route::get('getDoctors', [UserDirectoryController::class, 'getDoctors']);
   Route::get('/doctorPatients', [UserDirectoryController::class, 'getDoctorsPatients']);
   Route::get('/getAllPatients', [UserDirectoryController::class, 'getPatientIndex']);
