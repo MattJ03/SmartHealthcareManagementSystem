@@ -146,6 +146,24 @@ class ActivityLogsController extends Controller
             'cancelledAppointments' => $cancelledAppointments,
         ]);
     }
+
+    public function fiveRecentActivityLogsAdmin() {
+        $user = auth()->user();
+        abort_unless($user->hasRole('admin'), 403);
+
+        $logs = ActivityLog::query()
+                             ->orderBy('created_at', 'desc')
+                              ->paginate(5);
+        if($logs->total() === 0) {
+            return response()->json([
+                'message' => 'No logs found',
+            ]);
+        }
+
+        return response()->json([
+            'logs' => $logs,
+        ]);
+    }
 }
 
 
