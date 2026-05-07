@@ -53,4 +53,25 @@ class DoctorAvailabilityController extends Controller
         return response()->json($slots);
     }
 
+    public function getDoctorActivityThisWeek() {
+        $user = auth()->user();
+        abort_unless($user->hasRole('admin'), 403);
+
+        $startOfWeek = now()->startOfWeek();
+        $endOfWeek = now()->endOfWeek();
+
+        $doctors = User::role('doctor')
+                         ->withCount(['appointments' => function($query) use ($startOfWeek, $endOfWeek) {
+                             $query->whereBetween('starts_at', [$startOfWeek, $endOfWeek]);
+                         }])
+                          ->orderBy('appointments_count', 'desc')
+                           ->get(['id', 'name']);
+
+        return response()->json([
+            'busiest' => $doctors->take(3),
+            'least_busy' => $doctors->sortBy('appointments_count')->take(3)->values(),
+        ]);
+    }
+
+
 }

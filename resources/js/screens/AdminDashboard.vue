@@ -40,6 +40,8 @@
         </div>
         <div class="bottom-row">
         <div class="todays-appointments-container">
+            <span>Most active doctors</span>
+            <div class=""
 
         </div>
         <div class="recent-activity-container">
