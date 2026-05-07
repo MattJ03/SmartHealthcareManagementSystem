@@ -8,6 +8,7 @@ export const useMedicalRecordStores = defineStore('medicalRecords', () => {
     const patientRecords = ref([]);
     const records = ref([]);
     const selectedRecord = ref(null);
+    const pdfUrl = ref('');
     const hasRecord = computed(() => patientRecords.value.length > 0);
 
     const fetchPatientRecords = async (patientId) => {
@@ -25,13 +26,54 @@ export const useMedicalRecordStores = defineStore('medicalRecords', () => {
         }
     };
 
-    const openRecord = (record) => {
-         selectedRecord.value = record;
-    }
+    const openRecord = async (record) => {
+
+        try {
+
+            loading.value = true;
+            error.value = null;
+
+            const response = await api.get(
+                `/showMedicalRecord/${record.id}`,
+                {
+                    responseType: "blob",
+                    withCredentials: true,
+                }
+            );
+            console.log(response);
+            console.log(response.headers['content-type']);
+            if (pdfUrl.value) {
+                URL.revokeObjectURL(pdfUrl.value);
+            }
+
+            pdfUrl.value = URL.createObjectURL(response.data);
+
+            selectedRecord.value = record;
+
+        } catch (err) {
+
+            console.error(err);
+
+            error.value =
+                err.response?.data?.message ??
+                "Failed to open medical record";
+
+        } finally {
+
+            loading.value = false;
+        }
+    };
 
     const closeRecord = () => {
+
+        if (pdfUrl.value) {
+            URL.revokeObjectURL(pdfUrl.value);
+        }
+
+        pdfUrl.value = "";
         selectedRecord.value = null;
-    }
+    };
+
 
     const deleteRecord = async (id) => {
         loading.value = true;
@@ -61,9 +103,6 @@ export const useMedicalRecordStores = defineStore('medicalRecords', () => {
         }
     };
 
-    const pdfUrl = computed(() =>
-        selectedRecord.value ? `/showMedicalRecord/${selectedRecord.value.id}` : ""
-    );
 
     const fetchDoctorRecords = async (search = '') => {
         loading.value = true;

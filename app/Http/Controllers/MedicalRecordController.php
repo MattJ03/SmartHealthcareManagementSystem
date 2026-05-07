@@ -109,14 +109,13 @@ class MedicalRecordController extends Controller
             'description' => $prefix . $user->name . ' viewed the record ' . $record->title,
         ]);
         Log::info('medical record viewed by ' . auth()->id());
-        return response()->file(
-            Storage::disk('private')->path($record->file_path),
-          ['Content-Type' => mime_content_type(
-              Storage::disk('private')->path($record->file_path)
-          ),
-              'Content-Disposition' => 'inline; filename="'. $record->title . '"',
-              ]
-        );
+
+        $fileContents = Storage::disk('private')->get($record->file_path);
+
+        return response($fileContents, 200, [
+            'Content-Type' => mime_content_type(Storage::disk('private')->path($record->file_path)),
+            'Content-Disposition' => 'inline; filename="' . $record->title . '.' . $record->file_type . '"',
+        ]);
     }
 
     public function getAllRecords(Request $request)
