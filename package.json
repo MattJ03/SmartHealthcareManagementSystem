@@ -16,6 +16,7 @@
         "vite": "^7.3.0"
     },
     "dependencies": {
+        "dayjs": "^1.11.20",
         "pinia": "^3.0.4",
         "vue-router": "^4.6.4",
         "vvue": "^1.7.21"

@@ -47,6 +47,7 @@
             <hr>
             <div v-for="log in logsStore.fiveAdminLogs"  class="detaials-of-log">
                 <p class="type-log"> {{ log.description }}</p>
+                <p class="log-time-ago"> {{ dayjs(log.created_at).fromNow()}}</p>
                 <hr>
             </div>
 
@@ -68,10 +69,15 @@ import { useAppointmentStore } from "../stores/AppointmentStore.js";
 import calendar from '../assets/calendar.png';
 import cancel from '../assets/cancel.png';
 import { useActivityLogsStore } from "../stores/ActivityLogsStore.js";
+import dayjs from "dayjs";
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 const userStore = useUserDirectoryStore();
 const appointmentStore = useAppointmentStore();
 const logsStore = useActivityLogsStore();
+
+dayjs.extend(relativeTime);
+
 
 onMounted(() => {
     userStore.fetchAllPatients();
@@ -234,7 +240,8 @@ onMounted(() => {
 .details-of-log {
     display: flex;
 }
-.type-log {
-    font-size: 16px;
+.log-time-ago {
+    font-size: 14px;
+    color: #4a5568;
 }
 </style>
