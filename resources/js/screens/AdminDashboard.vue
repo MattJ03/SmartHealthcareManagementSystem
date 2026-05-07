@@ -50,7 +50,15 @@
                 <p class="number-appointments"> {{doctor.doctor_appointments_count }}</p>
                 <hr>
             </div>
-
+            <span class="busy-doctor-title">Least active doctors</span>
+            <hr>
+            <div v-for="doctor in availablilityStore.leastBusyDoctors" :id="doctor.id" class="details-of-least-busy-doctors">
+                <div class="img-name-wrapper">
+                    <img :src="doctor1" alt="doctor" class="small-doctor-image">
+                    <p class="doctor-busy-name"> {{ doctor.name }}</p>
+                </div>
+                <p class="number-appointments"> {{ doctor.doctor_appointments_count }}</p>
+            </div>
 
         </div>
         <div class="recent-activity-container">
@@ -114,7 +122,7 @@ onMounted(() => {
     margin: 40px;
 
     background-color: #FFFFFF;
-    min-height: 800px;
+    min-height: 1000px;
 }
 .top-row-squares {
     display: flex;
@@ -239,9 +247,12 @@ onMounted(() => {
 }
 
 .recent-activity-container {
+    display: flex;
+    flex-direction: column;
+
     flex: 1;
     border: 1px solid #305cde;
-    min-height: 200px;
+    min-height: 600px;
     border-radius: 14px;
     padding: 20px;
 }
@@ -250,6 +261,7 @@ onMounted(() => {
 }
 .recent-activity-title {
     font-size: 22px;
+    margin-bottom: 20px;
 }
 .details-of-log {
     display: flex;

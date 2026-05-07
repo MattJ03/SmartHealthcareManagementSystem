@@ -69,7 +69,7 @@ class DoctorAvailabilityController extends Controller
 
         return response()->json([
             'busiest' => $doctors->take(3),
-            'least_busy' => $doctors->sortBy('appointments_count')->take(3)->values(),
+            'least_busy' => $doctors->sortBy('doctor_appointments_count')->take(3)->values(),
         ]);
     }
 
