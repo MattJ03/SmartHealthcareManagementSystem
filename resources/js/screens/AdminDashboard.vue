@@ -38,6 +38,17 @@
                 <p class="total-cancelled-appointments-result"> {{ logsStore.numCancelledAppointments }}</p>
             </div>
         </div>
+        <<div class="bottom-row">
+        <div class="todays-appointments-container">
+
+        </div>
+        <div class="recent-activity-container">
+             <span class="recent-activity-title">Recent activity</span>
+            <hr>
+        </div>
+    </div>
+
+
 
     </div>
 </template>
@@ -70,6 +81,7 @@ onMounted(() => {
 <style scoped>
 .container {
     display: flex;
+    flex-direction: column;
     border: 1px solid #305cde;
     border-radius: 14px;
     margin: auto;
@@ -81,10 +93,11 @@ onMounted(() => {
 .top-row-squares {
     display: flex;
     flex-direction: row;
-    margin-left: 60px;
+    margin-left: 120px;
     margin-right: 40px;
     margin-top: 40px;
     gap: 60px;
+
 }
 .container-square {
     display: flex;
@@ -185,5 +198,31 @@ onMounted(() => {
     align-items: center;
     margin: auto;
 }
+.bottom-row {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin: 30px 40px;
+}
 
+.todays-appointments-container {
+    flex: 2;
+    border: 1px solid #305cde;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.recent-activity-container {
+    flex: 1;
+    border: 1px solid #305cde;
+    min-height: 200px;
+    border-radius: 14px;
+    padding: 20px;
+}
+.break-line {
+    color: #305cde;
+}
+.recent-activity-title {
+    font-size: 22px;
+}
 </style>
