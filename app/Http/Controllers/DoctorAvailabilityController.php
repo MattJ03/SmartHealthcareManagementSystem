@@ -53,7 +53,7 @@ class DoctorAvailabilityController extends Controller
         return response()->json($slots);
     }
 
-    public function getDoctorActivityThisWeek() {
+    public function doctorActivityThisWeek() {
         $user = auth()->user();
         abort_unless($user->hasRole('admin'), 403);
 

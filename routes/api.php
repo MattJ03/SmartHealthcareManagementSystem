@@ -44,7 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('/getAllPatients', [UserDirectoryController::class, 'getPatientIndex']);
   Route::get('/admin/doctors/{doctor}/patients', [AppointmentController::class, 'getPatientsOfDoctor']);
   Route::get('/doctors/{doctor}/availability', DoctorAvailabilityController::class);
-
+  Route::get('/doctorAppointmentRate', [DoctorAvailabilityController::class, 'doctorActivityThisWeek']);
     Route::post('/storeMedicalRecord', [MedicalRecordController::class, 'storeRecord']);
     Route::delete('/deleteMedicalRecord/{id}', [MedicalRecordController::class, 'deleteRecord']);
     Route::get('/showMedicalRecord/{id}', [MedicalRecordController::class, 'showRecord']);
