@@ -19,8 +19,8 @@
                     {{ userDirectoryStore.loading ? 'Loading...' : 'Select Patient' }}
                     <option v-for="patient in userDirectoryStore.patients"
                             class="dropdown-text"
-                            :key="patient.id"
-                            :value="patient.id">
+                            :key="role === 'admin' ? patient.id : patient.user.id"
+                            :value="role === 'admin' ? patient.id : patient.user.id">
                         {{ role === 'admin' ? patient.name : patient.user.name }}
                     </option>
                 </select>
