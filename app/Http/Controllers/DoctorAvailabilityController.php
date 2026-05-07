@@ -61,7 +61,7 @@ class DoctorAvailabilityController extends Controller
         $endOfWeek = now()->endOfWeek();
 
         $doctors = User::role('doctor')
-                         ->withCount(['appointments' => function($query) use ($startOfWeek, $endOfWeek) {
+                         ->withCount(['doctorAppointments' => function($query) use ($startOfWeek, $endOfWeek) {
                              $query->whereBetween('starts_at', [$startOfWeek, $endOfWeek]);
                          }])
                           ->orderBy('appointments_count', 'desc')
