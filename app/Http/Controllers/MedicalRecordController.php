@@ -211,7 +211,8 @@ class MedicalRecordController extends Controller
             'description' => $prefix . $user->name .  ' downloaded the medical record ' . $record->title
         ]);
 
-        return Storage::disk('private')->download($record->file_path);
+        return Storage::disk('private')->download($record->file_path,
+                                                        $record->title . '.' . $record->file_type);
     }
 
 }
