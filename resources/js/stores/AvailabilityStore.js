@@ -23,7 +23,7 @@ export const useAvailabilityStore = defineStore('availability', () => {
     const getBusyDoctorsAndLeast = async () => {
         loading.value = true;
         try {
-            const res = await api.get('doctorAppointmentRate');
+            const res = await api.get('/doctorAppointmentRate');
             busiestDoctors.value = res.data.busiest;
             leastBusyDoctors.value = res.data.least_busy;
         } catch(err) {

@@ -11,7 +11,7 @@
             </div>
             <div class="container-square">
                 <div class="top-content">
-                    <img :src="doctor" alt="doctor" class="doctor-img">
+                    <img :src="doctor1" alt="doctor" class="doctor-img">
                     <p class="number-doctors-text">Number of doctors</p>
                 </div>
                 <p class="doctors-num-result"> {{ userStore.numberDoctors }}</p>
@@ -40,8 +40,17 @@
         </div>
         <div class="bottom-row">
         <div class="todays-appointments-container">
-            <span>Most active doctors</span>
-            <div class=""
+            <span class="busy-doctor-title">Most active doctors</span>
+            <hr>
+            <div v-for="doctor in availablilityStore.busiestDoctors" :id="doctor.id" class="detials-of-buesit-doctors">
+                <div class="img-name-wrapper">
+                <img :src="doctor1" alt="doctor" class="small-doctor-image">
+                <p class="doctor-busy-name"> {{ doctor.name }} </p>
+                </div>
+                <p class="number-appointments"> {{doctor.doctor_appointments_count }}</p>
+                <hr>
+            </div>
+
 
         </div>
         <div class="recent-activity-container">
@@ -65,7 +74,7 @@ import NavBar from "../components/NavBar.vue";
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useUserDirectoryStore } from "../stores/UserDirectoryStore.js";
 import patient from '../assets/patient.png';
-import doctor from '../assets/doctor.png';
+import doctor1 from '../assets/doctor.png';
 import sevenDays from '../assets/7-days.png';
 import { useAppointmentStore } from "../stores/AppointmentStore.js";
 import calendar from '../assets/calendar.png';
@@ -73,10 +82,13 @@ import cancel from '../assets/cancel.png';
 import { useActivityLogsStore } from "../stores/ActivityLogsStore.js";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { useAvailabilityStore } from "../stores/AvailabilityStore.js";
+
 
 const userStore = useUserDirectoryStore();
 const appointmentStore = useAppointmentStore();
 const logsStore = useActivityLogsStore();
+const availablilityStore = useAvailabilityStore();
 
 dayjs.extend(relativeTime);
 
@@ -88,7 +100,7 @@ onMounted(() => {
     appointmentStore.getTotalNumberAppointments();
     logsStore.getNumberCancelledAppointments();
     logsStore.getFiveRecentLogsAdmin();
-
+    availablilityStore.getBusyDoctorsAndLeast();
 });
 
 </script>
@@ -220,7 +232,7 @@ onMounted(() => {
 }
 
 .todays-appointments-container {
-    flex: 2;
+    flex: 1;
     border: 1px solid #305cde;
     border-radius: 14px;
     padding: 20px;
@@ -246,4 +258,27 @@ onMounted(() => {
     font-size: 14px;
     color: #4a5568;
 }
+.busy-doctor-title {
+    font-size: 22px;
+}
+.doctor-busy-name {
+    font-size: 18px;
+    margin: 0;
+}
+.number-appointments {
+    font-size: 22px;
+    color: #4a5568;
+}
+.small-doctor-image {
+    height: 20px;
+}
+.img-name-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: left;
+    align-items: center;
+
+}
+
 </style>

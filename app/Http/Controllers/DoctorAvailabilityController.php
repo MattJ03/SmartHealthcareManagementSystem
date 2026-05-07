@@ -64,7 +64,7 @@ class DoctorAvailabilityController extends Controller
                          ->withCount(['doctorAppointments' => function($query) use ($startOfWeek, $endOfWeek) {
                              $query->whereBetween('starts_at', [$startOfWeek, $endOfWeek]);
                          }])
-                          ->orderBy('appointments_count', 'desc')
+                          ->orderBy('doctor_appointments_count', 'desc')
                            ->get(['id', 'name']);
 
         return response()->json([
