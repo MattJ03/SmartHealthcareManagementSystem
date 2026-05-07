@@ -8,6 +8,7 @@ export const useActivityLogsStore = defineStore('activity_logs', () => {
     const patientLogs = ref([]);
     const doctorLogs = ref([]);
     const allActions = ref([]);
+    const fiveAdminLogs = ref([]);
     const loading = ref(false);
     const error = ref(null);
     const numCancelledAppointments = ref(0);
@@ -77,12 +78,27 @@ export const useActivityLogsStore = defineStore('activity_logs', () => {
         }
     }
 
+    const getFiveRecentLogsAdmin = async () => {
+        loading.value = true;
+        error.value = '';
+        try {
+            const res = await api.get('fiveRecentLogsAdmin');
+            fiveAdminLogs.value = res.data.logs.data;
+        } catch(error) {
+            error.value = error.response?.data?.message ?? 'Failed to fetch 5 logs admin';
+        }
+        finally {
+            loading.value = false;
+        }
+    }
+
     return {
         role,
         allLogs,
         patientLogs,
         doctorLogs,
         allActions,
+        fiveAdminLogs,
         numCancelledAppointments,
         error,
         loading,
@@ -91,6 +107,7 @@ export const useActivityLogsStore = defineStore('activity_logs', () => {
         getDoctorLogs,
         getAllActions,
         getNumberCancelledAppointments,
+        getFiveRecentLogsAdmin,
     };
 
 });

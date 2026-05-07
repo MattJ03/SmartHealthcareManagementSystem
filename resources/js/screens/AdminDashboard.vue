@@ -38,13 +38,18 @@
                 <p class="total-cancelled-appointments-result"> {{ logsStore.numCancelledAppointments }}</p>
             </div>
         </div>
-        <<div class="bottom-row">
+        <div class="bottom-row">
         <div class="todays-appointments-container">
 
         </div>
         <div class="recent-activity-container">
              <span class="recent-activity-title">Recent activity</span>
             <hr>
+            <div v-for="log in logsStore.fiveAdminLogs"  class="detaials-of-log">
+                <p class="type-log"> {{ log.description }}</p>
+                <hr>
+            </div>
+
         </div>
     </div>
 
@@ -74,6 +79,7 @@ onMounted(() => {
     appointmentStore.getNextSevenAppointments();
     appointmentStore.getTotalNumberAppointments();
     logsStore.getNumberCancelledAppointments();
+    logsStore.getFiveRecentLogsAdmin();
 
 });
 
@@ -224,5 +230,11 @@ onMounted(() => {
 }
 .recent-activity-title {
     font-size: 22px;
+}
+.details-of-log {
+    display: flex;
+}
+.type-log {
+    font-size: 16px;
 }
 </style>

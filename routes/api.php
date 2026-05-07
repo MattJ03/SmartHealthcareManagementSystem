@@ -58,5 +58,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getFilteredLogList', [ActivityLogsController::class, 'filterLogList']);
     Route::get('/allActionsCategories', [ActivityLogsController::class, 'getAllActionsCategories']);
     Route::get('/numberCancelledAppointments', [ActivityLogsController::class, 'totalCancelledAppointments']);
+    Route::get('/fiveRecentLogsAdmin', [ActivityLogsController::class, 'fiveRecentActivityLogsAdmin']);
 });
 
