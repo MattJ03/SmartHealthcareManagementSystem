@@ -99,19 +99,35 @@ onMounted(async () => {
      console.log(newValue);
  });
 
- const downloadRecord = async (record) => {
-     const res = await api.get(`downloadFile/${record.id}/download`, {
-         responseType: 'blob',
-     });
+const downloadRecord = async (record) => {
+    try {
+        const res = await api.get(
+            `/downloadFile/${record.id}/download`,
+            {
+                responseType: 'blob',
+            }
+        );
 
-     const url = window.URL.createObjectURL(new Blob([res.data]));
-     const link = document.createElement('a');
-     link.href = url;
-     link.setAttribute('download', record.title);
-     document.body.appendChild(link);
-     link.click();
-     link.remove();
-}
+        const blob = new Blob([res.data], {
+            type: 'application/pdf',
+        });
+
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${record.title}.pdf`;
+
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        window.URL.revokeObjectURL(url);
+
+    } catch (error) {
+        console.error(error);
+    }
+};
 
 const cancelSearch = async () => {
      search.value = '';

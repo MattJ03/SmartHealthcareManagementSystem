@@ -194,6 +194,7 @@ class MedicalRecordController extends Controller
         $this->authorize('view', $record);
 
         $user = auth()->user();
+        Log::info('DOWNLOAD ROUTE HIT');
 
         if(!Storage::disk('private')->exists($record->file_path)) {
             abort(404, 'File not found');

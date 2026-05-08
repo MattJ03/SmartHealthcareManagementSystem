@@ -84,7 +84,7 @@ export const useMedicalRecordStores = defineStore('medicalRecords', () => {
         } catch (err) {
             error.value = error.response?.data?.message ?? 'couldnt delete record';
         } finally {
-            loading.value =  true;
+            loading.value =  false;
         }
     }
 
